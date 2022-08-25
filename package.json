@@ -18,7 +18,8 @@
     "prepack": "nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "release": "yarn lint && standard-version && git push --follow-tags"
   },
   "dependencies": {
     "@iconify/vue": "^3.2.1",
@@ -28,6 +29,7 @@
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
-    "nuxt": "^3.0.0-rc.8"
+    "nuxt": "^3.0.0-rc.8",
+    "standard-version": "^9.5.0"
   }
 }

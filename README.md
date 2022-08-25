@@ -3,8 +3,8 @@
 # Nuxt Icon
 
 [![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
+<!-- [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href] -->
 [![License][license-src]][license-href]
 
 > Icon module for [Nuxt](https://v3.nuxtjs.org).
@@ -89,7 +89,7 @@ Note that `NuxtIcon` needs to be inside `components/global/` folder (see [exampl
 [npm-downloads-href]: https://npmjs.com/package/nuxt-icon
 
 [github-actions-ci-src]: https://github.com/Atinux/nuxt-icon/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/AtinuxZ/nuxt-icon/actions?query=workflow%3Aci
+[github-actions-ci-href]: https://github.com/Atinux/nuxt-icon/actions?query=workflow%3Aci
 
-[license-src]: https://img.shields.io/npm/l/nuxt-icon.svg
-[license-href]: https://npmjs.com/package/nuxt-icon
+[license-src]: https://img.shields.io/github/license/Atinux/nuxt-icon.svg
+[license-href]: https://github.com/Atinux/nuxt-icon/blob/main/LICENSE

@@ -3,9 +3,9 @@
 # Nuxt Icon
 
 [![npm version][npm-version-src]][npm-version-href]
+[![License][license-src]][license-href]
 <!-- [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href] -->
-[![License][license-src]][license-href]
 
 > Icon module for [Nuxt](https://v3.nuxtjs.org).
 

@@ -11,7 +11,6 @@ export default defineNuxtModule<ModuleOptions>({
   setup (_options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
-    // nuxt.options.build.transpile.push(resolve('./runtime'))
     addComponent({
       name: 'Icon',
       global: true,

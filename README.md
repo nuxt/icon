@@ -9,6 +9,9 @@
 
 > Icon module for [Nuxt](https://v3.nuxtjs.org).
 
+- [✨ &nbsp;Release Notes](https://github.com/Atinux/nuxt-icon/releases)
+- [🏀 &nbsp;Online playground](https://stackblitz.com/edit/nuxt-icon-playground?file=app.vue)
+
 ## Features
 
 - Nuxt 3 ready

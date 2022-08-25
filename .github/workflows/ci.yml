@@ -39,5 +39,5 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Build
-        run: yarn build
+      - name: Prepack
+        run: yarn prepack

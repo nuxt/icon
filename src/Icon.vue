@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'

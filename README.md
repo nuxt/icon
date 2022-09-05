@@ -1,13 +1,12 @@
-<!-- [![@nuxtjs/strapi](./docs/public/cover.jpg)](https://strapi.nuxtjs.org) -->
+![nuxt-icon](https://user-images.githubusercontent.com/904724/188514727-e252b825-be56-43bb-a044-5a97f9a3badc.png)
 
 # Nuxt Icon
 
 [![npm version][npm-version-src]][npm-version-href]
 [![License][license-src]][license-href]
-<!-- [![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href] -->
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-> Icon module for [Nuxt](https://v3.nuxtjs.org).
+> Icon module for [Nuxt](https://v3.nuxtjs.org) with [100,000+ ready to use icons](https://icones.js.org) from Iconify.
 
 - [✨ &nbsp;Release Notes](https://github.com/Atinux/nuxt-icon/releases)
 - [🏀 &nbsp;Online playground](https://stackblitz.com/edit/nuxt-icon-playground?file=app.vue)
@@ -82,14 +81,11 @@ Note that `NuxtIcon` needs to be inside `components/global/` folder (see [exampl
 [MIT License](./LICENSE)
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/nuxt-icon/latest.svg
+[npm-version-src]: https://img.shields.io/npm/v/nuxt-icon/latest.svg?style=flat&colorA=002438&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/nuxt-icon
 
-[npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-icon.svg
+[npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-icon.svg?style=flat&colorA=002438&colorB=28CF8D
 [npm-downloads-href]: https://npmjs.com/package/nuxt-icon
 
-[github-actions-ci-src]: https://github.com/Atinux/nuxt-icon/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/Atinux/nuxt-icon/actions?query=workflow%3Aci
-
-[license-src]: https://img.shields.io/github/license/Atinux/nuxt-icon.svg
+[license-src]: https://img.shields.io/github/license/Atinux/nuxt-icon.svg?style=flat&colorA=002438&colorB=28CF8D
 [license-href]: https://github.com/Atinux/nuxt-icon/blob/main/LICENSE

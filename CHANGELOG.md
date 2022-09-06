@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/Atinux/nuxt-icon/compare/v0.1.2...v0.1.3) (2022-09-06)
+
+
+### Features
+
+* add default icon size ([#2](https://github.com/Atinux/nuxt-icon/issues/2)) ([4f7d17b](https://github.com/Atinux/nuxt-icon/commit/4f7d17b824c7550da9fcfade3391f1753d2601ca))
+
 ### [0.1.2](https://github.com/Atinux/nuxt-icon/compare/v0.1.1...v0.1.2) (2022-08-25)
 
 

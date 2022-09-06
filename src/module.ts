@@ -4,8 +4,11 @@ export interface ModuleOptions {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'icon',
-    configKey: 'icon'
+    name: 'nuxt-icon',
+    configKey: 'icon',
+    compatibility: {
+      nuxt: '^3.0.0-rc.9'
+    }
   },
   defaults: {},
   setup (_options, nuxt) {

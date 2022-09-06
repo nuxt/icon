@@ -71,12 +71,12 @@ Note that `NuxtIcon` needs to be inside `components/global/` folder (see [exampl
 
 ## Configuration
 
-To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `icon.size` property:
+To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `nuxtIcon.size` property:
 
 ```ts
 // app.config.ts
 export default defineAppConfig({
-  icon: {
+  nuxtIcon: {
     size: '24px' // default <Icon> size applied
   }
 })

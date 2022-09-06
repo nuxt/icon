@@ -11,14 +11,14 @@
 - [✨ &nbsp;Release Notes](https://github.com/Atinux/nuxt-icon/releases)
 - [🏀 &nbsp;Online playground](https://stackblitz.com/edit/nuxt-icon-playground?file=app.vue)
 
-## Features
+## Features ✨
 
 - Nuxt 3 ready
 - Support 100,000 open source vector icons via [Iconify](https://iconify.design)
 - Emoji Support
 - Custom SVG support (via Vue component)
 
-## Setup
+## Setup ⛓️
 
 Add `nuxt-icon` dependency to your project:
 
@@ -41,7 +41,9 @@ export default defineNuxtConfig({
 
 That's it, you can now use the `<Icon />` in your components!
 
-## Usage
+✨ If you are using VS Code, you can use the [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) extension by @antfu 
+
+## Usage 👌
 
 **Props:**
 - `name` (required): icon name, emoji or global component name
@@ -69,7 +71,7 @@ You can use any name from the https://icones.js.org collection:
 
 Note that `NuxtIcon` needs to be inside `components/global/` folder (see [example](./playground/components/global/NuxtIcon.vue)).
 
-## Configuration
+## Configuration ⚙️
 
 To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `nuxtIcon.size` property:
 
@@ -82,14 +84,19 @@ export default defineAppConfig({
 })
 ```
 
-## Contributing
+## Contributing 🙏
 
 1. Clone this repository
 2. Install dependencies using `yarn install` or `npm install`
 3. Run `npm run dev:prepare` to generate type stubs.
 4. Use `npm run dev` to start [playground](./playground) in development mode.
 
-## License
+## Credits 💌
+
+- @benjamincanac for the initial version
+- @cyberalien for making [Iconify](https://github.com/iconify/iconify)
+
+## License 📎
 
 [MIT License](./LICENSE)
 

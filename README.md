@@ -41,7 +41,7 @@ export default defineNuxtConfig({
 
 That's it, you can now use the `<Icon />` in your components!
 
-✨ If you are using VS Code, you can use the [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) extension by @antfu 
+✨ If you are using VS Code, you can use the [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) extension by [@antfu](https://github.com/antfu)
 
 ## Usage 👌
 
@@ -93,8 +93,8 @@ export default defineAppConfig({
 
 ## Credits 💌
 
-- @benjamincanac for the initial version
-- @cyberalien for making [Iconify](https://github.com/iconify/iconify)
+- [@benjamincanac](https://github.com/benjamincanac) for the initial version
+- [@cyberalien](https://github.com/cyberalien) for making [Iconify](https://github.com/iconify/iconify)
 
 ## License 📎
 

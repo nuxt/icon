@@ -3,11 +3,11 @@ import { defineNuxtModule, createResolver, addComponent } from '@nuxt/kit'
 export interface ModuleOptions {}
 
 declare module '@nuxt/schema' {
-  interface AppConfig {
+  interface AppConfigInput {
     /** nuxt-icon configuration */
-    nuxtIcon: {
+    nuxtIcon?: {
       /** default size */
-      size: string
+      size?: string
     }
   }
 }

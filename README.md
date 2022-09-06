@@ -69,6 +69,19 @@ You can use any name from the https://icones.js.org collection:
 
 Note that `NuxtIcon` needs to be inside `components/global/` folder (see [example](./playground/components/global/NuxtIcon.vue)).
 
+## Configuration
+
+To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `nuxtIcon.size` property:
+
+```ts
+// app.config.ts
+export default defineAppConfig({
+  nuxtIcon: {
+    size: '24px' // default <Icon> size applied
+  }
+})
+```
+
 ## Contributing
 
 1. Clone this repository

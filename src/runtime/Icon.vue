@@ -6,6 +6,7 @@ import { loadIcon } from '@iconify/vue'
 import { useNuxtApp, useState, ref, computed, watch } from '#imports'
 
 const nuxtApp = useNuxtApp()
+const nuxtIcon = useAppConfig().nuxtIcon
 const props = defineProps({
   name: {
     type: String,
@@ -13,7 +14,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: '1em'
+    default: ''
   }
 })
 const state = useState('icons', () => ({}))
@@ -21,10 +22,11 @@ const isFetching = ref(false)
 const icon = computed<IconifyIcon | null>(() => state.value?.[props.name])
 const component = computed(() => nuxtApp.vueApp.component(props.name))
 const sSize = computed(() => {
-  if (String(Number(props.size)) === props.size) {
-    return `${props.size}px`
+  const size = props.size || nuxtIcon?.size || '1em'
+  if (String(Number(size)) === size) {
+    return `${size}px`
   }
-  return props.size
+  return size
 })
 
 async function loadIconComponent () {

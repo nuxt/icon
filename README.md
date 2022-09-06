@@ -8,7 +8,7 @@
 
 > Icon module for [Nuxt](https://v3.nuxtjs.org) with [100,000+ ready to use icons](https://icones.js.org) from Iconify.
 
-- [✨ &nbsp;Release Notes](https://github.com/Atinux/nuxt-icon/releases)
+- [✨ &nbsp;Release Notes](https://github.com/nuxt-modules/icon/releases)
 - [🏀 &nbsp;Online playground](https://stackblitz.com/edit/nuxt-icon-playground?file=app.vue)
 
 ## Features ✨
@@ -107,5 +107,5 @@ export default defineAppConfig({
 [npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-icon.svg?style=flat&colorA=002438&colorB=28CF8D
 [npm-downloads-href]: https://npmjs.com/package/nuxt-icon
 
-[license-src]: https://img.shields.io/github/license/Atinux/nuxt-icon.svg?style=flat&colorA=002438&colorB=28CF8D
-[license-href]: https://github.com/Atinux/nuxt-icon/blob/main/LICENSE
+[license-src]: https://img.shields.io/github/license/nuxt-modules/icon.svg?style=flat&colorA=002438&colorB=28CF8D
+[license-href]: https://github.com/nuxt-modules/icon/blob/main/LICENSE

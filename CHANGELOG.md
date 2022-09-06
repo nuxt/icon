@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/Atinux/nuxt-icon/compare/v0.1.3...v0.1.4) (2022-09-06)
+
+
+### Bug Fixes
+
+* add missing import ([5cb16fe](https://github.com/Atinux/nuxt-icon/commit/5cb16fe8dd36f34da73a0db0907e48de77fd3d5b))
+
 ### [0.1.3](https://github.com/Atinux/nuxt-icon/compare/v0.1.2...v0.1.3) (2022-09-06)
 
 

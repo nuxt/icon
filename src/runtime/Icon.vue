@@ -3,7 +3,7 @@
 import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon } from '@iconify/vue'
-import { useNuxtApp, useState, ref, computed, watch } from '#imports'
+import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#imports'
 
 const nuxtApp = useNuxtApp()
 const nuxtIcon = useAppConfig().nuxtIcon

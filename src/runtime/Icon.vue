@@ -6,7 +6,7 @@ import { loadIcon } from '@iconify/vue'
 import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#imports'
 
 const nuxtApp = useNuxtApp()
-const nuxtIcon = useAppConfig().nuxtIcon
+const nuxtIcon = (useAppConfig() as any).nuxtIcon
 const props = defineProps({
   name: {
     type: String,

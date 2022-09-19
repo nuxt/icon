@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/nuxt-modules/icon/compare/v0.1.5...v0.1.6) (2022-09-19)
+
 ### [0.1.5](https://github.com/nuxt-modules/icon/compare/v0.1.4...v0.1.5) (2022-09-06)
 
 ### [0.1.4](https://github.com/Atinux/nuxt-icon/compare/v0.1.3...v0.1.4) (2022-09-06)

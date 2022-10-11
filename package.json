@@ -24,7 +24,7 @@
     "release": "yarn lint && standard-version && git push --follow-tags"
   },
   "dependencies": {
-    "@iconify/vue": "^3.2.1",
+    "@iconify/vue": "^4.0.0",
     "@nuxt/kit": "^3.0.0-rc.10"
   },
   "devDependencies": {

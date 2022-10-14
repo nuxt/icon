@@ -81,10 +81,9 @@ You can also define aliases to make swapping out icons easier. Just provide a di
 // app.config.ts
 export default defineAppConfig({
   nuxtIcon: {
-    size: '24px' // default <Icon> size applied
+    size: '24px', // default <Icon> size applied
     aliases: {
       'nuxt-icon': 'logos:nuxt-icon',
-      // ...
     }
   }
 })

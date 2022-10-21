@@ -20,9 +20,9 @@
     </p>
     <p>
       Aliases:
-      <Icon name="awesome-github" />
-      <Icon name="awesome-nuxt" />
-      <Icon name="awesome-rocket" />
+      <Icon name="github" size="24" />
+      <Icon name="nuxt" size="24" />
+      <Icon name="rocket" size="24" />
     </p>
   </div>
 </template>

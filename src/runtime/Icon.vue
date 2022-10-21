@@ -19,8 +19,9 @@ const props = defineProps({
 })
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
-const icon = computed<IconifyIcon | undefined>(() => state.value?.[props.name])
-const component = computed(() => nuxtApp.vueApp.component(props.name))
+const iconName = computed(() => (nuxtIcon?.aliases || {})[props.name] || props.name)
+const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
+const component = computed(() => nuxtApp.vueApp.component(iconName.value))
 const sSize = computed(() => {
   const size = props.size || nuxtIcon?.size || '1em'
   if (String(Number(size)) === size) {
@@ -33,14 +34,14 @@ async function loadIconComponent () {
   if (component.value) {
     return
   }
-  if (!state.value?.[props.name]) {
+  if (!state.value?.[iconName.value]) {
     isFetching.value = true
-    state.value[props.name] = await loadIcon(props.name).catch(() => undefined)
+    state.value[iconName.value] = await loadIcon(iconName.value).catch(() => undefined)
     isFetching.value = false
   }
 }
 
-watch(() => props.name, loadIconComponent)
+watch(() => iconName.value, loadIconComponent)
 
 !component.value && await loadIconComponent()
 </script>

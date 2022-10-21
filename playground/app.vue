@@ -18,6 +18,12 @@
       <Icon name="🚀" size="24" />
       <Icon name="🚀" size="48" />
     </p>
+    <p>
+      Aliases:
+      <Icon name="github" size="24" />
+      <Icon name="nuxt" size="24" />
+      <Icon name="rocket" size="24" />
+    </p>
   </div>
 </template>
 

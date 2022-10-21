@@ -7,7 +7,8 @@ declare module '@nuxt/schema' {
     /** nuxt-icon configuration */
     nuxtIcon?: {
       /** default size */
-      size?: string
+      size?: string,
+      aliases?: { [alias: string]: string }
     }
   }
 }

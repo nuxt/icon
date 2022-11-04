@@ -25,13 +25,13 @@
   },
   "dependencies": {
     "@iconify/vue": "^4.0.0",
-    "@nuxt/kit": "^3.0.0-rc.12"
+    "@nuxt/kit": "^3.0.0-rc.13"
   },
   "devDependencies": {
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
-    "nuxt": "^3.0.0-rc.12",
+    "nuxt": "^3.0.0-rc.13",
     "standard-version": "^9.5.0",
     "typescript": "^4.8.4",
     "vue-tsc": "^1.0.9"

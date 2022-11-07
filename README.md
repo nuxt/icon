@@ -95,6 +95,28 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 <Icon name="nuxt" />
 ```
 
+## Render Function
+
+You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:
+
+```ts
+import { Icon } from '#components'
+```
+
+See an example of a `<MyIcon>` component:
+
+```vue
+<script setup>
+import { Icon } from '#components'
+
+const MyIcon = h(Icon, { name: 'uil:twitter' })
+</script>
+
+<template>
+  <p><MyIcon /></p>
+</template>
+```
+
 ## Contributing 🙏
 
 1. Clone this repository

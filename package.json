@@ -21,7 +21,7 @@
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test:types": "vue-tsc --noEmit",
-    "release": "yarn lint && standard-version && git push --follow-tags"
+    "release": "release-it"
   },
   "dependencies": {
     "@iconify/vue": "^4.0.1",
@@ -32,7 +32,7 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "nuxt": "^3.0.0",
-    "standard-version": "^9.5.0",
+    "release-it": "^15.5.0",
     "typescript": "^4.9.3",
     "vue-tsc": "^1.0.10"
   }

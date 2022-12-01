@@ -21,6 +21,7 @@
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test:types": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm lint",
     "release": "release-it"
   },
   "dependencies": {

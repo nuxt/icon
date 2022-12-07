@@ -8,7 +8,8 @@ declare module '@nuxt/schema' {
     nuxtIcon?: {
       /** default size */
       size?: string,
-      aliases?: { [alias: string]: string }
+      aliases?: { [alias: string]: string },
+      headless?: boolean
     }
   }
 }

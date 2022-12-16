@@ -30,10 +30,7 @@ const sSize = computed(() => {
   return size
 })
 
-const isHeadless = computed(() => {
-  return nuxtIcon?.headless || false
-})
-
+const isHeadless = nuxtIcon?.headless ?? false
 async function loadIconComponent () {
   if (component.value) {
     return

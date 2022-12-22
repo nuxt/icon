@@ -5,6 +5,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![License][license-src]][license-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+<a href="https://volta.net/nuxt-modules/icon?utm_source=nuxt_readme"><img src="https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg" alt="Volta board"></a>
 
 > Icon module for [Nuxt](https://v3.nuxtjs.org) with [100,000+ ready to use icons](https://icones.js.org) from Iconify.
 
@@ -134,11 +135,11 @@ const MyIcon = h(Icon, { name: 'uil:twitter' })
 [MIT License](./LICENSE)
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/nuxt-icon/latest.svg?style=flat&colorA=002438&colorB=28CF8D
+[npm-version-src]: https://img.shields.io/npm/v/nuxt-icon/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/nuxt-icon
 
-[npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-icon.svg?style=flat&colorA=002438&colorB=28CF8D
+[npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-icon.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-downloads-href]: https://npmjs.com/package/nuxt-icon
 
-[license-src]: https://img.shields.io/github/license/nuxt-modules/icon.svg?style=flat&colorA=002438&colorB=28CF8D
+[license-src]: https://img.shields.io/github/license/nuxt-modules/icon.svg?style=flat&colorA=18181B&colorB=28CF8D
 [license-href]: https://github.com/nuxt-modules/icon/blob/main/LICENSE

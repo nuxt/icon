@@ -5,7 +5,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![License][license-src]][license-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
-<a href="https://volta.net/nuxt-modules/icon?utm_source=nuxt_readme"><img src="https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg" alt="Volta board"></a>
+<a href="https://volta.net/nuxt-modules/icon?utm_source=nuxt_icon_readme"><img src="https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg" alt="Volta board"></a>
 
 > Icon module for [Nuxt](https://v3.nuxtjs.org) with [100,000+ ready to use icons](https://icones.js.org) from Iconify.
 

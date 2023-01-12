@@ -6,7 +6,6 @@ declare module '@nuxt/schema' {
   interface AppConfigInput {
     /** nuxt-icon configuration */
     nuxtIcon?: {
-      /** default size */
       size?: string,
       class?: string,
       aliases?: { [alias: string]: string }
@@ -23,7 +22,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {},
-  setup (_options, nuxt) {
+  setup (_options) {
     const { resolve } = createResolver(import.meta.url)
 
     addComponent({

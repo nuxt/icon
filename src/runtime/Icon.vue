@@ -29,7 +29,7 @@ const sSize = computed(() => {
   }
   return size
 })
-const className = nuxtIcon?.class ?? 'icon'
+const className = computed(() => nuxtIcon?.class ?? 'icon')
 
 async function loadIconComponent () {
   if (component.value) {

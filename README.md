@@ -76,7 +76,7 @@ Note that `NuxtIcon` needs to be inside `components/global/` folder (see [exampl
 
 To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `nuxtIcon.size` property.
 
-Update the default class (`.icon`) of the `<Icon />` with the `nuxtIcon.class` property.
+Update the default class (`.icon`) of the `<Icon />` with the `nuxtIcon.class` property, for a headless Icon, simply set `nuxtIcon.class: ''`.
 
 You can also define aliases to make swapping out icons easier by leveraging the `nuxtIcon.aliases` property.
 

@@ -29,6 +29,7 @@ const sSize = computed(() => {
   }
   return size
 })
+const className = nuxtIcon?.headless ? '' : (nuxtIcon?.class ?? 'icon')
 
 const isHeadless = nuxtIcon?.headless ?? false
 async function loadIconComponent () {
@@ -48,10 +49,10 @@ watch(() => iconName.value, loadIconComponent)
 </script>
 
 <template>
-  <span v-if="isFetching" :class="{ icon: isHeadless }" :width="sSize" :height="sSize" />
-  <Iconify v-else-if="icon" :icon="icon" :class="{ icon: isHeadless }" :width="sSize" :height="sSize" />
-  <Component :is="component" v-else-if="component" :class="{ icon: isHeadless }" :width="sSize" :height="sSize" />
-  <span v-else :class="{ icon: isHeadless }" :style="{ fontSize: sSize, lineHeight: sSize, width: sSize, height: sSize }">{{ name }}</span>
+  <span v-if="isFetching" :class="className" :width="sSize" :height="sSize" />
+  <Iconify v-else-if="icon" :icon="icon" :class="className" :width="sSize" :height="sSize" />
+  <Component :is="component" v-else-if="component" :class="className" :width="sSize" :height="sSize" />
+  <span v-else :class="className" :style="{ fontSize: sSize, lineHeight: sSize, width: sSize, height: sSize }">{{ name }}</span>
 </template>
 
 <style scoped>

@@ -6,10 +6,10 @@ declare module '@nuxt/schema' {
   interface AppConfigInput {
     /** nuxt-icon configuration */
     nuxtIcon?: {
-      /** default size */
       size?: string,
-      aliases?: { [alias: string]: string },
       headless?: boolean
+      class?: string,
+      aliases?: { [alias: string]: string }
     }
   }
 }

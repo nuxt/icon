@@ -29,9 +29,8 @@ const sSize = computed(() => {
   }
   return size
 })
-const className = nuxtIcon?.headless ? '' : (nuxtIcon?.class ?? 'icon')
+const className = computed(() => nuxtIcon?.class ?? 'icon')
 
-const isHeadless = nuxtIcon?.headless ?? false
 async function loadIconComponent () {
   if (component.value) {
     return

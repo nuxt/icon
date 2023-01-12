@@ -30,20 +30,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/pnpm-lock.yaml')) }}
 
       - name: Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
+        run: pnpm install
 
       - name: Prepare
-        run: yarn dev:prepare
+        run: npm run dev:prepare
 
       - name: Lint
-        run: yarn lint
+        run: npm run lint
 
-      - name: Lint
-        run: yarn test:types
+      - name: Test types
+        run: npm run test:types
 
       - name: Prepack
-        run: yarn prepack
+        run: npm run prepack

@@ -19,7 +19,7 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
-    "lint": "eslint --ext .js,.ts,.vue .",
+    "lint": "eslint .",
     "test:types": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm lint",
     "release": "release-it"
@@ -29,8 +29,8 @@
     "@nuxt/kit": "^3.0.0"
   },
   "devDependencies": {
+    "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/module-builder": "latest",
-    "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "nuxt": "^3.0.0",
     "release-it": "^15.6.0",

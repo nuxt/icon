@@ -124,7 +124,7 @@ const MyIcon = h(Icon, { name: 'uil:twitter' })
 ## Contributing 🙏
 
 1. Clone this repository
-2. Install dependencies using `yarn install` or `npm install`
+2. Install dependencies using `pnpm install` (install `pnpm` with `corepack enable`, [learn more](https://pnpm.io/installation#using-corepack))
 3. Run `npm run dev:prepare` to generate type stubs.
 4. Use `npm run dev` to start [playground](./playground) in development mode.
 

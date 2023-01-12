@@ -6,13 +6,17 @@ declare module '@nuxt/schema' {
   interface AppConfigInput {
     /** nuxt-icon configuration */
     nuxtIcon?: {
+      /** Default Icon size */
       size?: string,
+      /** Default Icon class */
       class?: string,
+      /** Icon name aliases */
       aliases?: { [alias: string]: string }
     }
   }
 }
 
+// Learn how to create a Nuxt module on https://nuxt.com/docs/guide/going-further/modules/
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-icon',
@@ -22,7 +26,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {},
-  setup (_options) {
+  setup () {
     const { resolve } = createResolver(import.meta.url)
 
     addComponent({

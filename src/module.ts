@@ -1,20 +1,7 @@
-import { defineNuxtModule, createResolver, addComponent } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addComponent, installModule } from '@nuxt/kit'
+import { defineUntypedSchema } from 'untyped'
 
 export interface ModuleOptions {}
-
-declare module '@nuxt/schema' {
-  interface AppConfigInput {
-    /** nuxt-icon configuration */
-    nuxtIcon?: {
-      /** Default Icon size */
-      size?: string,
-      /** Default Icon class */
-      class?: string,
-      /** Icon name aliases */
-      aliases?: { [alias: string]: string }
-    }
-  }
-}
 
 // Learn how to create a Nuxt module on https://nuxt.com/docs/guide/going-further/modules/
 export default defineNuxtModule<ModuleOptions>({
@@ -26,8 +13,39 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {},
-  setup () {
+  setup (_options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
+
+    // Define types for the app.config compatible with Nuxt Studio
+    nuxt.options.$schema = nuxt.options.$schema || {}
+    nuxt.options.$schema.appConfig = defineUntypedSchema({
+      nuxtIcon: {
+        size: {
+          $default: '',
+          $schema: {
+            description: 'Nuxt Icon class',
+            tags: ['@studio-icon material-symbols:format-size-rounded']
+          }
+        },
+        class: {
+          $default: '',
+          $schema: {
+            description: 'Nuxt Icon class',
+            tags: ['@studio-icon material-symbols:css']
+          }
+        },
+        aliases: {
+          $default: {},
+          $schema: {
+            description: 'Icon name aliases',
+            tags: ['@studio-icon material-symbols:star-rounded'],
+            tsType: '{ [alias: string]: string }'
+          }
+        }
+      }
+    })
+
+    installModule('nuxt-config-schema')
 
     addComponent({
       name: 'Icon',

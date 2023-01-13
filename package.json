@@ -26,7 +26,9 @@
   },
   "dependencies": {
     "@iconify/vue": "^4.0.2",
-    "@nuxt/kit": "^3.0.0"
+    "@nuxt/kit": "^3.0.0",
+    "nuxt-config-schema": "^0.4.0",
+    "untyped": "^1.2.1"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.1.1",

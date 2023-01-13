@@ -24,24 +24,27 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('schema:extend', (schemas) => {
       schemas.push({
         nuxtIcon: {
+          $schema: {
+            description: 'Nuxt Icon',
+          },
           size: {
             $default: '',
             $schema: {
-              description: 'Nuxt Icon class',
+              description: 'Default size',
               tags: ['@studio-icon material-symbols:format-size-rounded'],
             },
           },
           class: {
             $default: '',
             $schema: {
-              description: 'Nuxt Icon class',
+              description: 'Default class',
               tags: ['@studio-icon material-symbols:css'],
             },
           },
           aliases: {
             $default: {},
             $schema: {
-              description: 'Icon name aliases',
+              description: 'Aliases',
               tags: ['@studio-icon material-symbols:star-rounded'],
               tsType: '{ [alias: string]: string }',
             },

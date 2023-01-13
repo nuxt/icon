@@ -26,26 +26,30 @@ export default defineNuxtModule<ModuleOptions>({
         appConfig: {
           nuxtIcon: {
             $schema: {
-              description: 'Nuxt Icon',
+              title: 'Nuxt Icon',
+              description: 'Configure the defaults of Nuxt Icon'
             },
             size: {
               $default: '',
               $schema: {
-                description: 'Default size',
+                title: 'Icon Size',
+                description: 'Set the default icon size',
                 tags: ['@studio-icon material-symbols:format-size-rounded'],
               },
             },
             class: {
               $default: '',
               $schema: {
-                description: 'Default class',
+                title: 'CSS Class',
+                description: 'Set the default CSS class',
                 tags: ['@studio-icon material-symbols:css'],
               },
             },
             aliases: {
               $default: {},
               $schema: {
-                description: 'Aliases',
+                title: 'Icon aliases',
+                description: 'Define Icon aliases to update them easily without code changes.',
                 tags: ['@studio-icon material-symbols:star-rounded'],
                 tsType: '{ [alias: string]: string }',
               },

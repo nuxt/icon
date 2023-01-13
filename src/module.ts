@@ -1,56 +1,62 @@
-import { defineNuxtModule, createResolver, addComponent, installModule } from '@nuxt/kit'
-import { defineUntypedSchema } from 'untyped'
+import {
+  defineNuxtModule,
+  createResolver,
+  addComponent,
+  installModule,
+} from "@nuxt/kit";
+import { defineUntypedSchema } from "untyped";
 
 export interface ModuleOptions {}
 
 // Learn how to create a Nuxt module on https://nuxt.com/docs/guide/going-further/modules/
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-icon',
-    configKey: 'icon',
+    name: "nuxt-icon",
+    configKey: "icon",
     compatibility: {
-      nuxt: '^3.0.0-rc.9'
-    }
+      nuxt: "^3.0.0-rc.9",
+    },
   },
   defaults: {},
-  setup (_options, nuxt) {
-    const { resolve } = createResolver(import.meta.url)
+  setup(_options, nuxt) {
+    const { resolve } = createResolver(import.meta.url);
 
     // Define types for the app.config compatible with Nuxt Studio
-    nuxt.options.$schema = nuxt.options.$schema || {}
-    nuxt.options.$schema.appConfig = defineUntypedSchema({
-      nuxtIcon: {
-        size: {
-          $default: '',
-          $schema: {
-            description: 'Nuxt Icon class',
-            tags: ['@studio-icon material-symbols:format-size-rounded']
-          }
+    nuxt.hook("schema:extend", (schemas) => {
+      schemas.push({
+        nuxtIcon: {
+          size: {
+            $default: "",
+            $schema: {
+              description: "Nuxt Icon class",
+              tags: ["@studio-icon material-symbols:format-size-rounded"],
+            },
+          },
+          class: {
+            $default: "",
+            $schema: {
+              description: "Nuxt Icon class",
+              tags: ["@studio-icon material-symbols:css"],
+            },
+          },
+          aliases: {
+            $default: {},
+            $schema: {
+              description: "Icon name aliases",
+              tags: ["@studio-icon material-symbols:star-rounded"],
+              tsType: "{ [alias: string]: string }",
+            },
+          },
         },
-        class: {
-          $default: '',
-          $schema: {
-            description: 'Nuxt Icon class',
-            tags: ['@studio-icon material-symbols:css']
-          }
-        },
-        aliases: {
-          $default: {},
-          $schema: {
-            description: 'Icon name aliases',
-            tags: ['@studio-icon material-symbols:star-rounded'],
-            tsType: '{ [alias: string]: string }'
-          }
-        }
-      }
-    })
+      });
+    });
 
-    installModule('nuxt-config-schema')
+    installModule("nuxt-config-schema");
 
     addComponent({
-      name: 'Icon',
+      name: "Icon",
       global: true,
-      filePath: resolve('./runtime/Icon.vue')
-    })
-  }
-})
+      filePath: resolve("./runtime/Icon.vue"),
+    });
+  },
+});

@@ -23,30 +23,32 @@ export default defineNuxtModule<ModuleOptions>({
     // Define types for the app.config compatible with Nuxt Studio
     nuxt.hook('schema:extend', (schemas) => {
       schemas.push({
-        nuxtIcon: {
-          $schema: {
-            description: 'Nuxt Icon',
-          },
-          size: {
-            $default: '',
+        appConfig: {
+          nuxtIcon: {
             $schema: {
-              description: 'Default size',
-              tags: ['@studio-icon material-symbols:format-size-rounded'],
+              description: 'Nuxt Icon',
             },
-          },
-          class: {
-            $default: '',
-            $schema: {
-              description: 'Default class',
-              tags: ['@studio-icon material-symbols:css'],
+            size: {
+              $default: '',
+              $schema: {
+                description: 'Default size',
+                tags: ['@studio-icon material-symbols:format-size-rounded'],
+              },
             },
-          },
-          aliases: {
-            $default: {},
-            $schema: {
-              description: 'Aliases',
-              tags: ['@studio-icon material-symbols:star-rounded'],
-              tsType: '{ [alias: string]: string }',
+            class: {
+              $default: '',
+              $schema: {
+                description: 'Default class',
+                tags: ['@studio-icon material-symbols:css'],
+              },
+            },
+            aliases: {
+              $default: {},
+              $schema: {
+                description: 'Aliases',
+                tags: ['@studio-icon material-symbols:star-rounded'],
+                tsType: '{ [alias: string]: string }',
+              },
             },
           },
         },

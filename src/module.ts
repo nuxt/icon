@@ -34,7 +34,7 @@ export default defineNuxtModule<ModuleOptions>({
               $schema: {
                 title: 'Icon Size',
                 description: 'Set the default icon size',
-                tags: ['@studio-icon material-symbols:format-size-rounded'],
+                tags: ['@studioIcon material-symbols:format-size-rounded'],
               },
             },
             class: {
@@ -42,7 +42,7 @@ export default defineNuxtModule<ModuleOptions>({
               $schema: {
                 title: 'CSS Class',
                 description: 'Set the default CSS class',
-                tags: ['@studio-icon material-symbols:css'],
+                tags: ['@studioIcon material-symbols:css'],
               },
             },
             aliases: {
@@ -50,7 +50,10 @@ export default defineNuxtModule<ModuleOptions>({
               $schema: {
                 title: 'Icon aliases',
                 description: 'Define Icon aliases to update them easily without code changes.',
-                tags: ['@studio-icon material-symbols:star-rounded'],
+                tags: [
+                  '@studioIcon material-symbols:star-rounded',
+                  '@studioInputObjectValueType icon'
+                ],
                 tsType: '{ [alias: string]: string }',
               },
             },

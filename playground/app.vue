@@ -5,6 +5,7 @@
       <Icon name="uil:github" />
       <Icon name="uil:github" size="24" />
       <Icon name="uil:github" size="48" />
+      <Icon name="" />
     </p>
     <p>
       Custom component:

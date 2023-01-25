@@ -7,11 +7,20 @@ import { loadIcon } from '@iconify/vue'
 import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#imports'
 import type { AppConfig } from '@nuxt/schema'
 
+type AliasesKeys =
+  AppConfig extends undefined ?
+  // @ts-expect-error - Key might be missing
+  never : AppConfig['nuxtIcon'] extends undefined ?
+  // @ts-expect-error - Key might be missing
+  never : AppConfig['nuxtIcon']['aliases'] extends undefined ?
+  // @ts-expect-error - Key might be missing
+  never : Extract<keyof AppConfig['nuxtIcon']['aliases'], string>
+
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig() as any
 const props = defineProps({
   name: {
-    type: String as PropType<keyof AppConfig['nuxtIcon']['aliases'] | (string & {})>,
+    type: String as PropType<AliasesKeys | (string & {})>,
     required: true
   },
   size: {

@@ -32,6 +32,7 @@
   "devDependencies": {
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/module-builder": "latest",
+    "@types/node": "^18.11.18",
     "eslint": "latest",
     "nuxt": "^3.1.0",
     "release-it": "^15.6.0",

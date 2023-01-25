@@ -1,15 +1,17 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon } from '@iconify/vue'
 import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#imports'
+import type { AppConfig } from '@nuxt/schema'
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig() as any
 const props = defineProps({
   name: {
-    type: String,
+    type: String as PropType<keyof AppConfig['nuxtIcon']['aliases'] | (string & {})>,
     required: true
   },
   size: {

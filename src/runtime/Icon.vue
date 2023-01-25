@@ -5,13 +5,18 @@ import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon } from '@iconify/vue'
 import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#imports'
-import type { AppConfig } from '@nuxt/schema'
 
 const nuxtApp = useNuxtApp()
-const appConfig = useAppConfig() as any
+const appConfig = useAppConfig()
+
+// @ts-ignore
+const aliases = appConfig?.nuxtIcon?.aliases || {}
+
+type AliasesKeys = keyof typeof aliases
+
 const props = defineProps({
   name: {
-    type: String as PropType<keyof AppConfig['nuxtIcon']['aliases'] | (string & {})>,
+    type: String as PropType<AliasesKeys | (string & {})>,
     required: true
   },
   size: {
@@ -19,9 +24,10 @@ const props = defineProps({
     default: ''
   }
 })
+
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
-const iconName = computed(() => (appConfig.nuxtIcon?.aliases || {})[props.name] || props.name)
+const iconName = computed(() => ((appConfig as any)?.nuxtIcon?.aliases || {})[props.name] || props.name)
 const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
 const component = computed(() => nuxtApp.vueApp.component(iconName.value))
 const sSize = computed(() => {
@@ -31,7 +37,7 @@ const sSize = computed(() => {
   }
   return size
 })
-const className = computed(() => appConfig.nuxtIcon?.class ?? 'icon')
+const className = computed(() => (appConfig as any)?.nuxtIcon?.class ?? 'icon')
 
 async function loadIconComponent () {
   if (component.value) {

@@ -30,11 +30,12 @@ export default defineNuxtModule<ModuleOptions>({
               description: 'Configure the defaults of Nuxt Icon'
             },
             size: {
-              $default: '',
+              $default: '1em',
               $schema: {
                 title: 'Icon Size',
-                description: 'Set the default icon size',
+                description: 'Set the default icon size. Set to false to disable the sizing of icon in style.',
                 tags: ['@studioIcon material-symbols:format-size-rounded'],
+                tsType: 'string | false'
               },
             },
             class: {

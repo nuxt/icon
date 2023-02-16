@@ -29,6 +29,10 @@ const iconName = computed(() => ((appConfig as any)?.nuxtIcon?.aliases || {})[pr
 const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
 const component = computed(() => nuxtApp.vueApp.component(iconName.value))
 const sSize = computed(() => {
+  // Disable size if appConfig.nuxtIcon.size === false
+  if (!props.size && typeof appConfig.nuxtIcon?.size === 'boolean' && !appConfig.nuxtIcon?.size) {
+    return undefined
+  }
   const size = props.size || appConfig.nuxtIcon?.size || '1em'
   if (String(Number(size)) === size) {
     return `${size}px`

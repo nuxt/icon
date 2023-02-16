@@ -21,6 +21,10 @@ const props = defineProps({
 const iconName = computed(() => ((appConfig as any)?.nuxtIcon?.aliases || {})[props.name] || props.name)
 const iconUrl = computed(() => `url('https://api.iconify.design/${iconName.value.replace(':', '/')}.svg')`)
 const sSize = computed(() => {
+  // Disable size if appConfig.nuxtIcon.size === false
+  if (!props.size && typeof appConfig.nuxtIcon?.size === 'boolean' && !appConfig.nuxtIcon?.size) {
+    return undefined
+  }
   const size = props.size || appConfig.nuxtIcon?.size || '1em'
   if (String(Number(size)) === size) {
     return `${size}px`

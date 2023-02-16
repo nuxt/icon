@@ -135,6 +135,8 @@ You can use aliases in `<IconCSS>` as well.
 
 Note that CSS Masks have limited support, see https://caniuse.com/css-masks for more information.
 
+Also, the icons won't be loaded on initial load and an HTTP request will be made to Iconify CDN to load them.
+
 
 ## Contributing 🙏
 

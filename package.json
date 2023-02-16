@@ -30,6 +30,7 @@
     "nuxt-config-schema": "^0.4.4"
   },
   "devDependencies": {
+    "@nuxt/devtools": "^0.1.3",
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/module-builder": "latest",
     "@types/node": "^18.13.0",

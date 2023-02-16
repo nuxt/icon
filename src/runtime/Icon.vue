@@ -8,8 +8,6 @@ import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#impor
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig()
-
-// @ts-ignore
 const aliases = appConfig?.nuxtIcon?.aliases || {}
 
 type AliasesKeys = keyof typeof aliases

@@ -69,6 +69,11 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
       filePath: resolve('./runtime/Icon.vue'),
     })
+    addComponent({
+      name: 'IconCSS',
+      global: true,
+      filePath: resolve('./runtime/IconCSS.vue'),
+    })
 
     // @ts-expect-error - private API
     nuxt.hook('devtools:customTabs', (iframeTabs) => {
@@ -81,6 +86,5 @@ export default defineNuxtModule<ModuleOptions>({
           src: 'https://icones.js.org',
         },
       })
-    })
-  },
+  })
 })

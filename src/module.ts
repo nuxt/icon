@@ -69,5 +69,10 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
       filePath: resolve('./runtime/Icon.vue'),
     })
+    addComponent({
+      name: 'IconCSS',
+      global: true,
+      filePath: resolve('./runtime/IconCSS.vue'),
+    })
   },
 })

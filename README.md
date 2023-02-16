@@ -121,6 +121,21 @@ const MyIcon = h(Icon, { name: 'uil:twitter' })
 </template>
 ```
 
+## CSS Icons
+
+This is currently experimental and may change in the future, this is a way to use CSS icons instead of SVG icons to reduce the DOM size and improve performance. It is leveraging the Mask combined with background color set to `currentColor`, useful to render monotone icons that use `currentColor` as icon color. Learn more on https://docs.iconify.design/icon-components/css.html
+
+```vue
+<template>
+  <IconCSS name="uil:twitter" />
+</template>
+```
+
+You can use aliases in `<IconCSS>` as well.
+
+Note that CSS Masks have limited support, see https://caniuse.com/css-masks for more information.
+
+
 ## Contributing 🙏
 
 1. Clone this repository

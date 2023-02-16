@@ -83,8 +83,9 @@ export default defineNuxtModule<ModuleOptions>({
         icon: 'i-arcticons-iconeration',
         view: {
           type: 'iframe',
-          src: 'https://icones.js.org',
-        },
+          src: 'https://icones.js.org'
+        }
       })
-  })
+    })
+  }
 })

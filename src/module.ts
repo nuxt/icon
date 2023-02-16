@@ -69,5 +69,18 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
       filePath: resolve('./runtime/Icon.vue'),
     })
+
+    // @ts-expect-error - private API
+    nuxt.hook('devtools:customTabs', (iframeTabs) => {
+      iframeTabs.push({
+        name: 'icones',
+        title: 'Icônes',
+        icon: 'i-arcticons-iconeration',
+        view: {
+          type: 'iframe',
+          src: 'https://icones.js.org',
+        },
+      })
+    })
   },
 })

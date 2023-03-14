@@ -25,7 +25,7 @@ const props = defineProps({
 
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
-const iconName = computed(() => ((appConfig as any)?.nuxtIcon?.aliases || {})[props.name] || props.name)
+const iconName = computed(() => (appConfig.nuxtIcon?.aliases || {})[props.name] || props.name)
 const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
 const component = computed(() => nuxtApp.vueApp.component(iconName.value))
 const sSize = computed(() => {

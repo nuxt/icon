@@ -3,6 +3,7 @@
   "version": "0.3.2",
   "license": "MIT",
   "type": "module",
+  "repository": "nuxt-modules/icon",
   "exports": {
     ".": {
       "import": "./dist/module.mjs",

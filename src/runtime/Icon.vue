@@ -8,7 +8,6 @@ import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#impor
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig()
-// @ts-ignore
 const aliases = appConfig?.nuxtIcon?.aliases || {}
 
 type AliasesKeys = keyof typeof aliases
@@ -26,9 +25,9 @@ const props = defineProps({
 
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
-const iconName = computed(() => ((appConfig as any)?.nuxtIcon?.aliases || {})[props.name] || props.name)
+const iconName = computed(() => (appConfig.nuxtIcon?.aliases || {})[props.name] || props.name)
 const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
-const component = computed(() => nuxtApp.vueApp.component(iconName.value))
+const component = computed(() => nuxtApp.vueApp.component(iconName.value as string))
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false
   // @ts-ignore
@@ -50,7 +49,7 @@ async function loadIconComponent () {
   }
   if (!state.value?.[iconName.value]) {
     isFetching.value = true
-    state.value[iconName.value] = await loadIcon(iconName.value).catch(() => undefined)
+    state.value[iconName.value] = await loadIcon(iconName.value as string).catch(() => undefined)
     isFetching.value = false
   }
 }

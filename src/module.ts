@@ -5,7 +5,11 @@ import {
   installModule,
 } from '@nuxt/kit'
 
-export interface ModuleOptions {}
+export interface ModuleOptions {
+  size?: string | false
+  class?: string
+  aliases?: { [alias: string]: string }
+}
 
 // Learn how to create a Nuxt module on https://nuxt.com/docs/guide/going-further/modules/
 export default defineNuxtModule<ModuleOptions>({

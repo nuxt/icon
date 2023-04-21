@@ -13,7 +13,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-icon',
     configKey: 'icon',
     compatibility: {
-      nuxt: '^3.0.0-rc.9',
+      nuxt: '^3.0.0',
     },
   },
   defaults: {},
@@ -63,8 +63,6 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
-    installModule('nuxt-config-schema')
-
     addComponent({
       name: 'Icon',
       global: true,
@@ -76,7 +74,6 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolve('./runtime/IconCSS.vue'),
     })
 
-    // @ts-expect-error - private API
     nuxt.hook('devtools:customTabs', (iframeTabs) => {
       iframeTabs.push({
         name: 'icones',

@@ -13,7 +13,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-icon',
     configKey: 'icon',
     compatibility: {
-      nuxt: '^3.0.0-rc.9',
+      nuxt: '^3.1.0',
     },
   },
   defaults: {},
@@ -62,8 +62,6 @@ export default defineNuxtModule<ModuleOptions>({
         },
       })
     })
-
-    installModule('nuxt-config-schema')
 
     addComponent({
       name: 'Icon',

@@ -26,19 +26,19 @@
     "release": "release-it"
   },
   "dependencies": {
-    "@iconify/vue": "^4.1.0",
-    "@nuxt/kit": "^3.3.1"
+    "@iconify/vue": "^4.1.1",
+    "@nuxt/kit": "^3.4.2"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.2.5",
+    "@nuxt/devtools": "^0.4.1",
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/module-builder": "latest",
-    "@types/node": "^18.15.3",
+    "@types/node": "^18.15.13",
     "eslint": "latest",
-    "nuxt": "^3.3.1",
-    "release-it": "^15.8.0",
-    "typescript": "^5.0.2",
-    "vue-tsc": "^1.2.0"
+    "nuxt": "^3.4.2",
+    "release-it": "^15.10.1",
+    "typescript": "^5.0.4",
+    "vue-tsc": "^1.4.2"
   },
   "release-it": {
     "git": {

@@ -4,7 +4,8 @@ import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon } from '@iconify/vue'
-import { useNuxtApp, useState, ref, useAppConfig, computed, watch } from '#imports'
+import { ref, computed, watch } from 'vue'
+import { useAppConfig, useNuxtApp, useState } from '#imports'
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig()

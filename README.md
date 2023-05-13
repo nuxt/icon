@@ -50,6 +50,7 @@ That's it, you can now use the `<Icon />` in your components!
 **Props:**
 - `name` (required): icon name, emoji or global component name
 - `size`: icon size (default: `1em`)
+- `color`: svg path color
 
 ### Iconify dataset
 

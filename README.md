@@ -50,7 +50,14 @@ That's it, you can now use the `<Icon />` in your components!
 **Props:**
 - `name` (required): icon name, emoji or global component name
 - `size`: icon size (default: `1em`)
-- `color`: svg path color
+
+**Attributes**:
+
+When using an icone from Iconify, an `<svg>` will be created, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the navite element.
+
+```html
+<Icon name="uil:github" color="black" />
+```
 
 ### Iconify dataset
 

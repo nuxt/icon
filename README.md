@@ -79,7 +79,7 @@ You can use any name from the https://icones.js.org collection:
 <Icon name="NuxtIcon" />
 ```
 
-Note that `NuxtIcon` needs to be inside `components/global/` folder (see [example](./playground/components/global/NuxtIcon.vue)).
+Note that `NuxtIcon` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtIcon.vue)).
 
 ## Configuration ⚙️
 
@@ -152,7 +152,7 @@ Also, the icons won't be loaded on initial load and an HTTP request will be made
 1. Clone this repository
 2. Install dependencies using `pnpm install` (install `pnpm` with `corepack enable`, [learn more](https://pnpm.io/installation#using-corepack))
 3. Run `npm run dev:prepare` to generate type stubs.
-4. Use `npm run dev` to start [playground](./playground) in development mode.
+4. Use `npm run dev` to start [playground](https://github.com/nuxt-modules/icon/tree/main/playground) in development mode.
 
 ## Credits 💌
 
@@ -161,7 +161,7 @@ Also, the icons won't be loaded on initial load and an HTTP request will be made
 
 ## License 📎
 
-[MIT License](./LICENSE)
+[MIT License](https://github.com/nuxt-modules/icon/blob/main/LICENSE)
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-icon/latest.svg?style=flat&colorA=18181B&colorB=28CF8D

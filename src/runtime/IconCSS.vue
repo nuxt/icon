@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useAppConfig, computed } from '#imports'
+import { computed } from 'vue'
+import { useAppConfig } from '#imports'
 
 const appConfig = useAppConfig()
 const aliases = appConfig?.nuxtIcon?.aliases || {}

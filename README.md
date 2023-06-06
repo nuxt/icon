@@ -53,7 +53,7 @@ That's it, you can now use the `<Icon />` in your components!
 
 **Attributes**:
 
-When using an icone from Iconify, an `<svg>` will be created, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the navite element.
+When using an icone from Iconify, an `<svg>` will be created, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the native element.
 
 ```html
 <Icon name="uil:github" color="black" />

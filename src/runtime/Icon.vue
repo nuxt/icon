@@ -64,7 +64,7 @@ watch(() => iconName.value, loadIconComponent)
   <span v-if="isFetching" :class="className" :width="sSize" :height="sSize" />
   <Iconify v-else-if="icon" :icon="icon" :class="className" :width="sSize" :height="sSize" />
   <Component :is="component" v-else-if="component" :class="className" :width="sSize" :height="sSize" />
-  <span v-else :class="className" :style="{ fontSize: sSize, lineHeight: sSize, width: sSize, height: sSize }">{{ name }}</span>
+  <span v-else :class="className" :style="{ fontSize: sSize, lineHeight: sSize, width: sSize, height: sSize }"><slot>{{ name }}</slot></span>
 </template>
 
 <style scoped>

@@ -31,6 +31,11 @@
       <IconCSS name="uil:github" size="48" />
       <IconCSS name="nuxt" size="48" style="color: #00DC82;" />
     </p>
+    <p>
+      Failing:
+      <Icon name="uil:bad">☀️</Icon>
+      <Icon name="uil:bad" />
+    </p>
   </div>
 </template>
 

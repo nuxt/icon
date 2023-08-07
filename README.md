@@ -67,6 +67,8 @@ You can use any name from the https://icones.js.org collection:
 <Icon name="uil:github" />
 ```
 
+It supports the `i-` prefix (for example `i-uil-github`).
+
 ### Emoji
 
 ```html

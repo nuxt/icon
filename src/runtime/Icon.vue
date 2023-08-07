@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon } from '@iconify/vue'
@@ -9,13 +8,10 @@ import { useAppConfig, useNuxtApp, useState } from '#imports'
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig()
-const aliases = appConfig?.nuxtIcon?.aliases || {}
-
-type AliasesKeys = keyof typeof aliases
 
 const props = defineProps({
   name: {
-    type: String as PropType<AliasesKeys | (string & {})>,
+    type: String,
     required: true
   },
   size: {
@@ -26,7 +22,7 @@ const props = defineProps({
 
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
-const iconName = computed(() => (appConfig.nuxtIcon?.aliases || {})[props.name] || props.name)
+const iconName = computed(() => ((appConfig.nuxtIcon?.aliases || {})[props.name] || props.name).replace(/^i-/, ''))
 const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
 const component = computed(() => nuxtApp.vueApp.component(iconName.value as string))
 const sSize = computed(() => {

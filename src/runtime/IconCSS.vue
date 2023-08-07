@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useAppConfig } from '#imports'
 
 const appConfig = useAppConfig()
-const aliases = appConfig?.nuxtIcon?.aliases || {}
-
-type AliasesKeys = keyof typeof aliases
 
 const props = defineProps({
   name: {
-    type: String as PropType<AliasesKeys | (string & {})>,
+    type: String,
     required: true
   },
   size: {
@@ -19,7 +15,7 @@ const props = defineProps({
   }
 })
 
-const iconName = computed(() => ((appConfig as any)?.nuxtIcon?.aliases || {})[props.name] || props.name)
+const iconName = computed(() => ((appConfig.nuxtIcon?.aliases || {})[props.name] || props.name).replace(/^i-/, ''))
 const iconUrl = computed(() => `url('https://api.iconify.design/${iconName.value.replace(':', '/')}.svg')`)
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false

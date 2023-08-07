@@ -1,4 +1,4 @@
-![nuxt-icon](https://user-images.githubusercontent.com/904724/188514727-e252b825-be56-43bb-a044-5a97f9a3badc.png)
+![nuxt-icon](https://github.com/nuxt-modules/icon/assets/904724/3e36ab37-bb8c-4cc5-a8fa-55be6993bcfd)
 
 # Nuxt Icon
 
@@ -169,7 +169,7 @@ Also, the icons won't be loaded on initial load and an HTTP request will be made
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-icon/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/nuxt-icon
 
-[npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-icon.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-icon.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-downloads-href]: https://npmjs.com/package/nuxt-icon
 
 [license-src]: https://img.shields.io/github/license/nuxt-modules/icon.svg?style=flat&colorA=18181B&colorB=28CF8D

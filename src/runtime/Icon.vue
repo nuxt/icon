@@ -7,7 +7,13 @@ import { ref, computed, watch } from 'vue'
 import { useAppConfig, useNuxtApp, useState } from '#imports'
 
 const nuxtApp = useNuxtApp()
-const appConfig = useAppConfig()
+const appConfig = useAppConfig() as {
+  nuxtIcon: {
+    size?: string
+    class?: string
+    aliases?: Record<string, string>
+  }
+}
 
 const props = defineProps({
   name: {
@@ -22,7 +28,13 @@ const props = defineProps({
 
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
-const iconName = computed(() => ((appConfig.nuxtIcon?.aliases || {})[props.name] || props.name).replace(/^i-/, ''))
+const iconName = computed(() => {
+  if (appConfig.nuxtIcon.aliases && appConfig.nuxtIcon.aliases[props.name]) {
+    return appConfig.nuxtIcon.aliases[props.name].replace(/^i-/, '')
+  }
+
+  return props.name.replace(/^i-/, '')
+})
 const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
 const component = computed(() => nuxtApp.vueApp.component(iconName.value as string))
 const sSize = computed(() => {

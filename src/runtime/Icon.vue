@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
-import { loadIcon } from '@iconify/vue'
+import { loadIcon, addAPIProvider } from '@iconify/vue'
 import { ref, computed, watch } from 'vue'
 import { useAppConfig, useNuxtApp, useState } from '#imports'
 
@@ -19,6 +19,32 @@ const props = defineProps({
     default: ''
   }
 })
+
+watch(() => appConfig.nuxtIcon?.iconifyApiOptions, () => {
+  if (!appConfig.nuxtIcon?.iconifyApiOptions?.url) return
+
+  // validate the custom Iconify API URL
+  try {
+    new URL(appConfig.nuxtIcon.iconifyApiOptions.url)
+  } catch (e) {
+    console.warn('Nuxt Icon: Invalid custom Iconify API URL')
+    return
+  }
+
+  // don't override the default public api if publicApiFallback is enabled. See more: https://iconify.design/docs/api/providers.html
+  if (appConfig.nuxtIcon?.iconifyApiOptions?.publicApiFallback) {
+    addAPIProvider('custom', {
+      resources: [appConfig.nuxtIcon?.iconifyApiOptions.url],
+      index: 0
+    })
+    return
+  }
+
+  // override the default public api to force the use of the custom API
+  addAPIProvider('', {
+    resources: [appConfig.nuxtIcon?.iconifyApiOptions.url],
+  })
+}, { immediate: true })
 
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)

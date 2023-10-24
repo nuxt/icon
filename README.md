@@ -110,6 +110,23 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 <Icon name="nuxt" />
 ```
 
+By default, this module will fetch the Icons from [the official Iconify API](https://api.iconify.design). You can change this behavior by setting the `nuxtIcon.iconifyApiOptions.url` property to [your own Iconify API](https://iconify.design/docs/api/hosting.html).
+
+You can also set `nuxtIcon.iconifyApiOptions.publicApiFallback` to `true` to use the public API as a fallback (only for the `<Icon>` component, not for the `<IconCSS>` component`)
+
+```ts
+// app.config.ts
+export default defineAppConfig({
+  nuxtIcon: {
+    // ...
+    iconifyApiOptions: {
+      url: 'https://<your-api-url>',
+      publicApiFallback: true // default: false
+    }
+  }
+})
+```
+
 ## Render Function
 
 You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:

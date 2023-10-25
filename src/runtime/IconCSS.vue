@@ -2,7 +2,13 @@
 import { computed } from 'vue'
 import { useAppConfig } from '#imports'
 
-const appConfig = useAppConfig()
+const appConfig = useAppConfig() as {
+  nuxtIcon: {
+    size?: string
+    class?: string
+    aliases?: Record<string, string>
+  }
+}
 
 const props = defineProps({
   name: {
@@ -15,7 +21,13 @@ const props = defineProps({
   }
 })
 
-const iconName = computed(() => ((appConfig.nuxtIcon?.aliases || {})[props.name] || props.name).replace(/^i-/, ''))
+const iconName = computed(() => {
+  if (appConfig.nuxtIcon.aliases && appConfig.nuxtIcon.aliases[props.name]) {
+    return appConfig.nuxtIcon.aliases[props.name].replace(/^i-/, '')
+  }
+
+  return props.name.replace(/^i-/, '')
+})
 const iconUrl = computed(() => `url('https://api.iconify.design/${iconName.value.replace(':', '/')}.svg')`)
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false

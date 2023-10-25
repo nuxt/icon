@@ -57,6 +57,22 @@ export default defineNuxtModule<ModuleOptions>({
                 tsType: '{ [alias: string]: string }',
               },
             },
+            iconifyApiOptions: {
+              url: {
+                $default: 'https://api.iconify.design',
+                $schema: {
+                  title: 'Iconify API URL',
+                  description: 'Define a custom Iconify API URL. Useful if you want to use a self-hosted Iconify API. Learn more: https://iconify.design/docs/api/',
+                },
+              },
+              publicApiFallback: {
+                $default: false,
+                $schema: {
+                  title: 'Public Iconify API fallback',
+                  description: 'Define, if the public Iconify API should be used as fallback if the .',
+                },
+              },
+            },
           },
         },
       })

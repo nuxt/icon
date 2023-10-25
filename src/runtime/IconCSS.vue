@@ -7,6 +7,10 @@ const appConfig = useAppConfig() as {
     size?: string
     class?: string
     aliases?: Record<string, string>
+    iconifyApiOptions?: {
+      url?: string
+      publicApiFallback?: boolean
+    }
   }
 }
 
@@ -28,7 +32,23 @@ const iconName = computed(() => {
 
   return props.name.replace(/^i-/, '')
 })
-const iconUrl = computed(() => `url('https://api.iconify.design/${iconName.value.replace(':', '/')}.svg')`)
+const iconUrl = computed(() => {
+  const customUrl = appConfig.nuxtIcon?.iconifyApiOptions?.url
+
+  if (customUrl) {
+    // validate the custom Iconify API URL
+    try {
+      new URL(customUrl)
+    } catch (e) {
+      console.warn('Nuxt IconCSS: Invalid custom Iconify API URL')
+      return
+    }
+  }
+
+  const baseUrl = customUrl || 'https://api.iconify.design'
+
+  return `url('${baseUrl}/${iconName.value.replace(':', '/')}.svg')`
+})
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false
   if (!props.size && typeof appConfig.nuxtIcon?.size === 'boolean' && !appConfig.nuxtIcon?.size) {

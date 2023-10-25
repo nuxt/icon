@@ -7,6 +7,10 @@ const appConfig = useAppConfig() as {
     size?: string
     class?: string
     aliases?: Record<string, string>
+    iconifyApiOptions?: {
+      url?: string
+      publicApiFallback?: boolean
+    }
   }
 }
 

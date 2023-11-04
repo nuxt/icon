@@ -5,6 +5,7 @@ import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon, addAPIProvider } from '@iconify/vue'
 import { ref, computed, watch } from 'vue'
 import { useAppConfig, useNuxtApp, useState } from '#imports'
+import { resolveIconName } from './utils'
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig() as {
@@ -59,14 +60,15 @@ watch(() => appConfig.nuxtIcon?.iconifyApiOptions, () => {
 const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => ({}))
 const isFetching = ref(false)
 const iconName = computed(() => {
-  if (appConfig.nuxtIcon?.aliases?.[props.name]) {
-    return appConfig.nuxtIcon.aliases[props.name].replace(/^i-/, '')
+  let name = props.name
+  if (appConfig.nuxtIcon?.aliases?.[name]) {
+    name = appConfig.nuxtIcon.aliases[name]
   }
 
-  return props.name.replace(/^i-/, '')
+  return resolveIconName(name)
 })
-const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value])
-const component = computed(() => nuxtApp.vueApp.component(iconName.value as string))
+const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value.name])
+const component = computed(() => nuxtApp.vueApp.component(iconName.value.name))
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false
   // @ts-ignore
@@ -86,14 +88,14 @@ async function loadIconComponent () {
   if (component.value) {
     return
   }
-  if (!state.value?.[iconName.value]) {
+  if (!state.value?.[iconName.value.name]) {
     isFetching.value = true
-    state.value[iconName.value] = await loadIcon(iconName.value as string).catch(() => undefined)
+    state.value[iconName.value.name] = await loadIcon({ provider: '', ...iconName.value }).catch(() => undefined)
     isFetching.value = false
   }
 }
 
-watch(() => iconName.value, loadIconComponent)
+watch(iconName, loadIconComponent)
 
 !component.value && await loadIconComponent()
 </script>

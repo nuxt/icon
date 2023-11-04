@@ -2,7 +2,9 @@ import {
   defineNuxtModule,
   createResolver,
   addComponent,
+  addTemplate
 } from '@nuxt/kit'
+import { collections } from '@iconify/collections'
 
 export interface ModuleOptions {}
 
@@ -16,7 +18,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   defaults: {},
-  setup(_options, nuxt) {
+  setup (_options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
     // Define types for the app.config compatible with Nuxt Studio
@@ -88,6 +90,17 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
       filePath: resolve('./runtime/IconCSS.vue'),
     })
+
+
+    // Add Iconify collections & sort by longest first
+    const iconCollections = Object.keys(collections).sort((a, b) => b.length - a.length)
+    const template = addTemplate({
+      filename: 'icon-collections.mjs',
+      getContents: () => `export default ${JSON.stringify(iconCollections)}`,
+      write: true
+    })
+    // Add alias to `#icon-collections`
+    nuxt.options.alias['#icon-collections'] = template.dst
 
     nuxt.hook('devtools:customTabs', (iframeTabs) => {
       iframeTabs.push({

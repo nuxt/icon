@@ -4,7 +4,8 @@ import {
   addComponent,
   addTemplate
 } from '@nuxt/kit'
-import { collections } from '@iconify/collections'
+// @ts-ignore
+import iconifyCollections from '@iconify/collections/collections.json' assert { type: 'json' }
 
 export interface ModuleOptions {}
 
@@ -93,7 +94,7 @@ export default defineNuxtModule<ModuleOptions>({
 
 
     // Add Iconify collections & sort by longest first
-    const iconCollections = Object.keys(collections).sort((a, b) => b.length - a.length)
+    const iconCollections = Object.keys(iconifyCollections).sort((a, b) => b.length - a.length)
     const template = addTemplate({
       filename: 'icon-collections.mjs',
       getContents: () => `export default ${JSON.stringify(iconCollections)}`,

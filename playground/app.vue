@@ -26,10 +26,14 @@
     </p>
     <p>
       CSS:
-      <IconCSS name="i-uil-github" />
       <IconCSS name="uil:github" size="24" />
       <IconCSS name="uil:github" size="48" />
       <IconCSS name="nuxt" size="48" style="color: #00DC82;" />
+    </p>
+    <p>
+      `i-` syntax:
+      <Icon name="i-fluent-emoji-high-contrast-1st-place-medal" />
+      <IconCSS name="i-fluent-emoji-high-contrast-1st-place-medal" />
     </p>
     <p>
       Failing:
@@ -37,6 +41,9 @@
         ☀️
       </Icon>
       <Icon name="uil:bad" />
+      <IconCSS name="uil:bad" />
+      <Icon name="i-uil-bad" />
+      <IconCSS name="i-uil-bad" />
     </p>
   </div>
 </template>

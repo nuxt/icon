@@ -45,6 +45,11 @@
       <Icon name="i-uil-bad" />
       <IconCSS name="i-uil-bad" />
     </p>
+    <p>
+      Specials:
+      <Icon name="i-ph-code" />
+      <Icon name="ph:table" />
+    </p>
   </div>
 </template>
 

@@ -4,8 +4,8 @@ import {
   addComponent,
   addTemplate
 } from '@nuxt/kit'
-// @ts-ignore
-import iconifyCollections from '@iconify/collections/collections.json' assert { type: 'json' }
+import { addCustomTab } from '@nuxt/devtools-kit'
+const iconifyCollections = require('@iconify/collections/collections.json')
 
 export interface ModuleOptions {}
 
@@ -103,16 +103,14 @@ export default defineNuxtModule<ModuleOptions>({
     // Add alias to `#icon-collections`
     nuxt.options.alias['#icon-collections'] = template.dst
 
-    nuxt.hook('devtools:customTabs', (iframeTabs) => {
-      iframeTabs.push({
-        name: 'icones',
-        title: 'Icônes',
-        icon: 'i-arcticons-iconeration',
-        view: {
-          type: 'iframe',
-          src: 'https://icones.js.org'
-        }
-      })
+    addCustomTab({
+      name: 'icones',
+      title: 'Icônes',
+      icon: 'i-arcticons-iconeration',
+      view: {
+        type: 'iframe',
+        src: 'https://icones.js.org'
+      }
     })
   }
 })

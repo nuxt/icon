@@ -67,8 +67,9 @@ const iconName = computed(() => {
 
   return resolveIconName(name)
 })
-const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconName.value.name])
-const component = computed(() => nuxtApp.vueApp.component(iconName.value.name))
+const iconKey = computed(() => `${iconName.value.prefix}:${iconName.value.name}`)
+const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconKey.value])
+const component = computed(() => nuxtApp.vueApp.component(props.name))
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false
   // @ts-ignore
@@ -88,9 +89,9 @@ async function loadIconComponent () {
   if (component.value) {
     return
   }
-  if (!state.value?.[iconName.value.name]) {
+  if (!state.value?.[iconKey.value]) {
     isFetching.value = true
-    state.value[iconName.value.name] = await loadIcon({ provider: '', ...iconName.value }).catch(() => undefined)
+    state.value[iconKey.value] = await loadIcon({ provider: '', ...iconName.value }).catch(() => undefined)
     isFetching.value = false
   }
 }

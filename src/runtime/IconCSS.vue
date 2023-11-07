@@ -27,13 +27,12 @@ const props = defineProps({
 })
 
 const iconName = computed(() => {
-  let name = props.name
-  if (appConfig.nuxtIcon?.aliases?.[name]) {
-    name = appConfig.nuxtIcon.aliases[name]
+  if (appConfig.nuxtIcon?.aliases?.[props.name]) {
+    return appConfig.nuxtIcon.aliases[props.name]
   }
-
-  return resolveIconName(name)
+  return props.name
 })
+const resolvedIcon = computed(() => resolveIconName(iconName.value))
 const iconUrl = computed(() => {
   const customUrl = appConfig.nuxtIcon?.iconifyApiOptions?.url
 
@@ -48,7 +47,7 @@ const iconUrl = computed(() => {
   }
 
   const baseUrl = customUrl || 'https://api.iconify.design'
-  return `url('${baseUrl}/${iconName.value.prefix}/${iconName.value.name}.svg')`
+  return `url('${baseUrl}/${resolvedIcon.value.prefix}/${resolvedIcon.value.name}.svg')`
 })
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false

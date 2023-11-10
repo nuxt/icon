@@ -29,7 +29,7 @@ export default defineNuxtModule<ModuleOptions>({
           nuxtIcon: {
             $schema: {
               title: 'Nuxt Icon',
-              description: 'Configure the defaults of Nuxt Icon'
+              description: 'Configure Nuxt Icon module preferences.'
             },
             size: {
               $default: '1em',
@@ -44,7 +44,7 @@ export default defineNuxtModule<ModuleOptions>({
               $default: '',
               $schema: {
                 title: 'CSS Class',
-                description: 'Set the default CSS class',
+                description: 'Set the default CSS class.',
                 tags: ['@studioIcon material-symbols:css'],
               },
             },
@@ -54,25 +54,36 @@ export default defineNuxtModule<ModuleOptions>({
                 title: 'Icon aliases',
                 description: 'Define Icon aliases to update them easily without code changes.',
                 tags: [
-                  '@studioIcon material-symbols:star-rounded',
-                  '@studioInputObjectValueType icon'
+                  '@studioIcon material-symbols:star-rounded'
                 ],
                 tsType: '{ [alias: string]: string }',
               },
             },
             iconifyApiOptions: {
+              $schema: {
+                  title: 'Iconify API Options',
+                  description: 'Define preferences for Iconify API fetch.',
+                  tags: [
+                    '@studioIcon material-symbols:tv-options-input-settings'
+                  ],
               url: {
                 $default: 'https://api.iconify.design',
                 $schema: {
                   title: 'Iconify API URL',
-                  description: 'Define a custom Iconify API URL. Useful if you want to use a self-hosted Iconify API. Learn more: https://iconify.design/docs/api/',
+                  description: 'Define a custom Iconify API URL. Useful if you want to use a self-hosted Iconify API. Learn more: https://iconify.design/docs/api.',
+                  tags: [
+                    '@studioIcon material-symbols:api'
+                  ],
                 },
               },
               publicApiFallback: {
                 $default: false,
                 $schema: {
                   title: 'Public Iconify API fallback',
-                  description: 'Define, if the public Iconify API should be used as fallback if the .',
+                  description: 'Define if the public Iconify API should be used as fallback.',
+                  tags: [
+                    '@studioIcon material-symbols:public'
+                  ]
                 },
               },
             },

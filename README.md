@@ -1,4 +1,4 @@
-![nuxt-icon](https://github.com/nuxt-modules/icon/assets/904724/3e36ab37-bb8c-4cc5-a8fa-55be6993bcfd)
+![nuxt-icon](https://github.com/nuxt-modules/icon/assets/904724/ae673805-06ad-4c05-820e-a8445c7224ce)
 
 # Nuxt Icon
 
@@ -8,7 +8,7 @@
 [![Nuxt][nuxt-src]][nuxt-href]
 <a href="https://volta.net/nuxt-modules/icon?utm_source=nuxt_icon_readme"><img src="https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg" alt="Volta board"></a>
 
-Add [100,000+ ready to use icons](https://icones.js.org) to your [Nuxt](https://nuxt.com) application, based on [Iconify](https://iconify.design).
+Add [200,000+ ready to use icons](https://icones.js.org) to your [Nuxt](https://nuxt.com) application, based on [Iconify](https://iconify.design).
 
 - [✨ &nbsp;Release Notes](https://github.com/nuxt-modules/icon/releases)
 - [🏀 &nbsp;Online playground](https://stackblitz.com/edit/nuxt-icon-playground?file=app.vue)
@@ -16,7 +16,7 @@ Add [100,000+ ready to use icons](https://icones.js.org) to your [Nuxt](https://
 ## Features ✨
 
 - Nuxt 3 ready
-- Support 100,000 open source vector icons via [Iconify](https://iconify.design)
+- Support 200,000 open source vector icons via [Iconify](https://iconify.design)
 - Emoji Support
 - Custom SVG support (via Vue component)
 

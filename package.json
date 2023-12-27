@@ -6,6 +6,7 @@
   "repository": "nuxt-modules/icon",
   "exports": {
     ".": {
+      "types": "./dist/types.d.ts",
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
     }
@@ -35,6 +36,7 @@
     "@nuxt/devtools": "^1.0.6",
     "@nuxt/eslint-config": "^0.2.0",
     "@nuxt/module-builder": "latest",
+    "@nuxt/schema": "^3.9.0",
     "@types/node": "^20.10.5",
     "eslint": "latest",
     "nuxt": "^3.9.0",

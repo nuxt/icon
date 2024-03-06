@@ -61,7 +61,7 @@ const state = useState<Record<string, IconifyIcon | undefined>>('icons', () => (
 const isFetching = ref(false)
 const iconName = computed(() => {
   if (appConfig.nuxtIcon?.aliases?.[props.name]) {
-    return appConfig.nuxtIcon.aliases[props.name]
+    return appConfig.nuxtIcon.aliases[props.name]!
   }
   return props.name
 })

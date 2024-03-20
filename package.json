@@ -27,22 +27,22 @@
     "release": "release-it"
   },
   "dependencies": {
-    "@iconify/collections": "^1.0.401",
+    "@iconify/collections": "^1.0.406",
     "@iconify/vue": "^4.1.1",
-    "@nuxt/devtools-kit": "^1.0.8",
-    "@nuxt/kit": "^3.10.3"
+    "@nuxt/devtools-kit": "^1.1.1",
+    "@nuxt/kit": "^3.11.1"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.0.8",
+    "@nuxt/devtools": "^1.1.1",
     "@nuxt/eslint-config": "^0.2.0",
     "@nuxt/module-builder": "latest",
-    "@nuxt/schema": "^3.10.3",
-    "@types/node": "^20.11.24",
+    "@nuxt/schema": "^3.11.1",
+    "@types/node": "^20.11.30",
     "eslint": "latest",
-    "nuxt": "^3.10.3",
+    "nuxt": "^3.11.1",
     "release-it": "^17.1.1",
-    "typescript": "^5.3.3",
-    "vue-tsc": "^2.0.5"
+    "typescript": "^5.4.3",
+    "vue-tsc": "^2.0.7"
   },
   "release-it": {
     "git": {

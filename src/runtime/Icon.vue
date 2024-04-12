@@ -72,17 +72,16 @@ const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconKey.value
 const component = computed(() => nuxtApp.vueApp?.component(iconName.value))
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false
-  // @ts-expect-error
   if (!props.size && typeof appConfig.nuxtIcon?.size === 'boolean' && !appConfig.nuxtIcon?.size) {
     return undefined
   }
-  // @ts-expect-error
   const size = props.size || appConfig.nuxtIcon?.size || '1em'
   if (String(Number(size)) === size) {
     return `${size}px`
   }
   return size
 })
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const className = computed(() => (appConfig as any)?.nuxtIcon?.class ?? 'icon')
 
 async function loadIconComponent() {

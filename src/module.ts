@@ -6,6 +6,8 @@ import {
 } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 
+// TODO: investigate this
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const iconifyCollections = require('@iconify/collections/collections.json')
 
 export interface ModuleOptions {}

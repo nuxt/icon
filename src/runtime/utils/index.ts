@@ -1,4 +1,4 @@
-// @ts-expect-error
+// @ts-expect-error virtual module
 import iconCollections from '#icon-collections'
 
 export function resolveIconName(name: string = '') {

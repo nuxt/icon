@@ -4,8 +4,8 @@ import type { IconifyIcon } from '@iconify/vue'
 import { Icon as Iconify } from '@iconify/vue/dist/offline'
 import { loadIcon, addAPIProvider } from '@iconify/vue'
 import { ref, computed, watch } from 'vue'
-import { useAppConfig, useNuxtApp, useState } from '#imports'
 import { resolveIconName } from './utils'
+import { useAppConfig, useNuxtApp, useState } from '#imports'
 
 const nuxtApp = useNuxtApp()
 const appConfig = useAppConfig() as {
@@ -23,12 +23,12 @@ const appConfig = useAppConfig() as {
 const props = defineProps({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   size: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 watch(() => appConfig.nuxtIcon?.iconifyApiOptions, () => {
@@ -37,7 +37,8 @@ watch(() => appConfig.nuxtIcon?.iconifyApiOptions, () => {
   // validate the custom Iconify API URL
   try {
     new URL(appConfig.nuxtIcon.iconifyApiOptions.url)
-  } catch (e) {
+  }
+  catch (e) {
     console.warn('Nuxt Icon: Invalid custom Iconify API URL')
     return
   }
@@ -46,7 +47,7 @@ watch(() => appConfig.nuxtIcon?.iconifyApiOptions, () => {
   if (appConfig.nuxtIcon?.iconifyApiOptions?.publicApiFallback) {
     addAPIProvider('custom', {
       resources: [appConfig.nuxtIcon?.iconifyApiOptions.url],
-      index: 0
+      index: 0,
     })
     return
   }
@@ -71,11 +72,11 @@ const icon = computed<IconifyIcon | undefined>(() => state.value?.[iconKey.value
 const component = computed(() => nuxtApp.vueApp?.component(iconName.value))
 const sSize = computed(() => {
   // Disable size if appConfig.nuxtIcon.size === false
-  // @ts-ignore
+  // @ts-expect-error
   if (!props.size && typeof appConfig.nuxtIcon?.size === 'boolean' && !appConfig.nuxtIcon?.size) {
     return undefined
   }
-  // @ts-ignore
+  // @ts-expect-error
   const size = props.size || appConfig.nuxtIcon?.size || '1em'
   if (String(Number(size)) === size) {
     return `${size}px`
@@ -84,7 +85,7 @@ const sSize = computed(() => {
 })
 const className = computed(() => (appConfig as any)?.nuxtIcon?.class ?? 'icon')
 
-async function loadIconComponent () {
+async function loadIconComponent() {
   if (component.value) {
     return
   }
@@ -101,10 +102,30 @@ watch(iconName, loadIconComponent)
 </script>
 
 <template>
-  <span v-if="isFetching" :class="className" :style="{ width: sSize, height: sSize }" />
-  <Iconify v-else-if="icon" :icon="icon" :class="className" :width="sSize" :height="sSize" />
-  <Component :is="component" v-else-if="component" :class="className" :width="sSize" :height="sSize" />
-  <span v-else :class="className" :style="{ fontSize: sSize, lineHeight: sSize, width: sSize, height: sSize }"><slot>{{ name }}</slot></span>
+  <span
+    v-if="isFetching"
+    :class="className"
+    :style="{ width: sSize, height: sSize }"
+  />
+  <Iconify
+    v-else-if="icon"
+    :icon="icon"
+    :class="className"
+    :width="sSize"
+    :height="sSize"
+  />
+  <Component
+    :is="component"
+    v-else-if="component"
+    :class="className"
+    :width="sSize"
+    :height="sSize"
+  />
+  <span
+    v-else
+    :class="className"
+    :style="{ fontSize: sSize, lineHeight: sSize, width: sSize, height: sSize }"
+  ><slot>{{ name }}</slot></span>
 </template>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useAppConfig } from '#imports'
 import { resolveIconName } from './utils'
+import { useAppConfig } from '#imports'
 
 const appConfig = useAppConfig() as {
   nuxtIcon: {
@@ -18,12 +18,12 @@ const appConfig = useAppConfig() as {
 const props = defineProps({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   size: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 const iconName = computed(() => {
@@ -40,7 +40,8 @@ const iconUrl = computed(() => {
     // validate the custom Iconify API URL
     try {
       new URL(customUrl)
-    } catch (e) {
+    }
+    catch (e) {
       console.warn('Nuxt IconCSS: Invalid custom Iconify API URL')
       return
     }

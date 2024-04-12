@@ -1,7 +1,7 @@
-// @ts-ignore
+// @ts-expect-error
 import iconCollections from '#icon-collections'
 
-export function resolveIconName (name: string = '') {
+export function resolveIconName(name: string = '') {
   let prefix
   let provider = ''
 
@@ -20,7 +20,8 @@ export function resolveIconName (name: string = '') {
         break
       }
     }
-  } else if (name.includes(':')) {
+  }
+  else if (name.includes(':')) {
     const [_prefix, _name] = name.split(':')
 
     prefix = _prefix
@@ -30,6 +31,6 @@ export function resolveIconName (name: string = '') {
   return {
     provider,
     prefix: prefix || '',
-    name: name || ''
+    name: name || '',
   }
 }

@@ -7,7 +7,7 @@ export default defineAppConfig({
       github: 'carbon:logo-github',
       nuxt: 'logos:nuxt-icon',
       rocket: 'fluent-emoji:rocket',
-      nxt: 'NuxtIcon'
-    }
-  }
+      nxt: 'NuxtIcon',
+    },
+  },
 })

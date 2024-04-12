@@ -2,9 +2,10 @@ import {
   defineNuxtModule,
   createResolver,
   addComponent,
-  addTemplate
+  addTemplate,
 } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
+
 const iconifyCollections = require('@iconify/collections/collections.json')
 
 export interface ModuleOptions {}
@@ -19,7 +20,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   defaults: {},
-  setup (_options, nuxt) {
+  setup(_options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
     // Define types for the app.config compatible with Nuxt Studio
@@ -29,7 +30,7 @@ export default defineNuxtModule<ModuleOptions>({
           nuxtIcon: {
             $schema: {
               title: 'Nuxt Icon',
-              description: 'Configure Nuxt Icon module preferences.'
+              description: 'Configure Nuxt Icon module preferences.',
             },
             size: {
               $default: '1em',
@@ -37,7 +38,7 @@ export default defineNuxtModule<ModuleOptions>({
                 title: 'Icon Size',
                 description: 'Set the default icon size. Set to false to disable the sizing of icon in style.',
                 tags: ['@studioIcon material-symbols:format-size-rounded'],
-                tsType: 'string | false'
+                tsType: 'string | false',
               },
             },
             class: {
@@ -45,7 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
               $schema: {
                 title: 'CSS Class',
                 description: 'Set the default CSS class.',
-                tags: ['@studioIcon material-symbols:css']
+                tags: ['@studioIcon material-symbols:css'],
               },
             },
             aliases: {
@@ -54,30 +55,30 @@ export default defineNuxtModule<ModuleOptions>({
                 title: 'Icon aliases',
                 description: 'Define Icon aliases to update them easily without code changes.',
                 tags: ['@studioIcon material-symbols:star-rounded'],
-                tsType: '{ [alias: string]: string }'
-              }
+                tsType: '{ [alias: string]: string }',
+              },
             },
             iconifyApiOptions: {
               $schema: {
-                  title: 'Iconify API Options',
-                  description: 'Define preferences for Iconify API fetch.',
-                  tags: ['@studioIcon material-symbols:tv-options-input-settings']
+                title: 'Iconify API Options',
+                description: 'Define preferences for Iconify API fetch.',
+                tags: ['@studioIcon material-symbols:tv-options-input-settings'],
               },
               url: {
                 $default: 'https://api.iconify.design',
                 $schema: {
                   title: 'Iconify API URL',
                   description: 'Define a custom Iconify API URL. Useful if you want to use a self-hosted Iconify API. Learn more: https://iconify.design/docs/api.',
-                  tags: ['@studioIcon material-symbols:api']
-                }
+                  tags: ['@studioIcon material-symbols:api'],
+                },
               },
               publicApiFallback: {
                 $default: false,
                 $schema: {
                   title: 'Public Iconify API fallback',
                   description: 'Define if the public Iconify API should be used as fallback.',
-                  tags: ['@studioIcon material-symbols:public']
-                }
+                  tags: ['@studioIcon material-symbols:public'],
+                },
               },
             },
           },
@@ -96,13 +97,12 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolve('./runtime/IconCSS.vue'),
     })
 
-
     // Add Iconify collections & sort by longest first
     const iconCollections = Object.keys(iconifyCollections).sort((a, b) => b.length - a.length)
     const template = addTemplate({
       filename: 'icon-collections.mjs',
       getContents: () => `export default ${JSON.stringify(iconCollections)}`,
-      write: true
+      write: true,
     })
     // Add alias to `#icon-collections`
     nuxt.options.alias['#icon-collections'] = template.dst
@@ -113,8 +113,8 @@ export default defineNuxtModule<ModuleOptions>({
       icon: 'i-arcticons-iconeration',
       view: {
         type: 'iframe',
-        src: 'https://icones.js.org'
-      }
+        src: 'https://icones.js.org',
+      },
     })
-  }
+  },
 })

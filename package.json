@@ -34,11 +34,11 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.1.1",
-    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/eslint-config": "0.3.6",
     "@nuxt/module-builder": "latest",
     "@nuxt/schema": "^3.11.1",
     "@types/node": "^20.11.30",
-    "eslint": "latest",
+    "eslint": "9.0.0",
     "nuxt": "^3.11.1",
     "release-it": "^17.1.1",
     "typescript": "^5.4.3",

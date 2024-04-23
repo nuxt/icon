@@ -36,7 +36,7 @@ export default defineComponent({
         : NuxtIconCss),
     )
     const style = computed(() => {
-      const size = props.size
+      const size = props.size || options.size
       return size
         ? { fontSize: Number.isNaN(+size) ? size : size + 'px' }
         : null

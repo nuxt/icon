@@ -26,6 +26,7 @@ export default defineNuxtModule<ModuleOptions>({
     // Runtime options
     provider: schema['provider'].$default,
     class: schema['class'].$default,
+    size: schema['size'].$default,
     aliases: schema['aliases'].$default,
     iconifyApiEndpoint: schema['iconifyApiEndpoint'].$default,
     fallbackToApi: schema['fallbackToApi'].$default,

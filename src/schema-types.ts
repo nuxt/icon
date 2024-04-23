@@ -2,6 +2,14 @@
 
 export interface NuxtIconRuntimeOptions {
   /**
+   * Icon Size
+   *
+   * Set the default icon size.
+   *
+   */
+  size: string | undefined
+
+  /**
    * CSS Class
    *
    * Set the default CSS class.
@@ -44,7 +52,7 @@ export interface NuxtIconRuntimeOptions {
    * Set the default CSS `@layer` name.
    *
    */
-  cssLayer: string | null
+  cssLayer: string | undefined
 
   /**
    * Use CSS `:where()` Pseudo Selector

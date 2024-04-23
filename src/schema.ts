@@ -5,6 +5,15 @@ export const schema = {
     title: 'Nuxt Icon',
     description: 'Configure Nuxt Icon module preferences.',
   },
+  size: {
+    $default: undefined,
+    $schema: {
+      title: 'Icon Size',
+      description: 'Set the default icon size.',
+      tags: ['@studioIcon material-symbols:format-size-rounded'],
+      tsType: 'string | undefined',
+    },
+  },
   class: {
     $default: '',
     $schema: {
@@ -40,12 +49,12 @@ export const schema = {
     },
   },
   cssLayer: {
-    $default: null,
+    $default: undefined,
     $schema: {
       title: 'CSS Layer Name',
       description: 'Set the default CSS `@layer` name.',
       tags: ['@studioIcon material-symbols:layers'],
-      tsType: 'string | null',
+      tsType: 'string | undefined',
     },
   },
   cssWherePseudo: {

@@ -1,5 +1,5 @@
 import { defineNuxtModule, addPlugin, addServerHandler, createResolver, addTemplate, addComponent, logger } from '@nuxt/kit'
-import collectionsData from '@iconify/collections/collections.json'
+import collectionsData from '@iconify/collections/collections.json' with { type: 'json' }
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { schema } from './schema'
 import type { ModuleOptions, ServerBundleOptions } from './types'

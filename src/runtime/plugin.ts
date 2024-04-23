@@ -1,0 +1,28 @@
+import { addAPIProvider, _api, disableCache } from '@iconify/vue'
+import type { NuxtIconRuntimeOptions } from '../schema-types'
+import { defineNuxtPlugin, useAppConfig } from '#imports'
+
+export default defineNuxtPlugin({
+  name: 'nuxt-icon',
+  setup() {
+    const options = useAppConfig().nuxtIcon as NuxtIconRuntimeOptions
+
+    // @ts-expect-error - missing types
+    _api.setFetch($fetch.native)
+
+    disableCache('all')
+
+    const resources: string[] = []
+    if (options.provider === 'server') {
+      resources.push('/api/_nuxt_icon')
+      if (options.fallbackToApi) {
+        resources.push(options.iconifyApiEndpoint!)
+      }
+    }
+    else {
+      resources.push(options.iconifyApiEndpoint!)
+    }
+
+    addAPIProvider('', { resources })
+  },
+})

@@ -1,18 +1,14 @@
-import {
-  defineNuxtModule,
-  createResolver,
-  addComponent,
-  addTemplate,
-} from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, createResolver, addTemplate, addComponent, logger } from '@nuxt/kit'
+import collectionsData from '@iconify/collections/collections.json'
 import { addCustomTab } from '@nuxt/devtools-kit'
+import { schema } from './schema'
+import type { ModuleOptions, ServerBundleOptions } from './types'
+import { unocssIntegration } from './integrations/unocss'
 
-// TODO: investigate this
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const iconifyCollections = require('@iconify/collections/collections.json')
+export type { ModuleOptions }
 
-export interface ModuleOptions {}
+const collectionNames = Object.keys(collectionsData)
 
-// Learn how to create a Nuxt module on https://nuxt.com/docs/guide/going-further/modules/
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-icon',
@@ -21,102 +17,123 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt: '^3.0.0',
     },
   },
-  defaults: {},
-  setup(_options, nuxt) {
-    const { resolve } = createResolver(import.meta.url)
+  defaults: {
+    // Module options
+    componentName: 'Icon',
+    serverBundle: 'auto',
+    serverKnownCssClasses: [],
+
+    // Runtime options
+    provider: schema['provider'].$default,
+    class: schema['class'].$default,
+    aliases: schema['aliases'].$default,
+    iconifyApiEndpoint: schema['iconifyApiEndpoint'].$default,
+    fallbackToApi: schema['fallbackToApi'].$default,
+    cssSelectorPrefix: schema['cssSelectorPrefix'].$default,
+    cssWherePseudo: schema['cssWherePseudo'].$default,
+    cssLayer: schema['cssLayer'].$default,
+    defaultMode: schema['defaultMode'].$default,
+    collections: schema['collections'].$default,
+  },
+  async setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
+
+    addPlugin(
+      resolver.resolve('./runtime/plugin'),
+    )
+    addComponent({
+      name: options.componentName || 'Icon',
+      global: true,
+      filePath: resolver.resolve('./runtime/components/index'),
+    })
+    addServerHandler({
+      route: '/api/_nuxt_icon/:collection',
+      handler: resolver.resolve('./runtime/server/api'),
+    })
+
+    // Merge options to app.config
+    const runtimeOptions = Object.fromEntries(
+      Object.entries(options)
+        .filter(([key]) => key in schema),
+    )
+    if (!runtimeOptions.collections) {
+      runtimeOptions.collections = runtimeOptions.fallbackToApi
+        ? collectionNames
+        : options.serverBundle === 'auto'
+          ? collectionNames
+          : options.serverBundle
+            ? options.serverBundle.collections
+            : []
+    }
+    nuxt.options.appConfig.nuxtIcon = Object.assign(
+      nuxt.options.appConfig.nuxtIcon || {},
+      runtimeOptions,
+    )
 
     // Define types for the app.config compatible with Nuxt Studio
     nuxt.hook('schema:extend', (schemas) => {
       schemas.push({
         appConfig: {
-          nuxtIcon: {
-            $schema: {
-              title: 'Nuxt Icon',
-              description: 'Configure Nuxt Icon module preferences.',
-            },
-            size: {
-              $default: '1em',
-              $schema: {
-                title: 'Icon Size',
-                description: 'Set the default icon size. Set to false to disable the sizing of icon in style.',
-                tags: ['@studioIcon material-symbols:format-size-rounded'],
-                tsType: 'string | false',
-              },
-            },
-            class: {
-              $default: '',
-              $schema: {
-                title: 'CSS Class',
-                description: 'Set the default CSS class.',
-                tags: ['@studioIcon material-symbols:css'],
-              },
-            },
-            aliases: {
-              $default: {},
-              $schema: {
-                title: 'Icon aliases',
-                description: 'Define Icon aliases to update them easily without code changes.',
-                tags: ['@studioIcon material-symbols:star-rounded'],
-                tsType: '{ [alias: string]: string }',
-              },
-            },
-            iconifyApiOptions: {
-              $schema: {
-                title: 'Iconify API Options',
-                description: 'Define preferences for Iconify API fetch.',
-                tags: ['@studioIcon material-symbols:tv-options-input-settings'],
-              },
-              url: {
-                $default: 'https://api.iconify.design',
-                $schema: {
-                  title: 'Iconify API URL',
-                  description: 'Define a custom Iconify API URL. Useful if you want to use a self-hosted Iconify API. Learn more: https://iconify.design/docs/api.',
-                  tags: ['@studioIcon material-symbols:api'],
-                },
-              },
-              publicApiFallback: {
-                $default: false,
-                $schema: {
-                  title: 'Public Iconify API fallback',
-                  description: 'Define if the public Iconify API should be used as fallback.',
-                  tags: ['@studioIcon material-symbols:public'],
-                },
-              },
-            },
-          },
+          nuxtIcon: schema,
         },
       })
     })
 
-    addComponent({
-      name: 'Icon',
-      global: true,
-      filePath: resolve('./runtime/Icon.vue'),
-    })
-    addComponent({
-      name: 'IconCSS',
-      global: true,
-      filePath: resolve('./runtime/IconCSS.vue'),
-    })
-
-    // Add Iconify collections & sort by longest first
-    const iconCollections = Object.keys(iconifyCollections).sort((a, b) => b.length - a.length)
+    // Bundle icons for server
+    const bundle: ServerBundleOptions | Promise<ServerBundleOptions> = (!options.serverBundle || options.provider !== 'server')
+      ? {}
+      : (options.serverBundle === 'auto')
+          ? discoverLocalCollections()
+          : options.serverBundle
     const template = addTemplate({
-      filename: 'icon-collections.mjs',
-      getContents: () => `export default ${JSON.stringify(iconCollections)}`,
+      filename: 'nuxt-icon-server-bundle.mjs',
       write: true,
+      async getContents() {
+        const { collections = [] } = await bundle
+        return [
+          `export const collections = {`,
+          ...collections.map(collection => `  '${collection}': () => import('@iconify-json/${collection}/icons.json').then(m => m.default),`),
+          `}`,
+        ].join('\n')
+      },
     })
-    // Add alias to `#icon-collections`
-    nuxt.options.alias['#icon-collections'] = template.dst
+    nuxt.options.nitro.alias ||= {}
+    nuxt.options.nitro.alias['#nuxt-icon-server-bundle'] = template.dst
+    nuxt.options.build.transpile ||= []
+    nuxt.options.build.transpile.push(template.dst)
 
+    // Devtools
     addCustomTab({
       name: 'icones',
       title: 'Icônes',
-      icon: 'i-arcticons-iconeration',
+      icon: 'https://icones.js.org/favicon.svg',
       view: {
         type: 'iframe',
         src: 'https://icones.js.org',
       },
     })
+
+    // Server-only runtime config for known CSS selectors
+    options.serverKnownCssClasses ||= []
+    const serverKnownCssClasses = options.serverKnownCssClasses || []
+    nuxt.options.runtimeConfig.nuxtIcon = {
+      serverKnownCssClasses,
+    }
+    nuxt.hook('nitro:init', async (_nitro) => {
+      _nitro.options.runtimeConfig.nuxtIcon = {
+        serverKnownCssClasses,
+      }
+    })
+    unocssIntegration(nuxt, options)
+    await nuxt.callHook('icon:serverKnownCssClasses', serverKnownCssClasses)
   },
 })
+
+async function discoverLocalCollections(): Promise<ServerBundleOptions> {
+  const isPackageExists = await import('local-pkg').then(r => r.isPackageExists)
+  const collections = collectionNames
+    .filter(collection => isPackageExists('@iconify-json/' + collection))
+  if (collections.length)
+    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
+  return { collections }
+}

@@ -1,6 +1,7 @@
 import { defineNuxtModule, addPlugin, addServerHandler, createResolver, addTemplate, addComponent, logger } from '@nuxt/kit'
 import collectionsData from '@iconify/collections/collections.json' with { type: 'json' }
 import { addCustomTab } from '@nuxt/devtools-kit'
+import type { Nuxt } from '@nuxt/schema'
 import { schema } from './schema'
 import type { ModuleOptions, ServerBundleOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
@@ -126,12 +127,16 @@ export default defineNuxtModule<ModuleOptions>({
       }
     })
 
-    if (nuxt.options.modules.some(i => i === '@unocss/nuxt' || Array.isArray(i) && i[0] === '@unocss/nuxt'))
+    if (hasModule(nuxt, '@unocss/nuxt'))
       unocssIntegration(nuxt, options)
 
     await nuxt.callHook('icon:serverKnownCssClasses', serverKnownCssClasses)
   },
 })
+
+function hasModule(nuxt: Nuxt, name: string) {
+  return nuxt.options.modules.some(i => Array.isArray(i) ? i[0] === name : i === name)
+}
 
 async function discoverLocalCollections(): Promise<ServerBundleOptions> {
   const isPackageExists = await import('local-pkg').then(r => r.isPackageExists)

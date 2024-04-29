@@ -125,7 +125,10 @@ export default defineNuxtModule<ModuleOptions>({
         serverKnownCssClasses,
       }
     })
-    unocssIntegration(nuxt, options)
+
+    if (nuxt.options.modules.some(i => i === '@unocss/nuxt' || Array.isArray(i) && i[0] === '@unocss/nuxt'))
+      unocssIntegration(nuxt, options)
+
     await nuxt.callHook('icon:serverKnownCssClasses', serverKnownCssClasses)
   },
 })

@@ -1,4 +1,4 @@
-import { defineAppConfig } from 'nuxt/app'
+import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
   nuxtIcon: {

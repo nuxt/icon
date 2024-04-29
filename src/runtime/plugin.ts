@@ -5,7 +5,7 @@ import { defineNuxtPlugin, useAppConfig } from '#imports'
 export default defineNuxtPlugin({
   name: 'nuxt-icon',
   setup() {
-    const options = useAppConfig().nuxtIcon as NuxtIconRuntimeOptions
+    const options = useAppConfig().icon as NuxtIconRuntimeOptions
 
     // @ts-expect-error - missing types
     _api.setFetch($fetch.native)

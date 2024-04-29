@@ -1,3 +1,4 @@
+import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from './schema-types'
 
 export type { NuxtIconRuntimeOptions }
@@ -25,16 +26,29 @@ export interface ModuleOptions extends Partial<NuxtIconRuntimeOptions> {
   serverBundle?: 'auto' | false | ServerBundleOptions
 
   /**
+   * Custom icon collections
+   */
+  customCollections?: CustomCollection[]
+
+  /**
    * List of pre-compiled CSS classnames to be used for server-side CSS icon rendering
    */
   serverKnownCssClasses?: string[]
+}
+
+export interface CustomCollection extends Pick<IconifyJSON, 'prefix' | 'width' | 'height'> {
+  dir: string
 }
 
 export interface ServerBundleOptions {
   /**
    * Iconify collection names to be bundled
    */
-  collections?: string[]
+  collections?: (string | CustomCollection | IconifyJSON)[]
+}
+
+export interface ResolvedServerBundleOptions {
+  collections: (string | IconifyJSON)[]
 }
 
 declare module '@nuxt/schema' {

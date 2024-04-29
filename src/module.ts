@@ -1,9 +1,13 @@
+import { basename, join } from 'node:path'
+import fs from 'node:fs/promises'
 import { defineNuxtModule, addPlugin, addServerHandler, createResolver, addTemplate, addComponent, logger } from '@nuxt/kit'
 import collectionsData from '@iconify/collections/collections.json' with { type: 'json' }
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type { Nuxt } from '@nuxt/schema'
+import fg from 'fast-glob'
+import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import { schema } from './schema'
-import type { ModuleOptions, ServerBundleOptions } from './types'
+import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
 
 export type { ModuleOptions }
@@ -82,19 +86,36 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     // Bundle icons for server
-    const bundle: ServerBundleOptions | Promise<ServerBundleOptions> = (!options.serverBundle || options.provider !== 'server')
-      ? {}
-      : (options.serverBundle === 'auto')
-          ? discoverLocalCollections()
-          : options.serverBundle
+    const bundle = resolveServerBundle(
+      nuxt,
+      (!options.serverBundle || options.provider !== 'server')
+        ? {}
+        : (options.serverBundle === 'auto')
+            ? discoverLocalCollections()
+            : options.serverBundle,
+      options.customCollections,
+    )
+
     const template = addTemplate({
       filename: 'nuxt-icon-server-bundle.mjs',
       write: true,
       async getContents() {
-        const { collections = [] } = await bundle
+        const { collections } = await bundle
+
+        nuxt.options.appConfig.icon ||= {}
+        const appIcons = nuxt.options.appConfig.icon as NuxtIconRuntimeOptions
+        appIcons.collections ||= []
+        for (const collection of collections) {
+          const prefix = typeof collection === 'string' ? collection : collection.prefix
+          if (!appIcons.collections.includes(prefix))
+            appIcons.collections.push(prefix)
+        }
+
         return [
           `export const collections = {`,
-          ...collections.map(collection => `  '${collection}': () => import('@iconify-json/${collection}/icons.json').then(m => m.default),`),
+          ...collections.map(collection => typeof collection === 'string'
+            ? `  '${collection}': () => import('@iconify-json/${collection}/icons.json').then(m => m.default),`
+            : `  '${collection.prefix}': () => (${JSON.stringify(collection)}),`),
           `}`,
         ].join('\n')
       },
@@ -145,4 +166,45 @@ async function discoverLocalCollections(): Promise<ServerBundleOptions> {
   if (collections.length)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
   return { collections }
+}
+
+export async function resolveServerBundle(
+  nuxt: Nuxt,
+  options: ServerBundleOptions | Promise<ServerBundleOptions>,
+  customCollections: CustomCollection[] = [],
+): Promise<ResolvedServerBundleOptions> {
+  const resolved = await options
+  return {
+    collections: await Promise.all(([...(resolved.collections || []), ...customCollections])
+      .map(c => resolveCollection(nuxt, c))),
+  }
+}
+
+async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | CustomCollection): Promise<string | IconifyJSON> {
+  if (typeof collection === 'string')
+    return collection
+  // Custom collection
+  if ('dir' in collection) {
+    const dir = join(nuxt.options.rootDir, collection.dir)
+    const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
+      .sort()
+
+    const json: IconifyJSON = {
+      ...collection,
+      icons: Object.fromEntries(await Promise.all(files.map(async (file) => {
+        const name = basename(file, '.svg')
+        let svg = await fs.readFile(join(dir, file), 'utf-8')
+        const cleanupIdx = svg.indexOf('<svg')
+        if (cleanupIdx > 0)
+          svg = svg.slice(cleanupIdx)
+        return [name, { body: svg } satisfies IconifyIcon]
+      }))),
+    }
+    // @ts-expect-error remove extra properties
+    delete json.dir
+
+    logger.success(`Nuxt Icon loaded local colllection \`${json.prefix}\` with ${files.length} icons`)
+    return json
+  }
+  return collection
 }

@@ -3,6 +3,14 @@ export default defineNuxtConfig({
     '../src/module',
     '@unocss/nuxt',
   ],
+  icon: {
+    customCollections: [
+      {
+        prefix: 'custom1',
+        dir: './icons/custom1',
+      },
+    ],
+  },
   // ssr: false,
   devtools: {
     enabled: true,

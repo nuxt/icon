@@ -66,7 +66,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
   },
   async setup(props) {
     const nuxt = useNuxtApp()
-    const options = useAppConfig().nuxtIcon as NuxtIconRuntimeOptions
+    const options = useAppConfig().icon as NuxtIconRuntimeOptions
     const cssClass = computed(() => options.cssSelectorPrefix + props.name)
 
     function getIcon(name: string) {
@@ -136,7 +136,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
     }
 
     if (import.meta.server) {
-      const configs = (useRuntimeConfig().nuxtIcon || {}) as NuxtIconRuntimeServerOptions
+      const configs = (useRuntimeConfig().icon || {}) as NuxtIconRuntimeServerOptions
       if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
         const icon = await loadIcon(props.name)
         if (icon) {

@@ -46,8 +46,8 @@ export function unocssIntegration(nuxt: Nuxt, options: ModuleOptions) {
   // In dev, we proxy the nitro runtime to use a getter for serverKnownCssClasses and get the lastest known classes
   if (nuxt.options.dev) {
     nuxt.hook('nitro:init', async (_nitro) => {
-      _nitro.options.runtimeConfig.nuxtIcon ||= {} as any
-      Object.defineProperty(_nitro.options.runtimeConfig.nuxtIcon, 'serverKnownCssClasses', {
+      _nitro.options.runtimeConfig.icon ||= {} as any
+      Object.defineProperty(_nitro.options.runtimeConfig.icon, 'serverKnownCssClasses', {
         get() {
           return [
             ...options.serverKnownCssClasses || [],

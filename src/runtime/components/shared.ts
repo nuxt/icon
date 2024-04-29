@@ -10,7 +10,7 @@ export async function loadIcon(name: string) {
 }
 
 export function useResolvedName(getName: () => string) {
-  const options = useAppConfig().nuxtIcon as NuxtIconRuntimeOptions
+  const options = useAppConfig().icon as NuxtIconRuntimeOptions
   const collections = (options.collections || []).sort((a, b) => b.length - a.length)
 
   return computed(() => {

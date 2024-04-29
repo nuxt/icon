@@ -27,7 +27,7 @@ export default defineComponent({
   },
   async setup(props, { slots }) {
     const nuxtApp = useNuxtApp()
-    const options = useAppConfig().nuxtIcon as NuxtIconRuntimeOptions
+    const options = useAppConfig().icon as NuxtIconRuntimeOptions
     const name = useResolvedName(() => props.name)
     const component = computed(() =>
       nuxtApp.vueApp?.component(name.value)

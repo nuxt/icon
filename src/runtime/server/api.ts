@@ -11,7 +11,7 @@ export default defineCachedEventHandler(async (ctx) => {
   if (!url)
     return
 
-  const options = useAppConfig().nuxtIcon as NuxtIconRuntimeOptions
+  const options = useAppConfig().icon as NuxtIconRuntimeOptions
   const collectionName = ctx.context.params?.collection?.replace(/\.json$/, '')
   const collection = collectionName ? await collections[collectionName]?.() : null
 

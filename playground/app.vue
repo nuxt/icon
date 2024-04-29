@@ -106,26 +106,59 @@ function clear() {
       </div>
       <p>
         Sizes:
-        <Icon name="uil:github" />
+        <Icon
+          name="uil:github"
+          :mode
+        />
         <Icon
           name="uil:github"
           size="24"
+          :mode
         />
         <Icon
           name="uil:github"
           size="48"
+          :mode
         />
       </p>
       <p>
-        Custom component:
-        <Icon name="NuxtLogo" />
+        Global components:
+        <Icon
+          name="NuxtLogo"
+          :mode
+        />
         <Icon
           name="NuxtLogo"
           size="24"
+          :mode
         />
         <Icon
           name="NuxtLogo"
           size="48"
+          :mode
+        />
+      </p>
+      <p>
+        Custom icons from local fs:
+        <Icon
+          name="custom1:nuxt-v1"
+          size="64"
+          :mode
+        />
+        <Icon
+          name="custom1:nuxt-v2"
+          size="64"
+          :mode
+        />
+        <Icon
+          name="custom1:nuxt-v3-beta"
+          size="64"
+          :mode
+        />
+        <Icon
+          name="custom1:nuxt-v3"
+          size="64"
+          :mode
         />
       </p>
       <!-- <p>
@@ -145,14 +178,17 @@ function clear() {
         <Icon
           name="github"
           size="24"
+          :mode
         />
         <Icon
           name="nuxt"
           size="24"
+          :mode
         />
         <Icon
           name="rocket"
           size="24"
+          :mode
         />
         <Icon
           name="nxt"
@@ -161,7 +197,10 @@ function clear() {
       </p>
       <p>
         `i-` syntax:
-        <Icon name="i-fluent-emoji-high-contrast-1st-place-medal" />
+        <Icon
+          name="i-fluent-emoji-high-contrast-1st-place-medal"
+          :mode
+        />
       </p>
       <!-- <p>
         Failing:
@@ -173,8 +212,14 @@ function clear() {
       </p> -->
       <p>
         Specials:
-        <Icon name="i-ph-code" />
-        <Icon name="ph:table" />
+        <Icon
+          name="i-ph-code"
+          :mode
+        />
+        <Icon
+          name="ph:table"
+          :mode
+        />
       </p>
     </div>
   </div>

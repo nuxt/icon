@@ -66,8 +66,8 @@ export default defineNuxtModule<ModuleOptions>({
             ? options.serverBundle.collections
             : []
     }
-    nuxt.options.appConfig.nuxtIcon = Object.assign(
-      nuxt.options.appConfig.nuxtIcon || {},
+    nuxt.options.appConfig.icon = Object.assign(
+      nuxt.options.appConfig.icon || {},
       runtimeOptions,
     )
 
@@ -75,7 +75,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('schema:extend', (schemas) => {
       schemas.push({
         appConfig: {
-          nuxtIcon: schema,
+          icon: schema,
         },
       })
     })
@@ -117,11 +117,11 @@ export default defineNuxtModule<ModuleOptions>({
     // Server-only runtime config for known CSS selectors
     options.serverKnownCssClasses ||= []
     const serverKnownCssClasses = options.serverKnownCssClasses || []
-    nuxt.options.runtimeConfig.nuxtIcon = {
+    nuxt.options.runtimeConfig.icon = {
       serverKnownCssClasses,
     }
     nuxt.hook('nitro:init', async (_nitro) => {
-      _nitro.options.runtimeConfig.nuxtIcon = {
+      _nitro.options.runtimeConfig.icon = {
         serverKnownCssClasses,
       }
     })

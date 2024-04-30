@@ -22,7 +22,7 @@ Add [200,000+ ready to use icons](https://icones.js.org) to your [Nuxt](https://
 - Custom SVG support (via Vue component, or via local SVG files)
 
 > [!NOTE]
-> You are viewing the `v0.7` beta version of this module, which is a complete rewrite for a better developer experience and performance. If you are migrating from `v0.6`, please check [this PR](https://github.com/nuxt-modules/icon/pull/154) for the full list of changes.
+> You are viewing the `v1.0` version of this module, which is a complete rewrite for a better developer experience and performance. If you are migrating from `v0.6`, please check [this PR](https://github.com/nuxt-modules/icon/pull/154) for the full list of changes.
 
 ## Setup ⛓️
 

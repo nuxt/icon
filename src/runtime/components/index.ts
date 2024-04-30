@@ -45,6 +45,7 @@ export default defineComponent({
     return () => h(
       component.value,
       {
+        ...options.defaultAttrs,
         name: name.value,
         class: options.class,
         style: style.value,

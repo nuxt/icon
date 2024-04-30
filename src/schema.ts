@@ -22,6 +22,21 @@ export const schema = {
       tags: ['@studioIcon material-symbols:css'],
     },
   },
+  defaultAttrs: {
+    $default: {
+      'aria-hidden': true,
+    },
+    $schema: {
+      title: 'Default Attributes',
+      description: [
+        'Attributes applied to every icon component.',
+        '',
+        '@default { "aria-hidden": true }',
+      ].join('\n'),
+      tags: ['@studioIcon material-symbols:settings'],
+      tsType: 'Record<string, string | number | boolean>',
+    },
+  },
   defaultMode: {
     $default: 'css',
     $schema: {

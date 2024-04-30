@@ -38,7 +38,8 @@ export default defineNuxtModule<ModuleOptions>({
     cssSelectorPrefix: schema['cssSelectorPrefix'].$default,
     cssWherePseudo: schema['cssWherePseudo'].$default,
     cssLayer: schema['cssLayer'].$default,
-    defaultMode: schema['defaultMode'].$default,
+    mode: schema['mode'].$default,
+    attrs: schema['attrs'].$default,
     collections: schema['collections'].$default,
   },
   async setup(options, nuxt) {

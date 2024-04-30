@@ -31,7 +31,7 @@ export default defineComponent({
     const name = useResolvedName(() => props.name)
     const component = computed(() =>
       nuxtApp.vueApp?.component(name.value)
-      || ((props.mode || options.defaultMode) === 'svg'
+      || ((props.mode || options.mode) === 'svg'
         ? NuxtIconSvg
         : NuxtIconCss),
     )
@@ -45,7 +45,7 @@ export default defineComponent({
     return () => h(
       component.value,
       {
-        ...options.defaultAttrs,
+        ...options.attrs,
         name: name.value,
         class: options.class,
         style: style.value,

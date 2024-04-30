@@ -22,7 +22,7 @@ export const schema = {
       tags: ['@studioIcon material-symbols:css'],
     },
   },
-  defaultAttrs: {
+  attrs: {
     $default: {
       'aria-hidden': true,
     },
@@ -37,7 +37,7 @@ export const schema = {
       tsType: 'Record<string, string | number | boolean>',
     },
   },
-  defaultMode: {
+  mode: {
     $default: 'css',
     $schema: {
       title: 'Default Rendering Mode',

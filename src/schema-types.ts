@@ -26,7 +26,7 @@ export interface NuxtIconRuntimeOptions {
    * @default { "aria-hidden": true }
    *
    */
-  defaultAttrs: Record<string, string | number | boolean>
+  attrs: Record<string, string | number | boolean>
 
   /**
    * Default Rendering Mode
@@ -37,7 +37,7 @@ export interface NuxtIconRuntimeOptions {
    *
    * @enum css,svg
    */
-  defaultMode: string
+  mode: string
 
   /**
    * Icon aliases

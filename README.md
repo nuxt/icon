@@ -81,7 +81,9 @@ Note that `MyComponent` needs to be inside `components/global/` folder (see [exa
 
 ### Custom Local Collections
 
-You can use local SVG files to create a custom Iconify collection. For example, place your icons' SVG files under a folder on your choice, for example `./assets/icons`:
+You can use local SVG files to create a custom Iconify collection.
+
+For example, place your icons' SVG files under a folder on your choice, for example `./assets/my-icons`:
 
 ```bash
 assets/my-icons
@@ -89,7 +91,7 @@ assets/my-icons
 ├── bar-outline.svg
 ```
 
-And in your `nuxt.config.ts`, add an item in `icon.customCollections`:
+In your `nuxt.config.ts`, add an item in `icon.customCollections`:
 
 ```ts
 export default defineNuxtConfig({

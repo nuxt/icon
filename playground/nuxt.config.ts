@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     '../src/module',
     '@unocss/nuxt',
   ],
+  // ssr: false,
   icon: {
     customCollections: [
       {
@@ -11,7 +12,9 @@ export default defineNuxtConfig({
       },
     ],
   },
-  // ssr: false,
+  nitro: {
+    logLevel: 'verbose',
+  },
   devtools: {
     enabled: true,
   },

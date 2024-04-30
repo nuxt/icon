@@ -21,7 +21,7 @@ export interface NuxtIconRuntimeOptions {
   /**
    * Default Attributes
    *
-   * Default attributes applied to every icon component.
+   * Attributes applied to every icon component.
    *
    * @default { "aria-hidden": true }
    *

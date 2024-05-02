@@ -1,18 +1,16 @@
 import { basename, join } from 'node:path'
 import fs from 'node:fs/promises'
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addTemplate, addComponent, logger } from '@nuxt/kit'
-import collectionsData from '@iconify/collections/collections.json' with { type: 'json' }
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type { Nuxt } from '@nuxt/schema'
 import fg from 'fast-glob'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
+import collectionNames from './collections'
 import { schema } from './schema'
 import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
 
 export type { ModuleOptions }
-
-const collectionNames = Object.keys(collectionsData)
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

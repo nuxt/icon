@@ -165,7 +165,7 @@ async function discoverLocalCollections(): Promise<ServerBundleOptions> {
   return { collections }
 }
 
-export async function resolveServerBundle(
+async function resolveServerBundle(
   nuxt: Nuxt,
   options: ServerBundleOptions | Promise<ServerBundleOptions>,
   customCollections: CustomCollection[] = [],

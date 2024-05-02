@@ -10,7 +10,13 @@
       "types": "./dist/types.d.ts",
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
-    }
+    },
+    "./module": {
+      "types": "./dist/module.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    },
+    "./*": "./dist/*"
   },
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",

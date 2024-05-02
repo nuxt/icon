@@ -12,3 +12,8 @@ export default createConfigForNuxt({
     ],
   },
 })
+  .prepend({
+    ignores: [
+      'src/collections.ts',
+    ],
+  })

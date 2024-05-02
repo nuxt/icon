@@ -1,13 +1,12 @@
-import { defineAppConfig } from 'nuxt/app'
+import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  nuxtIcon: {
-    size: '1em',
+  icon: {
     aliases: {
       github: 'carbon:logo-github',
       nuxt: 'logos:nuxt-icon',
       rocket: 'fluent-emoji:rocket',
-      nxt: 'NuxtIcon',
+      nxt: 'NuxtLogo',
     },
   },
 })

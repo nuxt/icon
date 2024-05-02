@@ -16,29 +16,20 @@ Add [200,000+ ready to use icons](https://icones.js.org) to your [Nuxt](https://
 ## Features ✨
 
 - Nuxt 3 ready
-- Support 200,000 open source vector icons via [Iconify](https://iconify.design)
-- Emoji Support
-- Custom SVG support (via Vue component)
+- SSR friendly
+- Support 200,000 open-source vector icons via [Iconify](https://iconify.design)
+- Support both CSS mode / SVG mode
+- Custom SVG support (via Vue component, or via local SVG files)
+
+> [!NOTE]
+> You are viewing the `v1.0` version of this module, which is a complete rewrite for a better developer experience and performance. If you are migrating from `v0.6`, please check [this PR](https://github.com/nuxt-modules/icon/pull/154) for the full list of changes.
 
 ## Setup ⛓️
 
-Add `nuxt-icon` dependency to your project:
+Run the following command to add the module to your project:
 
 ```bash
-npm install --save-dev nuxt-icon
-
-# Using yarn
-yarn add --dev nuxt-icon
-```
-
-Add it to the `modules` array in your `nuxt.config.ts`:
-
-```ts
-import { defineNuxtConfig } from 'nuxt'
-
-export default defineNuxtConfig({
-  modules: ['nuxt-icon']
-})
+npx nuxi module add icon
 ```
 
 That's it, you can now use the `<Icon />` in your components!
@@ -48,12 +39,13 @@ That's it, you can now use the `<Icon />` in your components!
 ## Usage 👌
 
 **Props:**
-- `name` (required): icon name, emoji or global component name
+- `name` (required): icon name or global component name
 - `size`: icon size (default: `1em`)
+- `mode`: icon rendering mode (`svg` or `css`, default: `css`)
 
 **Attributes**:
 
-When using an icon from Iconify, an `<svg>` will be created, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the native element.
+When using an icon from Iconify, an `<span>` or `<svg>` will be created based on the rendering mode, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the native element.
 
 ```html
 <Icon name="uil:github" color="black" />
@@ -67,36 +59,80 @@ You can use any name from the https://icones.js.org collection:
 <Icon name="uil:github" />
 ```
 
-It supports the `i-` prefix (for example `i-uil-github`).
+It supports the `i-` prefix (for example, `i-uil-github`).
 
-### Emoji
+It's highly recommended to install the icon data locally with 
 
-```html
-<Icon name="🚀" />
+```bash
+npm i -D @iconify-json/collection-name
 ```
+
+For example, to use the `uil:github` icon, install it's collection with `@iconify-json/uil`. This way the icons can be served locally or from your serverless functions, which is faster and more reliable on both SSR and client-side.
 
 ### Vue component
 
+When the `name` matches a global registered component, it will be rendered as that component (in this case `mode` will be ignored):
+
 ```html
-<Icon name="NuxtIcon" />
+<Icon name="MyComponent" />
 ```
 
-Note that `NuxtIcon` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtIcon.vue)).
+Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtIcon.vue)).
+
+### Custom Local Collections
+
+You can use local SVG files to create a custom Iconify collection.
+
+For example, place your icons' SVG files under a folder on your choice, for example `./assets/my-icons`:
+
+```bash
+assets/my-icons
+├── foo.svg
+├── bar-outline.svg
+```
+
+In your `nuxt.config.ts`, add an item in `icon.customCollections`:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    'nuxt-icon'
+  ],
+  icon: {
+    customCollections: [
+      {
+        prefix: 'my-icon',
+        dir: './assets/my-icons'
+      },
+    ],
+  },
+})
+```
+
+Then you can use the icons like this:
+
+```vue
+<template>
+  <Icon name="my-icon:foo" />
+  <Icon name="my-icon:bar-outline" />
+</template>
+```
 
 ## Configuration ⚙️
 
-To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `nuxtIcon.size` property.
+To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `icon.size` property.
 
-Update the default class (`.icon`) of the `<Icon />` with the `nuxtIcon.class` property, for a headless Icon, simply set `nuxtIcon.class: ''`.
+Update the default class (`.icon`) of the `<Icon />` with the `icon.class` property, for a headless Icon, set `icon`.class: ''`.
 
-You can also define aliases to make swapping out icons easier by leveraging the `nuxtIcon.aliases` property.
+You can also define aliases to make swapping out icons easier by leveraging the `icon.aliases` property.
 
 ```ts
 // app.config.ts
 export default defineAppConfig({
-  nuxtIcon: {
+  icon: {
     size: '24px', // default <Icon> size applied
     class: 'icon', // default <Icon> class applied
+    mode: 'css', // default <Icon> mode applied
     aliases: {
       'nuxt': 'logos:nuxt-icon',
     }
@@ -110,22 +146,7 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 <Icon name="nuxt" />
 ```
 
-By default, this module will fetch the Icons from [the official Iconify API](https://api.iconify.design). You can change this behavior by setting the `nuxtIcon.iconifyApiOptions.url` property to [your own Iconify API](https://iconify.design/docs/api/hosting.html).
-
-You can also set `nuxtIcon.iconifyApiOptions.publicApiFallback` to `true` to use the public API as a fallback (only for the `<Icon>` component, not for the `<IconCSS>` component`)
-
-```ts
-// app.config.ts
-export default defineAppConfig({
-  nuxtIcon: {
-    // ...
-    iconifyApiOptions: {
-      url: 'https://<your-api-url>',
-      publicApiFallback: true // default: false
-    }
-  }
-})
-```
+By default, this module will create a server endpoint `/api/_nuxt_icon/:collection` to serve the icons from your local server bundle. When requesting an icon that does not exist in the local bundle, it will fallback to requesting [the official Iconify API](https://api.iconify.design). You can disable the fallback by setting `icon.fallbackToApi` to `false`, or set up [your own Iconify API](https://iconify.design/docs/api/hosting.html) and update `icon.iconifyApiEndpoint` to your own API endpoint.
 
 ## Render Function
 
@@ -148,23 +169,6 @@ const MyIcon = h(Icon, { name: 'uil:twitter' })
   <p><MyIcon /></p>
 </template>
 ```
-
-## CSS Icons
-
-This is currently experimental and may change in the future, this is a way to use CSS icons instead of SVG icons to reduce the DOM size and improve performance. It is leveraging the Mask combined with background color set to `currentColor`, useful to render monotone icons that use `currentColor` as icon color. Learn more on https://docs.iconify.design/icon-components/css.html
-
-```vue
-<template>
-  <IconCSS name="uil:twitter" />
-</template>
-```
-
-You can use aliases in `<IconCSS>` as well.
-
-Note that CSS Masks have limited support, see https://caniuse.com/css-masks for more information.
-
-Also, the icons won't be loaded on initial load and an HTTP request will be made to Iconify CDN to load them.
-
 
 ## Contributing 🙏
 

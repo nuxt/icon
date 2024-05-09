@@ -110,19 +110,36 @@ export default defineNuxtModule<ModuleOptions>({
             appIcons.collections.push(prefix)
         }
 
-        return [
+        const isBundling = !nuxt.options.dev
+
+        // When in dev mode, we avoid bundling the icons to improve performance
+        // Get rid of the require() when ESM JSON modules are widely supported
+        function getImport(collection: string) {
+          return isBundling
+            ? `import('@iconify-json/${collection}/icons.json').then(m => m.default)`
+            : `require('@iconify-json/${collection}/icons.json')`
+        }
+
+        const lines = [
+          ...(isBundling
+            ? []
+            : [
+                `import { createRequire } from 'module'`,
+                `const require = createRequire(import.meta.url)`,
+              ]
+          ),
           `export const collections = {`,
           ...collections.map(collection => typeof collection === 'string'
-            ? `  '${collection}': () => import('@iconify-json/${collection}/icons.json').then(m => m.default),`
+            ? `  '${collection}': () => ${getImport(collection)},`
             : `  '${collection.prefix}': () => (${JSON.stringify(collection)}),`),
           `}`,
-        ].join('\n')
+        ]
+
+        return lines.join('\n')
       },
     })
     nuxt.options.nitro.alias ||= {}
     nuxt.options.nitro.alias['#nuxt-icon-server-bundle'] = template.dst
-    nuxt.options.build.transpile ||= []
-    nuxt.options.build.transpile.push(template.dst)
 
     // Devtools
     addCustomTab({

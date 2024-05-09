@@ -7,6 +7,8 @@ import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
+const DEFAULT_ENDPOINT = 'https://api.iconify.design'
+
 export default defineCachedEventHandler(async (ctx) => {
   const url = ctx.node.req.url
   if (!url)
@@ -18,7 +20,8 @@ export default defineCachedEventHandler(async (ctx) => {
     ? await collections[collectionName]?.()
     : null
 
-  const apiUrl = new URL(basename(url), options.iconifyApiEndpoint || 'https://api.iconify.design')
+  const apiEndPoint = options.iconifyApiEndpoint || DEFAULT_ENDPOINT
+  const apiUrl = new URL(basename(url), apiEndPoint)
   const icons = apiUrl.searchParams.get('icons')?.split(',')
 
   if (collection) {
@@ -32,7 +35,8 @@ export default defineCachedEventHandler(async (ctx) => {
     }
   }
   else if (import.meta.dev) {
-    if (collectionName && !warnOnceSet.has(collectionName)) {
+    // Warn only once per collection, and only with the default endpoint
+    if (collectionName && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
       consola.warn([
         `[Icon] Collection \`${collectionName}\` is not found locally`,
         `We suggest to install it via \`npm i -D @iconify-json/${collectionName}\` to provide the best end-user experience.`,

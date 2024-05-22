@@ -42,7 +42,6 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
-    const baseURL = nuxt.options.app?.baseURL ?? ''
 
     addPlugin(
       resolver.resolve('./runtime/plugin'),
@@ -53,7 +52,7 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolver.resolve('./runtime/components/index'),
     })
     addServerHandler({
-      route: baseURL + '/api/_nuxt_icon/:collection',
+      route: '/api/_nuxt_icon/:collection',
       handler: resolver.resolve('./runtime/server/api'),
     })
 

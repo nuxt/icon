@@ -215,7 +215,7 @@ async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | 
     // @ts-expect-error remove extra properties
     delete json.dir
 
-    logger.success(`Nuxt Icon loaded local colllection \`${json.prefix}\` with ${files.length} icons`)
+    logger.success(`Nuxt Icon loaded local collection \`${json.prefix}\` with ${files.length} icons`)
     return json
   }
   return collection

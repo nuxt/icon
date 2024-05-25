@@ -11,7 +11,7 @@ let cssSelectors: Set<string> | undefined
 const SYMBOL_SERVER_CSS = 'NUXT_ICONS_SERVER_CSS'
 
 function escapeCssSelector(selector: string) {
-  return selector.replace(/([^a-z0-9_-])/gi, '\\$1')
+  return selector.replace(/([^\w-])/g, '\\$1')
 }
 
 function getAllSelectors() {

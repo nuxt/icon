@@ -4,7 +4,8 @@ import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createRes
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type { Nuxt } from '@nuxt/schema'
 import fg from 'fast-glob'
-import type { IconifyIcon, IconifyJSON } from '@iconify/types'
+import type { IconifyJSON } from '@iconify/types'
+import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import collectionNames from './collections'
 import { schema } from './schema'
 import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
@@ -209,7 +210,12 @@ async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | 
         const cleanupIdx = svg.indexOf('<svg')
         if (cleanupIdx > 0)
           svg = svg.slice(cleanupIdx)
-        return [name, { body: svg } satisfies IconifyIcon]
+        const data = convertParsedSVG(parseSVGContent(svg)!)!
+        if (data.top === 0)
+          delete data.top
+        if (data.left === 0)
+          delete data.left
+        return [name, data]
       }))),
     }
     // @ts-expect-error remove extra properties

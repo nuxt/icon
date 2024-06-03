@@ -4,6 +4,7 @@ export const schema = {
   $schema: {
     title: 'Nuxt Icon',
     description: 'Configure Nuxt Icon module preferences.',
+    tags: ['@studioIcon material-symbols:star'],
   },
   size: {
     $default: undefined,

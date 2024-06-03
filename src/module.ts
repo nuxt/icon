@@ -29,7 +29,8 @@ export default defineNuxtModule<ModuleOptions>({
           nuxtIcon: {
             $schema: {
               title: 'Nuxt Icon',
-              description: 'Configure the defaults of Nuxt Icon'
+              description: 'Configure the defaults of Nuxt Icon',
+              tags: ['@studioIcon material-symbols:star'],
             },
             size: {
               $default: '1em',

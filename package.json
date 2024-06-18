@@ -1,10 +1,10 @@
 {
-  "name": "nuxt-icon",
+  "name": "@nuxt/icon",
   "packageManager": "pnpm@9.1.2",
   "version": "1.0.0-beta.6",
   "license": "MIT",
   "type": "module",
-  "repository": "nuxt-modules/icon",
+  "repository": "nuxt/icon",
   "exports": {
     ".": {
       "types": "./dist/types.d.ts",

@@ -3,7 +3,7 @@ import type { NuxtIconRuntimeOptions } from '../types'
 import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
-  name: 'nuxt-icon',
+  name: '@nuxt/icon',
   setup() {
     const config = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions

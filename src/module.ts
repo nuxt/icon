@@ -1,4 +1,4 @@
-import { basename, join } from 'node:path'
+import { basename, join, isAbsolute } from 'node:path'
 import fs from 'node:fs/promises'
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addTemplate, addComponent, logger } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
@@ -198,7 +198,7 @@ async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | 
     return collection
   // Custom collection
   if ('dir' in collection) {
-    const dir = join(nuxt.options.rootDir, collection.dir)
+    const dir = isAbsolute(collection.dir) ? collection.dir : join(nuxt.options.rootDir, collection.dir)
     const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
       .sort()
 

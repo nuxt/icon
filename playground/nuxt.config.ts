@@ -3,6 +3,9 @@ export default defineNuxtConfig({
     '../src/module',
     '@unocss/nuxt',
   ],
+  extends: [
+    './base',
+  ],
   // ssr: false,
   icon: {
     customCollections: [

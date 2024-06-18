@@ -161,6 +161,14 @@ function clear() {
           :mode
         />
       </p>
+      <p>
+        Custom icons from layer:
+        <Icon
+          name="layer:layer"
+          size="64"
+          :mode
+        />
+      </p>
       <!-- <p>
         Emoji:
         <Icon name="🚀" />

@@ -15,7 +15,7 @@ export type { ModuleOptions }
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-icon',
+    name: '@nuxt/icon',
     configKey: 'icon',
     compatibility: {
       nuxt: '^3.0.0',

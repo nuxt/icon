@@ -42,6 +42,8 @@ export default defineNuxtModule<ModuleOptions>({
     collections: schema['collections'].$default,
   },
   async setup(options, nuxt) {
+    logger.warn('`nuxt-icon` v1 has been renamed to `@nuxt/icon`, please install with `npm i -D @nuxt/icon` and update your modules config')
+
     const resolver = createResolver(import.meta.url)
 
     addPlugin(

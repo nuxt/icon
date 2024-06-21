@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> `nuxt-icon` package has been renamed to `@nuxt/icon`. Please install it and update your `nuxt.config.ts` to use the new package name.
+
 ![nuxt-icon](https://github.com/nuxt-modules/icon/assets/904724/ae673805-06ad-4c05-820e-a8445c7224ce)
 
 # Nuxt Icon

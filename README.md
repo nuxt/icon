@@ -36,6 +36,30 @@ That's it, you can now use the `<Icon />` in your components!
 
 ✨ If you are using VS Code, you can use the [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) extension by [@antfu](https://github.com/antfu)
 
+
+<details>
+<summary>Manual Setup</summary>
+
+You can install the module manually with:
+
+```bash
+npm i -D @nuxt/icon
+```
+
+Update your `nuxt.config.ts`
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ]
+})
+```
+
+If you have the legacy module `nuxt-icon` installed, you might want to remove it from the `modules` list.
+
+</details>
+
 ## Usage 👌
 
 **Props:**

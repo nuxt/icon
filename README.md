@@ -120,7 +120,7 @@ In your `nuxt.config.ts`, add an item in `icon.customCollections`:
 ```ts
 export default defineNuxtConfig({
   modules: [
-    'nuxt-icon'
+    '@nuxt/icon'
   ],
   icon: {
     customCollections: [

@@ -117,7 +117,7 @@ export default defineNuxtModule<ModuleOptions>({
         // Get rid of the require() when ESM JSON modules are widely supported
         function getImport(collection: string) {
           return isBundling
-            ? `import('@iconify-json/${collection}/icons.json').then(m => m.default)`
+            ? `import('@iconify-json/${collection}/icons.json', { with: { type: 'json' } }).then(m => m.default)`
             : `require('@iconify-json/${collection}/icons.json')`
         }
 

@@ -17,7 +17,7 @@ export default defineNuxtPlugin({
     if (options.provider === 'server') {
       const baseURL = config.app?.baseURL?.replace(/\/$/, '') ?? ''
 
-      resources.push(baseURL + '/api/_nuxt_icon')
+      resources.push(baseURL + (options.localApiEndpoint || '/api/_nuxt_icon'))
       if (options.fallbackToApi) {
         resources.push(options.iconifyApiEndpoint!)
       }

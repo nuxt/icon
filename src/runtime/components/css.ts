@@ -48,8 +48,10 @@ function getAllSelectors() {
     }
   }
 
-  for (let i = 0; i < document.styleSheets.length; i++) {
-    const rules = document.styleSheets[i].cssRules || document.styleSheets[i].rules
+  const localStyleSheets = Array.from(document.styleSheets).filter(styleSheet => !styleSheet.href || styleSheet.href.startsWith(window.location.origin))
+
+  for (let i = 0; i < localStyleSheets.length; i++) {
+    const rules = localStyleSheets[i].cssRules || localStyleSheets[i].rules
     scanCssRules(rules)
   }
 

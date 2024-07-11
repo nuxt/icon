@@ -101,7 +101,7 @@ When the `name` matches a global registered component, it will be rendered as th
 <Icon name="MyComponent" />
 ```
 
-Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtIcon.vue)).
+Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtLogo.vue)).
 
 ### Custom Local Collections
 

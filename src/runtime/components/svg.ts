@@ -11,6 +11,10 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       type: String,
       required: true,
     },
+    stroke: {
+      type: [String, Number],
+      required: false,
+    },
   },
   async setup(props, { slots }) {
     const nuxt = useNuxtApp()
@@ -36,10 +40,19 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       }
     }
 
+    const updateStrokeWidth = (el) => {
+      if (props.stroke === null) return
+      el.querySelectorAll('[stroke-width]').forEach((el: HTMLElement) => {
+        el.setAttribute('stroke-width', props.stroke)
+      })
+    }
+
     return () => h(Iconify, {
       icon: name.value,
       ssr: true,
       class: options.class,
+      onVnodeMounted: ({ el }) => updateStrokeWidth(el),
+      onVnodeUpdated: ({ el }) => updateStrokeWidth(el)
     }, slots)
   },
 })

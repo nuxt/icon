@@ -16,6 +16,7 @@ const mode = useCookie<'svg' | 'css'>('nuxt-icon-demo-mode', {
 const iconsRaw = useCookie<string[]>('nuxt-icon-demo-icons', {
   default: () => ['logos-nuxt-icon', 'logos-vitejs', 'logos-vue'],
 })
+const stroke = ref<number>(0)
 
 const icons = ref<string[]>(iconsRaw.value)
 
@@ -51,6 +52,17 @@ function clear() {
           CSS
         </option>
       </select>
+      <div class="flex gap-2 mb-0.5 items-center">
+        <div>Stroke:</div>
+        <input
+          v-model="stroke"
+          type="range"
+          class="mt-1.5"
+          min="0.5"
+          step="0.1"
+          max="3"
+        >
+      </div>
       <button
         class="flex items-center gap-1"
         @click="addRandom"
@@ -92,6 +104,7 @@ function clear() {
           <Icon
             :name="icon"
             :mode="mode"
+            :stroke
           />
         </div>
         <div class="text-xs font-mono opacity-50">
@@ -109,16 +122,19 @@ function clear() {
         <Icon
           name="uil:github"
           :mode
+          :stroke
         />
         <Icon
           name="uil:github"
           size="24"
           :mode
+          :stroke
         />
         <Icon
           name="uil:github"
           size="48"
           :mode
+          :stroke
         />
       </p>
       <p>
@@ -126,16 +142,19 @@ function clear() {
         <Icon
           name="NuxtLogo"
           :mode
+          :stroke
         />
         <Icon
           name="NuxtLogo"
           size="24"
           :mode
+          :stroke
         />
         <Icon
           name="NuxtLogo"
           size="48"
           :mode
+          :stroke
         />
       </p>
       <p>
@@ -144,6 +163,7 @@ function clear() {
           name="custom1:nuxt-v1"
           size="64"
           :mode
+          :stroke
         />
         <Icon
           name="custom1:nuxt-v2"
@@ -154,11 +174,13 @@ function clear() {
           name="custom1:nuxt-v3-beta"
           size="64"
           :mode
+          :stroke
         />
         <Icon
           name="custom1:nuxt-v3"
           size="64"
           :mode
+          :stroke
         />
       </p>
       <p>
@@ -167,6 +189,7 @@ function clear() {
           name="layer:layer"
           size="64"
           :mode
+          :stroke
         />
       </p>
       <!-- <p>
@@ -187,20 +210,24 @@ function clear() {
           name="github"
           size="24"
           :mode
+          :stroke
         />
         <Icon
           name="nuxt"
           size="24"
           :mode
+          :stroke
         />
         <Icon
           name="rocket"
           size="24"
           :mode
+          :stroke
         />
         <Icon
           name="nxt"
           size="24"
+          :stroke
         />
       </p>
       <p>
@@ -208,6 +235,7 @@ function clear() {
         <Icon
           name="i-fluent-emoji-high-contrast-1st-place-medal"
           :mode
+          :stroke
         />
       </p>
       <!-- <p>
@@ -223,10 +251,12 @@ function clear() {
         <Icon
           name="i-ph-code"
           :mode
+          :stroke
         />
         <Icon
           name="ph:table"
           :mode
+          :stroke
         />
       </p>
     </div>

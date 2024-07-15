@@ -125,8 +125,8 @@ export default defineNuxtModule<ModuleOptions>({
           ...(isBundling
             ? []
             : [
-                `import { createRequire } from 'module'`,
-                `const require = createRequire(import.meta.url)`,
+              `import { createRequire } from 'module'`,
+              `const require = createRequire(import.meta.url)`,
               ]
           ),
           `export const collections = {`,
@@ -202,27 +202,33 @@ async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | 
     const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
       .sort()
 
-    const json: IconifyJSON = {
-      ...collection,
-      icons: Object.fromEntries(await Promise.all(files.map(async (file) => {
-        const name = basename(file, '.svg')
-        let svg = await fs.readFile(join(dir, file), 'utf-8')
-        const cleanupIdx = svg.indexOf('<svg')
-        if (cleanupIdx > 0)
-          svg = svg.slice(cleanupIdx)
-        const data = convertParsedSVG(parseSVGContent(svg)!)!
-        if (data.top === 0)
-          delete data.top
-        if (data.left === 0)
-          delete data.left
-        return [name, data]
-      }))),
-    }
-    // @ts-expect-error remove extra properties
-    delete json.dir
+    const parsedIcons = await Promise.all(files.map(async (file) => {
+      const name = basename(file, '.svg')
+      let svg = await fs.readFile(join(dir, file), 'utf-8')
+      const cleanupIdx = svg.indexOf('<svg')
+      if (cleanupIdx > 0)
+        svg = svg.slice(cleanupIdx)
+      const data = convertParsedSVG(parseSVGContent(svg)!)
+      if (!data) {
+        logger.error(`Nuxt Icon could not parse the SVG content for icon \`${name}\``)
+        return [name, {}]
+      }
+      if (data.top === 0)
+        delete data.top
+      if (data.left === 0)
+        delete data.left
+      return [name, data]
+    }))
 
-    logger.success(`Nuxt Icon loaded local collection \`${json.prefix}\` with ${files.length} icons`)
-    return json
+    const successfulIcons = parsedIcons.filter(([_, data]) => Object.keys(data).length > 0)
+    // @ts-expect-error remove extra properties
+    delete collection.dir
+
+    logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${successfulIcons.length} icons`)
+    return {
+      ...collection,
+      icons: Object.fromEntries(successfulIcons),
+    }
   }
   return collection
 }

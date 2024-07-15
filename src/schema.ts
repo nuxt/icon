@@ -125,4 +125,12 @@ export const schema = {
       tags: ['@studioIcon material-symbols:public'],
     },
   },
+  localApiEndpoint: {
+    $default: '/api/_nuxt_icon',
+    $schema: {
+      title: 'Local API Endpoint Path',
+      description: 'Define a custom path for the local API endpoint.',
+      tags: ['@studioIcon material-symbols:api'],
+    },
+  },
 } satisfies SchemaDefinition

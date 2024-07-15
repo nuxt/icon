@@ -115,4 +115,13 @@ export interface NuxtIconRuntimeOptions {
    * @default true
    */
   fallbackToApi: boolean
+
+  /**
+   * Local API Endpoint Path
+   *
+   * Define a custom path for the local API endpoint.
+   *
+   * @default "/api/_nuxt_icon"
+   */
+  localApiEndpoint: string
 }

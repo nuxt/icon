@@ -170,7 +170,7 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 <Icon name="nuxt" />
 ```
 
-By default, this module will create a server endpoint `/api/_nuxt_icon/:collection` to serve the icons from your local server bundle. When requesting an icon that does not exist in the local bundle, it will fallback to requesting [the official Iconify API](https://api.iconify.design). You can disable the fallback by setting `icon.fallbackToApi` to `false`, or set up [your own Iconify API](https://iconify.design/docs/api/hosting.html) and update `icon.iconifyApiEndpoint` to your own API endpoint.
+By default, this module will create a server endpoint `/api/_nuxt_icon/:collection` to serve the icons from your local server bundle (you can override the default path by setting `icon.localApiEndpoint` to your desired path). When requesting an icon that does not exist in the local bundle, it will fallback to requesting [the official Iconify API](https://api.iconify.design). You can disable the fallback by setting `icon.fallbackToApi` to `false`, or set up [your own Iconify API](https://iconify.design/docs/api/hosting.html) and update `icon.iconifyApiEndpoint` to your own API endpoint.
 
 ## Render Function
 

@@ -33,6 +33,7 @@ export default defineNuxtModule<ModuleOptions>({
     size: schema['size'].$default,
     aliases: schema['aliases'].$default,
     iconifyApiEndpoint: schema['iconifyApiEndpoint'].$default,
+    localApiEndpoint: schema['localApiEndpoint'].$default,
     fallbackToApi: schema['fallbackToApi'].$default,
     cssSelectorPrefix: schema['cssSelectorPrefix'].$default,
     cssWherePseudo: schema['cssWherePseudo'].$default,
@@ -53,7 +54,7 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolver.resolve('./runtime/components/index'),
     })
     addServerHandler({
-      route: '/api/_nuxt_icon/:collection',
+      route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,
       handler: resolver.resolve('./runtime/server/api'),
     })
 

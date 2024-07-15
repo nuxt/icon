@@ -48,9 +48,14 @@ function getAllSelectors() {
     }
   }
 
-  for (let i = 0; i < document.styleSheets.length; i++) {
-    const rules = document.styleSheets[i].cssRules || document.styleSheets[i].rules
-    scanCssRules(rules)
+  for (const styleSheet of document.styleSheets) {
+    try {
+      const rules = styleSheet.cssRules || styleSheet.rules
+      scanCssRules(rules)
+    }
+    catch (error) {
+      // this typically means the stylesheet is from an inaccessible origin
+    }
   }
 
   return cssSelectors

@@ -72,7 +72,7 @@ If you have the legacy module `nuxt-icon` installed, you might want to remove it
 When using an icon from Iconify, an `<span>` or `<svg>` will be created based on the rendering mode, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the native element.
 
 ```html
-<Icon name="uil:github" color="black" />
+<Icon name="uil:github" style="color: black" />
 ```
 
 ### Iconify dataset

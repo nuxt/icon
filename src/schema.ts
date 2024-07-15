@@ -96,7 +96,7 @@ export const schema = {
     },
   },
   provider: {
-    $default: 'server',
+    $default: undefined,
     $schema: {
       title: 'Icon Provider',
       description: [

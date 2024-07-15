@@ -45,6 +45,9 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
+    if (!options.provider)
+      options.provider = nuxt.options.ssr ? 'server' : 'client'
+
     addPlugin(
       resolver.resolve('./runtime/plugin'),
     )

@@ -103,6 +103,16 @@ When the `name` matches a global registered component, it will be rendered as th
 
 Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtLogo.vue)).
 
+You can also change the component name with:
+
+```ts
+export default defineNuxtConfig({
+  icon: {
+    componentName: 'NuxtIcon'
+  }
+})
+```
+
 ### Custom Local Collections
 
 You can use local SVG files to create a custom Iconify collection.
@@ -151,7 +161,7 @@ export default defineNuxtConfig({
   ],
   ssr: false,
   icon: {
-    provider: 'server', // <!-- this
+    provider: 'server', // <-- this
     customCollections: [
       {
         prefix: 'my-icon',

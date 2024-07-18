@@ -103,15 +103,16 @@ When the `name` matches a global registered component, it will be rendered as th
 
 Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtLogo.vue)).
 
-You can also change the component name with:
-
-```ts
-export default defineNuxtConfig({
-  icon: {
-    componentName: 'NuxtIcon'
-  }
-})
-```
+> [!TIP]
+> You can also change the component name with:
+>
+> ```ts
+> export default defineNuxtConfig({
+>   icon: {
+>     componentName: 'NuxtIcon'
+>   }
+> })
+> ```
 
 ### Custom Local Collections
 
@@ -180,7 +181,7 @@ Update the default class (`.icon`) of the `<Icon />` with the `icon.class` prope
 
 You can also define aliases to make swapping out icons easier by leveraging the `icon.aliases` property.
 
-> [!TIP]
+> [!NOTE]
 > Note it's `app.config.ts` and not `nuxt.config.ts` for runtime configs.
 
 ```ts

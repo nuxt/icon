@@ -75,7 +75,7 @@ When using an icon from Iconify, an `<span>` or `<svg>` will be created based on
 <Icon name="uil:github" style="color: black" />
 ```
 
-### Iconify dataset
+### Iconify Dataset
 
 You can use any name from the https://icones.js.org collection:
 
@@ -93,7 +93,7 @@ npm i -D @iconify-json/collection-name
 
 For example, to use the `uil:github` icon, install it's collection with `@iconify-json/uil`. This way the icons can be served locally or from your serverless functions, which is faster and more reliable on both SSR and client-side.
 
-### Vue component
+### Vue Component
 
 When the `name` matches a global registered component, it will be rendered as that component (in this case `mode` will be ignored):
 
@@ -103,11 +103,21 @@ When the `name` matches a global registered component, it will be rendered as th
 
 Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtLogo.vue)).
 
+You can also change the component name with:
+
+```ts
+export default defineNuxtConfig({
+  icon: {
+    componentName: 'NuxtIcon'
+  }
+})
+```
+
 ### Custom Local Collections
 
 You can use local SVG files to create a custom Iconify collection.
 
-For example, place your icons' SVG files under a folder on your choice, for example `./assets/my-icons`:
+For example, place your icons' SVG files under a folder of your choice, for example, `./assets/`my-icons`:
 
 ```bash
 assets/my-icons
@@ -142,13 +152,36 @@ Then you can use the icons like this:
 </template>
 ```
 
-## Configuration ⚙️
+Note that custom local collections require you to have a server to serve the API. When setting `ssr: false`, the provider will default to the Iconify API (which does not have your custom icons). If you want to build a SPA with server endpoints, you can explicitly set `provider: 'server'`:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  ssr: false,
+  icon: {
+    provider: 'server', // <-- this
+    customCollections: [
+      {
+        prefix: 'my-icon',
+        dir: './assets/my-icons'
+      },
+    ],
+  },
+})
+```
+
+### Icon Customization
 
 To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `icon.size` property.
 
 Update the default class (`.icon`) of the `<Icon />` with the `icon.class` property, for a headless Icon, set `icon`.class: ''`.
 
 You can also define aliases to make swapping out icons easier by leveraging the `icon.aliases` property.
+
+> [!TIP]
+> Note it's `app.config.ts` and not `nuxt.config.ts` for runtime configs.
 
 ```ts
 // app.config.ts
@@ -172,7 +205,73 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 
 By default, this module will create a server endpoint `/api/_nuxt_icon/:collection` to serve the icons from your local server bundle (you can override the default path by setting `icon.localApiEndpoint` to your desired path). When requesting an icon that does not exist in the local bundle, it will fallback to requesting [the official Iconify API](https://api.iconify.design). You can disable the fallback by setting `icon.fallbackToApi` to `false`, or set up [your own Iconify API](https://iconify.design/docs/api/hosting.html) and update `icon.iconifyApiEndpoint` to your own API endpoint.
 
-## Render Function
+### Server Bundle
+
+Since `@nuxt/icon` v1.0, we have introduced the server bundle concept to serve the icons from Nuxt server endpoints. This keeps the client bundle lean and able to load icons on-demand, while having all the dynamic features to use icons that might now be known at build time.
+
+#### Server Bundle Mode: `local`
+
+This mode will bundle the icon collections you have installed locally (like `@iconify-json/*`), into your server bundle as dynamic chunks. The collection data will be loaded on-demand, only when your client request icons from that collection.
+
+#### Server Bundle Mode: `remote`
+
+Introduced in `@nuxt/icon` v1.2, you can now use the `remote` server bundle to serve the icons from a remote CDN.
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    serverBundle: 'remote',
+  },
+})
+```
+
+Or you can specify the remote provider:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    serverBundle: {
+      remote: 'jsdelivr', // 'unpkg' or 'github-raw', or a custom function
+    }
+  },
+})
+```
+
+Which will make server requests to `https://cdn.jsdelivr.net/npm/@iconify-json/ph/icons.json` to fetch the icons at runtime, instead of bundling them with your server.
+
+Under the hood, instead of bundling `() => import('@iconify-json/ph/icons.json')` to your server bundle, it will now use something like `() => fetch('https://cdn.jsdelivr.net/npm/@iconify-json/ph/icons.json').then(res => res.json())`, where the collections are not inlined.
+
+This would be useful when server bundle size is a concern, like in serverless or worker environments.
+
+#### Server Bundle Mode: `auto`
+
+This is the default option, where the module will pick between `local` and `remote` based your deployment environment. `local` will be proffered unless you are deploying to a serverless or worker environment, like Vercel Edge or Cloudflare Workers.
+
+#### Completely Disable Server Bundle
+
+If you want to disable the server bundle completely, you can set `icon.serverBundle` to `false` and `provider` to `iconify`
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    provider: 'iconify',
+    serverBundle: false,
+  },
+})
+```
+
+This will make requests to Iconify API every time the client requests an icon. We do not recommend doing so unless the other options are not feasible.
+
+### Render Function
 
 You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:
 

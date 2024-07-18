@@ -3,9 +3,11 @@ export default defineNuxtConfig({
     '../src/module',
     '@unocss/nuxt',
   ],
+
   extends: [
     './base',
   ],
+
   // ssr: false,
   icon: {
     customCollections: [
@@ -14,17 +16,24 @@ export default defineNuxtConfig({
         dir: './icons/custom1',
       },
     ],
+    serverBundle: 'remote',
   },
+
   nitro: {
     logLevel: 'verbose',
   },
+
   devtools: {
     enabled: true,
   },
+
   typescript: {
     includeWorkspace: true,
   },
+
   imports: {
     autoImport: false,
   },
+
+  compatibilityDate: '2024-07-18',
 })

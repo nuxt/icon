@@ -104,6 +104,8 @@ export const schema = {
         '',
         '- `server` - Fetch icons with a server handler',
         '- `iconify` - Fetch icons with Iconify API, purely client-side',
+        '',
+        '`server` by default; `iconify` when `ssr: false`',
       ].join('\n'),
       enum: ['server', 'iconify'],
       tags: ['@studioIcon material-symbols:cloud'],

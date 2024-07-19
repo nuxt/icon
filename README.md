@@ -118,7 +118,7 @@ Note that `MyComponent` needs to be inside `components/global/` folder (see [exa
 
 You can use local SVG files to create a custom Iconify collection.
 
-For example, place your icons' SVG files under a folder of your choice, for example, `./assets/`my-icons`:
+For example, place your icons' SVG files under a folder of your choice, for example, `./assets/my-icons`:
 
 ```bash
 assets/my-icons

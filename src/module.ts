@@ -5,6 +5,7 @@ import { addCustomTab } from '@nuxt/devtools-kit'
 import type { Nuxt } from '@nuxt/schema'
 import fg from 'fast-glob'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
+import { isPackageExists } from 'local-pkg'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import collectionNames from './collections'
 import { schema } from './schema'
@@ -18,6 +19,8 @@ const KEYWORDS_EDGE_TARGETS: string[] = [
   'cloudflare',
   'worker',
 ]
+
+const isFullCollectionExists = isPackageExists('@iconify/json')
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -161,11 +164,15 @@ export default defineNuxtModule<ModuleOptions>({
               return `  '${collection}': createRemoteCollection(${JSON.stringify(getRemoteEndpoint(collection))}),`
             }
 
+            const path = isFullCollectionExists
+              ? `@iconify/json/json/${collection}.json`
+              : `@iconify-json/${collection}/icons.json`
+
             // When in dev mode, we avoid bundling the icons to improve performance
             // Get rid of the require() when ESM JSON modules are widely supported
             return isBundling
-              ? `  '${collection}': () => import('@iconify-json/${collection}/icons.json', { with: { type: 'json' } }).then(m => m.default),`
-              : `  '${collection}': () => require('@iconify-json/${collection}/icons.json'),`
+              ? `  '${collection}': () => import('${path}', { with: { type: 'json' } }).then(m => m.default),`
+              : `  '${collection}': () => require('${path}'),`
           }
           else {
             const { prefix } = collection
@@ -283,10 +290,12 @@ export default defineNuxtModule<ModuleOptions>({
 })
 
 async function discoverLocalCollections(): Promise<ServerBundleOptions['collections']> {
-  const isPackageExists = await import('local-pkg').then(r => r.isPackageExists)
-  const collections = collectionNames
-    .filter(collection => isPackageExists('@iconify-json/' + collection))
-  if (collections.length)
+  const collections = isFullCollectionExists
+    ? collectionNames
+    : collectionNames.filter(collection => isPackageExists('@iconify-json/' + collection))
+  if (isFullCollectionExists)
+    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections (@iconify/json)`)
+  else if (collections.length)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
   return collections
 }

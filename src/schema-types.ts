@@ -94,11 +94,11 @@ export interface NuxtIconRuntimeOptions {
    * - `server` - Fetch icons with a server handler
    * - `iconify` - Fetch icons with Iconify API, purely client-side
    *
-   * @default "server"
+   * @default "server" when ssr, "iconify" when csr
    *
    * @enum server,iconify
    */
-  provider: string
+  provider: string | undefined
 
   /**
    * Iconify API Endpoint URL
@@ -117,6 +117,15 @@ export interface NuxtIconRuntimeOptions {
    * @default true
    */
   fallbackToApi: boolean
+
+  /**
+   * Local API Endpoint Path
+   *
+   * Define a custom path for the local API endpoint.
+   *
+   * @default "/api/_nuxt_icon"
+   */
+  localApiEndpoint: string
 
   /**
    * Customise callback

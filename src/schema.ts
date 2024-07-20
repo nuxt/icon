@@ -96,7 +96,7 @@ export const schema = {
     },
   },
   provider: {
-    $default: 'server',
+    $default: undefined,
     $schema: {
       title: 'Icon Provider',
       description: [
@@ -104,6 +104,8 @@ export const schema = {
         '',
         '- `server` - Fetch icons with a server handler',
         '- `iconify` - Fetch icons with Iconify API, purely client-side',
+        '',
+        '`server` by default; `iconify` when `ssr: false`',
       ].join('\n'),
       enum: ['server', 'iconify'],
       tags: ['@studioIcon material-symbols:cloud'],
@@ -123,6 +125,14 @@ export const schema = {
       title: 'Fallback to Iconify API',
       description: 'Fallback to Iconify API if server provider fails to found the collection.',
       tags: ['@studioIcon material-symbols:public'],
+    },
+  },
+  localApiEndpoint: {
+    $default: '/api/_nuxt_icon',
+    $schema: {
+      title: 'Local API Endpoint Path',
+      description: 'Define a custom path for the local API endpoint.',
+      tags: ['@studioIcon material-symbols:api'],
     },
   },
   customise: {

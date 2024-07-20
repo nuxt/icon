@@ -4,21 +4,30 @@ import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createRes
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type { Nuxt } from '@nuxt/schema'
 import fg from 'fast-glob'
+import { isPackageExists } from 'local-pkg'
 import type { IconifyJSON } from '@iconify/types'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import collectionNames from './collections'
 import { schema } from './schema'
-import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
+import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions, RemoteCollection } from './types'
 import { unocssIntegration } from './integrations/unocss'
 
 export type { ModuleOptions }
+
+const KEYWORDS_EDGE_TARGETS: string[] = [
+  'edge',
+  'cloudflare',
+  'worker',
+]
+
+const isFullCollectionExists = isPackageExists('@iconify/json')
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: '@nuxt/icon',
     configKey: 'icon',
     compatibility: {
-      nuxt: '^3.0.0',
+      nuxt: '>=3.0.0',
     },
   },
   defaults: {
@@ -33,6 +42,7 @@ export default defineNuxtModule<ModuleOptions>({
     size: schema['size'].$default,
     aliases: schema['aliases'].$default,
     iconifyApiEndpoint: schema['iconifyApiEndpoint'].$default,
+    localApiEndpoint: schema['localApiEndpoint'].$default,
     fallbackToApi: schema['fallbackToApi'].$default,
     cssSelectorPrefix: schema['cssSelectorPrefix'].$default,
     cssWherePseudo: schema['cssWherePseudo'].$default,
@@ -45,6 +55,19 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
+    if (!options.provider)
+      options.provider = nuxt.options.ssr ? 'server' : 'client'
+
+    let serverBundle = options.serverBundle
+    if (serverBundle === 'auto') {
+      serverBundle = nuxt.options.dev
+        ? 'local'
+        : KEYWORDS_EDGE_TARGETS.some(word => typeof nuxt.options.nitro.preset === 'string' && nuxt.options.nitro.preset.includes(word))
+          ? 'remote'
+          : 'local'
+      logger.info(`Nuxt Icon server bundle mode is set to \`${serverBundle}\``)
+    }
+
     addPlugin(
       resolver.resolve('./runtime/plugin'),
     )
@@ -54,7 +77,7 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolver.resolve('./runtime/components/index'),
     })
     addServerHandler({
-      route: '/api/_nuxt_icon/:collection',
+      route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,
       handler: resolver.resolve('./runtime/server/api'),
     })
 
@@ -66,10 +89,10 @@ export default defineNuxtModule<ModuleOptions>({
     if (!runtimeOptions.collections) {
       runtimeOptions.collections = runtimeOptions.fallbackToApi
         ? collectionNames
-        : options.serverBundle === 'auto'
+        : typeof serverBundle === 'string'
           ? collectionNames
-          : options.serverBundle
-            ? options.serverBundle.collections
+          : serverBundle
+            ? serverBundle.collections
             : []
     }
     nuxt.options.appConfig.icon = Object.assign(
@@ -89,11 +112,11 @@ export default defineNuxtModule<ModuleOptions>({
     // Bundle icons for server
     const bundle = resolveServerBundle(
       nuxt,
-      (!options.serverBundle || options.provider !== 'server')
-        ? {}
-        : (options.serverBundle === 'auto')
-            ? discoverLocalCollections()
-            : options.serverBundle,
+      (!serverBundle || options.provider !== 'server')
+        ? { disabled: true }
+        : typeof serverBundle === 'string'
+          ? { remote: serverBundle === 'remote' }
+          : serverBundle,
       options.customCollections,
     )
 
@@ -101,7 +124,10 @@ export default defineNuxtModule<ModuleOptions>({
       filename: 'nuxt-icon-server-bundle.mjs',
       write: true,
       async getContents() {
-        const { collections } = await bundle
+        const {
+          collections,
+          remote,
+        } = await bundle
 
         nuxt.options.appConfig.icon ||= {}
         const appIcons = nuxt.options.appConfig.icon as NuxtIconRuntimeOptions
@@ -114,27 +140,68 @@ export default defineNuxtModule<ModuleOptions>({
 
         const isBundling = !nuxt.options.dev
 
-        // When in dev mode, we avoid bundling the icons to improve performance
-        // Get rid of the require() when ESM JSON modules are widely supported
-        function getImport(collection: string) {
-          return isBundling
-            ? `import('@iconify-json/${collection}/icons.json').then(m => m.default)`
-            : `require('@iconify-json/${collection}/icons.json')`
+        function getRemoteEndpoint(name: string) {
+          if (typeof remote === 'function')
+            return remote(name)
+
+          switch (remote) {
+            case 'jsdelivr':
+              return `https://cdn.jsdelivr.net/npm/@iconify-json/${name}/icons.json`
+            case 'unpkg':
+              return `https://unpkg.com/@iconify-json/${name}/icons.json`
+            case 'github-raw':
+              return `https://raw.githubusercontent.com/iconify/icon-sets/master/json/${name}.json`
+            default:
+              throw new Error(`Unknown remote collection source: ${remote}`)
+          }
         }
+
+        const collectionsValues = collections.map((collection) => {
+          if (typeof collection === 'string') {
+            if (remote) {
+              return `  '${collection}': createRemoteCollection(${JSON.stringify(getRemoteEndpoint(collection))}),`
+            }
+
+            const path = isFullCollectionExists
+              ? `@iconify/json/json/${collection}.json`
+              : `@iconify-json/${collection}/icons.json`
+
+            // When in dev mode, we avoid bundling the icons to improve performance
+            // Get rid of the require() when ESM JSON modules are widely supported
+            return isBundling
+              ? `  '${collection}': () => import('${path}', { with: { type: 'json' } }).then(m => m.default),`
+              : `  '${collection}': () => require('${path}'),`
+          }
+          else {
+            const { prefix } = collection
+            if ('fetchEndpoint' in collection)
+              return `  '${prefix}': createRemoteCollection(${JSON.stringify(collection.fetchEndpoint)}),`
+            return `  '${prefix}': () => (${JSON.stringify(collection)}),`
+          }
+        })
 
         const lines = [
           ...(isBundling
             ? []
             : [
-                `import { createRequire } from 'module'`,
-                `const require = createRequire(import.meta.url)`,
+              `import { createRequire } from 'module'`,
+              `const require = createRequire(import.meta.url)`,
               ]
           ),
+          `function createRemoteCollection(fetchEndpoint) {`,
+          '  let _cache',
+          '  return async () => {',
+          '    if (_cache)',
+          '      return _cache',
+          '    const res = await fetch(fetchEndpoint).then(r => r.json())',
+          '    _cache = res',
+          '    return res',
+          '  }',
+          '}',
+          '',
           `export const collections = {`,
-          ...collections.map(collection => typeof collection === 'string'
-            ? `  '${collection}': () => ${getImport(collection)},`
-            : `  '${collection.prefix}': () => (${JSON.stringify(collection)}),`),
-          `}`,
+          ...collectionsValues,
+          '}',
         ]
 
         return lines.join('\n')
@@ -173,13 +240,15 @@ export default defineNuxtModule<ModuleOptions>({
   },
 })
 
-async function discoverLocalCollections(): Promise<ServerBundleOptions> {
-  const isPackageExists = await import('local-pkg').then(r => r.isPackageExists)
-  const collections = collectionNames
-    .filter(collection => isPackageExists('@iconify-json/' + collection))
-  if (collections.length)
+async function discoverLocalCollections(): Promise<ServerBundleOptions['collections']> {
+  const collections = isFullCollectionExists
+    ? collectionNames
+    : collectionNames.filter(collection => isPackageExists('@iconify-json/' + collection))
+  if (isFullCollectionExists)
+    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections (@iconify/json)`)
+  else if (collections.length)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
-  return { collections }
+  return collections
 }
 
 async function resolveServerBundle(
@@ -188,13 +257,41 @@ async function resolveServerBundle(
   customCollections: CustomCollection[] = [],
 ): Promise<ResolvedServerBundleOptions> {
   const resolved = await options
+
+  if (resolved.disabled && customCollections.length)
+    logger.warn('Nuxt Icon server bundle is disabled, the custom collections will not be bundled.')
+
+  if (resolved.disabled) {
+    return {
+      disabled: true,
+      remote: false,
+      collections: [],
+    }
+  }
+
+  if (!resolved.collections)
+    resolved.collections = resolved.remote
+      ? collectionNames
+      : await discoverLocalCollections()
+
   return {
-    collections: await Promise.all(([...(resolved.collections || []), ...customCollections])
+    disabled: false,
+    remote: resolved.remote === true
+      ? 'jsdelivr' // Default remote source
+      : resolved.remote || false,
+
+    collections: await Promise.all(([
+      ...(resolved.collections || []),
+      ...customCollections,
+    ])
       .map(c => resolveCollection(nuxt, c))),
   }
 }
 
-async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | CustomCollection): Promise<string | IconifyJSON> {
+async function resolveCollection(
+  nuxt: Nuxt,
+  collection: string | IconifyJSON | CustomCollection | RemoteCollection,
+): Promise<string | IconifyJSON | RemoteCollection> {
   if (typeof collection === 'string')
     return collection
   // Custom collection
@@ -203,27 +300,33 @@ async function resolveCollection(nuxt: Nuxt, collection: string | IconifyJSON | 
     const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
       .sort()
 
-    const json: IconifyJSON = {
-      ...collection,
-      icons: Object.fromEntries(await Promise.all(files.map(async (file) => {
-        const name = basename(file, '.svg')
-        let svg = await fs.readFile(join(dir, file), 'utf-8')
-        const cleanupIdx = svg.indexOf('<svg')
-        if (cleanupIdx > 0)
-          svg = svg.slice(cleanupIdx)
-        const data = convertParsedSVG(parseSVGContent(svg)!)!
-        if (data.top === 0)
-          delete data.top
-        if (data.left === 0)
-          delete data.left
-        return [name, data]
-      }))),
-    }
-    // @ts-expect-error remove extra properties
-    delete json.dir
+    const parsedIcons = await Promise.all(files.map(async (file) => {
+      const name = basename(file, '.svg')
+      let svg = await fs.readFile(join(dir, file), 'utf-8')
+      const cleanupIdx = svg.indexOf('<svg')
+      if (cleanupIdx > 0)
+        svg = svg.slice(cleanupIdx)
+      const data = convertParsedSVG(parseSVGContent(svg)!)
+      if (!data) {
+        logger.error(`Nuxt Icon could not parse the SVG content for icon \`${name}\``)
+        return [name, {}]
+      }
+      if (data.top === 0)
+        delete data.top
+      if (data.left === 0)
+        delete data.left
+      return [name, data]
+    }))
 
-    logger.success(`Nuxt Icon loaded local collection \`${json.prefix}\` with ${files.length} icons`)
-    return json
+    const successfulIcons = parsedIcons.filter(([_, data]) => Object.keys(data).length > 0)
+    // @ts-expect-error remove extra properties
+    delete collection.dir
+
+    logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${successfulIcons.length} icons`)
+    return {
+      ...collection,
+      icons: Object.fromEntries(successfulIcons),
+    }
   }
   return collection
 }

@@ -272,6 +272,26 @@ export default defineNuxtConfig({
 
 This will make requests to Iconify API every time the client requests an icon. We do not recommend doing so unless the other options are not feasible.
 
+### Client Bundle
+
+For icons that you know you are going to use frequently, you can bundle them with your client bundle to avoid network requests.
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    clientBundle: [
+      'uil:github',
+      'logos:vitejs'
+    ],
+  },
+})
+```
+
+Currently, this is a manual config process, we are working on making it more automatic and easier to use.
+
 ### Render Function
 
 You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:

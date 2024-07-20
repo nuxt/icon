@@ -17,6 +17,12 @@ export default defineNuxtConfig({
       },
     ],
     serverBundle: 'remote',
+    clientBundle: {
+      icons: [
+        'logos:vitejs',
+        'ph:acorn-bold',
+      ],
+    },
   },
 
   nitro: {

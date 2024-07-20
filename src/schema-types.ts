@@ -130,7 +130,7 @@ export interface NuxtIconRuntimeOptions {
   /**
    * Customise callback
    *
-   * Customise callback.
+   * Customise icon content (replace stroke-width, colors, etc...).
    *
    * @default null
    */

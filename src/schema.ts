@@ -139,7 +139,7 @@ export const schema = {
     $default: null,
     $schema: {
       title: 'Customise callback',
-      description: 'Customise callback',
+      description: 'Customise icon content (replace stroke-width, colors, etc...).',
       tags: ['@studioIcon material-symbols:edit'],
     },
   },

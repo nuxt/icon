@@ -17,7 +17,7 @@ const iconsRaw = useCookie<string[]>('nuxt-icon-demo-icons', {
   default: () => ['logos-nuxt-icon', 'logos-vitejs', 'logos-vue'],
 })
 const stroke = useCookie<number>('nuxt-icon-demo-stroke', {
-  default: () => 0,
+  default: () => 0.5,
 })
 
 const customise = (content: string) => {
@@ -43,7 +43,7 @@ function addRandom() {
 function clear() {
   icons.value = []
   iconsRaw.value = icons.value
-  stroke.value = 0
+  stroke.value = 0.5
 }
 </script>
 

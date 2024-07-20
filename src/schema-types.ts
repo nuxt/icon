@@ -1,5 +1,7 @@
 // This file is generated from scripts/schema.ts
 
+import type { IconifyIconCustomiseCallback } from "./types"
+
 export interface NuxtIconRuntimeOptions {
   /**
    * Icon Size
@@ -115,4 +117,13 @@ export interface NuxtIconRuntimeOptions {
    * @default true
    */
   fallbackToApi: boolean
+
+  /**
+   * Customise callback
+   *
+   * Customise callback.
+   *
+   * @default null
+   */
+  customise: IconifyIconCustomiseCallback
 }

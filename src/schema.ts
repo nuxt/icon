@@ -125,4 +125,12 @@ export const schema = {
       tags: ['@studioIcon material-symbols:public'],
     },
   },
+  customise: {
+    $default: null,
+    $schema: {
+      title: 'Customise callback',
+      description: 'Customise callback',
+      tags: ['@studioIcon material-symbols:edit'],
+    },
+  },
 } satisfies SchemaDefinition

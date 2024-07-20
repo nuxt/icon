@@ -1,6 +1,7 @@
 import { Icon as Iconify, addIcon } from '@iconify/vue'
 import { h } from 'vue'
-import type { NuxtIconRuntimeOptions } from '../../types'
+import type { PropType } from 'vue'
+import type { NuxtIconRuntimeOptions, IconifyIconCustomiseCallback } from '../../types'
 import { loadIcon, useResolvedName } from './shared'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig } from '#imports'
 
@@ -8,11 +9,11 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
   name: 'NuxtIconSvg',
   props: {
     name: {
-      type: String,
+      type: String as PropType<string>,
       required: true,
     },
-    stroke: {
-      type: [String, Number],
+    customise: {
+      type: Function as PropType<IconifyIconCustomiseCallback>,
       required: false,
     },
   },
@@ -40,19 +41,11 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       }
     }
 
-    const updateStrokeWidth = (el) => {
-      if (props.stroke === null) return
-      el.querySelectorAll('[stroke-width]').forEach((el: HTMLElement) => {
-        el.setAttribute('stroke-width', props.stroke)
-      })
-    }
-
     return () => h(Iconify, {
       icon: name.value,
       ssr: true,
       class: options.class,
-      onVnodeMounted: ({ el }) => updateStrokeWidth(el),
-      onVnodeUpdated: ({ el }) => updateStrokeWidth(el)
+      customise: props.customise
     }, slots)
   },
 })

@@ -282,10 +282,12 @@ export default defineNuxtConfig({
     '@nuxt/icon'
   ],
   icon: {
-    clientBundle: [
-      'uil:github',
-      'logos:vitejs'
-    ],
+    clientBundle: {
+      icons: [
+        'uil:github',
+        'logos:vitejs'
+      ],
+    },
   },
 })
 ```

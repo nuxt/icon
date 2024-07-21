@@ -4,8 +4,8 @@ import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createRes
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type { Nuxt } from '@nuxt/schema'
 import fg from 'fast-glob'
+import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import { isPackageExists } from 'local-pkg'
-import type { IconifyJSON } from '@iconify/types'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import collectionNames from './collections'
 import { schema } from './schema'
@@ -35,6 +35,9 @@ export default defineNuxtModule<ModuleOptions>({
     componentName: 'Icon',
     serverBundle: 'auto',
     serverKnownCssClasses: [],
+    clientBundle: {
+      icons: [],
+    },
 
     // Runtime options
     provider: schema['provider'].$default,
@@ -120,7 +123,7 @@ export default defineNuxtModule<ModuleOptions>({
       options.customCollections,
     )
 
-    const template = addTemplate({
+    const templateServer = addTemplate({
       filename: 'nuxt-icon-server-bundle.mjs',
       write: true,
       async getContents() {
@@ -208,7 +211,54 @@ export default defineNuxtModule<ModuleOptions>({
       },
     })
     nuxt.options.nitro.alias ||= {}
-    nuxt.options.nitro.alias['#nuxt-icon-server-bundle'] = template.dst
+    nuxt.options.nitro.alias['#nuxt-icon-server-bundle'] = templateServer.dst
+
+    const iconifyCollectionMap = new Map<string, Promise<IconifyJSON | undefined>>()
+
+    // Client bundle
+    addTemplate({
+      filename: 'nuxt-icon-client-bundle.mjs',
+      write: true,
+      async getContents() {
+        const icons = options.clientBundle?.icons || []
+
+        if (!icons.length)
+          return 'export function init() {}'
+
+        const { getIconData } = await import('@iconify/utils')
+        const { loadCollectionFromFS } = await import('@iconify/utils/lib/loader/fs')
+
+        const lines: string[] = []
+
+        lines.push(
+          'import { addIcon } from "@iconify/vue"',
+          'let _initialized = false',
+          'export function init() {',
+          '  if (_initialized)',
+          '    return',
+          ...await Promise.all(icons.map(async (icon) => {
+            const [prefix, name] = icon.split(':')
+            if (!iconifyCollectionMap.has(prefix))
+              iconifyCollectionMap.set(prefix, loadCollectionFromFS(prefix))
+
+            let data: IconifyIcon | null = null
+            const collection = await iconifyCollectionMap.get(prefix)
+            if (collection)
+              data = getIconData(collection, name)
+
+            if (!data) {
+              logger.error(`Nuxt Icon could not fetch the icon data for \`${icon}\``)
+              return `  /* ${icon} failed to load */`
+            }
+            return `  addIcon('${icon}', ${JSON.stringify(data)})`
+          })),
+          '  _initialized = true',
+          '}',
+        )
+
+        return lines.join('\n')
+      },
+    })
 
     // Devtools
     addCustomTab({

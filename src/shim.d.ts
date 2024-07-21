@@ -3,3 +3,7 @@ declare module '#nuxt-icon-server-bundle' {
 
   export const collections: Record<string, () => Promise<IconifyCollection>>
 }
+
+declare module '#build/nuxt-icon-client-bundle' {
+  export function init(): void
+}

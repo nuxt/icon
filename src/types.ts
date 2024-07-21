@@ -37,6 +37,11 @@ export interface ModuleOptions extends Partial<NuxtIconRuntimeOptions> {
   serverBundle?: 'auto' | 'remote' | 'local' | false | ServerBundleOptions
 
   /**
+   * Bundle icons into client-side.
+   */
+  clientBundle?: ClientBundleOptions
+
+  /**
    * Custom icon collections
    */
   customCollections?: CustomCollection[]
@@ -75,6 +80,13 @@ export interface ServerBundleOptions {
    * Whether to disable server bundle
    */
   disabled?: boolean
+}
+
+export interface ClientBundleOptions {
+  /**
+   * List of icons to be bundled, each icon should be in the formatted as `prefix:icon`
+   */
+  icons?: string[]
 }
 
 export interface ResolvedServerBundleOptions {

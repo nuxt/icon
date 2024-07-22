@@ -21,7 +21,7 @@ const stroke = useCookie<number>('nuxt-icon-demo-stroke', {
 })
 
 const customize = (content: string) => {
-  return content.replace(/stroke-width="[^"]*"/g, `stroke-width="${stroke.value}"`);
+  return content.replace(/stroke-width="[^"]*"/g, `stroke-width="${stroke.value}"`)
 }
 
 const icons = ref<string[]>(iconsRaw.value)

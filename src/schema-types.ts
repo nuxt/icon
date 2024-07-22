@@ -1,6 +1,6 @@
 // This file is generated from scripts/schema.ts
 
-import type { IconifyIconCustomiseCallback } from "./types"
+import type { IconifyIconCustomizeCallback } from './types'
 
 export interface NuxtIconRuntimeOptions {
   /**
@@ -128,11 +128,9 @@ export interface NuxtIconRuntimeOptions {
   localApiEndpoint: string
 
   /**
-   * Customise callback
+   * Callback to customize iconify data
    *
-   * Customise icon content (replace stroke-width, colors, etc...).
-   *
-   * @default null
+   * @default undefined
    */
-  customise: IconifyIconCustomiseCallback
+  customize: IconifyIconCustomizeCallback
 }

@@ -20,7 +20,7 @@ const stroke = useCookie<number>('nuxt-icon-demo-stroke', {
   default: () => 0.5,
 })
 
-const customise = (content: string) => {
+const customize = (content: string) => {
   return content.replace(/stroke-width="[^"]*"/g, `stroke-width="${stroke.value}"`);
 }
 
@@ -111,7 +111,7 @@ function clear() {
           <Icon
             :name="icon"
             :mode="mode"
-            :customise
+            :customize
           />
         </div>
         <div class="text-xs font-mono opacity-50">
@@ -129,19 +129,19 @@ function clear() {
         <Icon
           name="uil:github"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="uil:github"
           size="24"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="uil:github"
           size="48"
           :mode
-          :customise
+          :customize
         />
       </p>
       <p>
@@ -149,19 +149,19 @@ function clear() {
         <Icon
           name="NuxtLogo"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="NuxtLogo"
           size="24"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="NuxtLogo"
           size="48"
           :mode
-          :customise
+          :customize
         />
       </p>
       <p>
@@ -170,7 +170,7 @@ function clear() {
           name="custom1:nuxt-v1"
           size="64"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="custom1:nuxt-v2"
@@ -181,13 +181,13 @@ function clear() {
           name="custom1:nuxt-v3-beta"
           size="64"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="custom1:nuxt-v3"
           size="64"
           :mode
-          :customise
+          :customize
         />
       </p>
       <p>
@@ -196,7 +196,7 @@ function clear() {
           name="layer:layer"
           size="64"
           :mode
-          :customise
+          :customize
         />
       </p>
       <!-- <p>
@@ -217,24 +217,24 @@ function clear() {
           name="github"
           size="24"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="nuxt"
           size="24"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="rocket"
           size="24"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="nxt"
           size="24"
-          :customise
+          :customize
         />
       </p>
       <p>
@@ -242,7 +242,7 @@ function clear() {
         <Icon
           name="i-fluent-emoji-high-contrast-1st-place-medal"
           :mode
-          :customise
+          :customize
         />
       </p>
       <!-- <p>
@@ -258,12 +258,12 @@ function clear() {
         <Icon
           name="i-ph-code"
           :mode
-          :customise
+          :customize
         />
         <Icon
           name="ph:table"
           :mode
-          :customise
+          :customize
         />
       </p>
     </div>

@@ -3,11 +3,11 @@ import type { NuxtIconRuntimeOptions } from './schema-types'
 
 export type { NuxtIconRuntimeOptions }
 
-export type IconifyIconCustomiseCallback = (
+export type IconifyIconCustomizeCallback = (
   content: string,
-  name: string,
-  prefix: string,
-  provider: string
+  name?: string,
+  prefix?: string,
+  provider?: string
 ) => string
 
 export interface NuxtIconRuntimeServerOptions {

@@ -5,7 +5,7 @@ export default defineAppConfig({
     aliases: {
       github: 'carbon:logo-github',
       nuxt: 'logos:nuxt-icon',
-      rocket: 'fluent-emoji:rocket',
+      rocket: 'skill-icons:rocket',
       nxt: 'NuxtLogo',
     },
   },

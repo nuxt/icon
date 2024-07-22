@@ -240,7 +240,7 @@ function clear() {
       <p>
         `i-` syntax:
         <Icon
-          name="i-fluent-emoji-high-contrast-1st-place-medal"
+          name="i-solar:medal-ribbon-bold-duotone"
           :mode
           :customize
         />

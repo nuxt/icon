@@ -135,4 +135,12 @@ export const schema = {
       tags: ['@studioIcon material-symbols:api'],
     },
   },
+  customize: {
+    $default: undefined,
+    $schema: {
+      title: 'Customize callback',
+      description: 'Customize icon content (replace stroke-width, colors, etc...).',
+      tags: ['@studioIcon material-symbols:edit'],
+    },
+  },
 } satisfies SchemaDefinition

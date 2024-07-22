@@ -1,8 +1,9 @@
 import { addIcon, getIcon as _getIcon } from '@iconify/vue'
 import { computed, watch, h, defineComponent } from 'vue'
 import { getIconCSS } from '@iconify/utils/lib/css/icon'
+import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/types'
-import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../../types'
+import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions, IconifyIconCustomizeCallback } from '../../types'
 import { loadIcon } from './shared'
 import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig } from '#imports'
 
@@ -65,8 +66,12 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
   name: 'NuxtIconCss',
   props: {
     name: {
-      type: String,
+      type: String as PropType<string>,
       required: true,
+    },
+    customize: {
+      type: Function as PropType<IconifyIconCustomizeCallback>,
+      required: false,
     },
   },
   async setup(props) {
@@ -95,6 +100,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       const css = getIconCSS(icon, {
         iconSelector,
         format: 'compressed',
+        customise: props.customize,
       })
       if (options.cssLayer && withLayer) {
         return `@layer ${options.cssLayer} { ${css} }`

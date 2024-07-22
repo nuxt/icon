@@ -1,7 +1,7 @@
 import { getIcon as _getIcon } from '@iconify/vue'
 import type { PropType } from 'vue'
 import { computed, defineComponent, h } from 'vue'
-import type { NuxtIconRuntimeOptions } from '../../types'
+import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
 import { NuxtIconCss } from './css'
 import { NuxtIconSvg } from './svg'
 import { useResolvedName } from './shared'
@@ -24,6 +24,10 @@ export default defineComponent({
       required: false,
       default: null,
     },
+    customize: {
+      type: Function as PropType<IconifyIconCustomizeCallback>,
+      required: false,
+    },
   },
   async setup(props, { slots }) {
     const nuxtApp = useNuxtApp()
@@ -41,6 +45,7 @@ export default defineComponent({
         ? { fontSize: Number.isNaN(+size) ? size : size + 'px' }
         : null
     })
+    const customize = props.customize || options.customize
 
     return () => h(
       component.value,
@@ -49,6 +54,7 @@ export default defineComponent({
         name: name.value,
         class: options.class,
         style: style.value,
+        customize,
       },
       slots,
     )

@@ -1,4 +1,5 @@
 import { addAPIProvider, _api, disableCache } from '@iconify/vue'
+import type { Plugin } from 'nuxt/app'
 import type { NuxtIconRuntimeOptions } from '../types'
 import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from '#imports'
 
@@ -28,4 +29,4 @@ export default defineNuxtPlugin({
 
     addAPIProvider('', { resources })
   },
-})
+}) as Plugin

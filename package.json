@@ -36,7 +36,7 @@
     "release": "release-it"
   },
   "dependencies": {
-    "@iconify/collections": "^1.0.442",
+    "@iconify/collections": "^1.0.443",
     "@iconify/types": "^2.0.0",
     "@iconify/utils": "^2.1.25",
     "@iconify/vue": "4.1.3-beta.1",
@@ -51,14 +51,14 @@
     "@iconify-json/fluent-emoji-high-contrast": "^1.1.15",
     "@iconify-json/logos": "^1.1.43",
     "@iconify-json/ph": "^1.1.13",
-    "@iconify-json/simple-icons": "^1.1.109",
+    "@iconify-json/simple-icons": "^1.1.110",
     "@iconify-json/uil": "^1.1.8",
     "@nuxt/devtools": "^1.3.9",
     "@nuxt/eslint-config": "^0.3.13",
     "@nuxt/module-builder": "^0.8.1",
     "@nuxt/schema": "^3.12.4",
     "@nuxt/test-utils": "^3.13.1",
-    "@types/node": "^20.14.11",
+    "@types/node": "^20.14.12",
     "@unocss/nuxt": "^0.61.5",
     "changelogen": "^0.5.5",
     "eslint": "9.0.0",
@@ -66,8 +66,8 @@
     "release-it": "^17.6.0",
     "typescript": "^5.5.4",
     "untyped": "^1.4.2",
-    "vite": "^5.3.4",
-    "vue-tsc": "^2.0.28"
+    "vite": "^5.3.5",
+    "vue-tsc": "^2.0.29"
   },
   "release-it": {
     "git": {

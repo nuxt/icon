@@ -1,10 +1,13 @@
 import { computed } from 'vue'
 import { loadIcons, getIcon as _getIcon } from '@iconify/vue'
+import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
 import { init } from '#build/nuxt-icon-client-bundle'
 
-export async function loadIcon(name: string) {
+export async function loadIcon(name: string): Promise<Required<IconifyIcon> | null> {
+  if (!name)
+    return null
   init()
   await new Promise(resolve => loadIcons([name], () => resolve(true)))
     .catch(() => null)

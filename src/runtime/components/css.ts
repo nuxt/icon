@@ -77,12 +77,14 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
   async setup(props) {
     const nuxt = useNuxtApp()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
-    const cssClass = computed(() => options.cssSelectorPrefix + props.name)
+    const cssClass = computed(() => props.name ? options.cssSelectorPrefix + props.name : '')
 
     function getIcon(name: string) {
-      const registry = _getIcon(name)
-      if (registry)
-        return registry
+      if (!name)
+        return
+      const icon = _getIcon(name)
+      if (icon)
+        return icon
       const payload = nuxt.payload.data[name]
       if (payload) {
         addIcon(name, payload)
@@ -173,7 +175,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
             })
           }
           // Dedupe CSS
-          if (!ssrCSS.has(props.name)) {
+          if (props.name && !ssrCSS.has(props.name)) {
             const css = getCSS(icon, false)
             ssrCSS.set(props.name, css)
           }

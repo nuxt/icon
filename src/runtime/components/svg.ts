@@ -24,20 +24,22 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
 
     const storeKey = 'i-' + name.value
 
-    // On server side, we fetch the icon data and store it in the payload
-    if (import.meta.server) {
-      useAsyncData(
-        storeKey,
-        () => loadIcon(name.value),
-        { deep: false },
-      )
-    }
+    if (name.value) {
+      // On server side, we fetch the icon data and store it in the payload
+      if (import.meta.server) {
+        useAsyncData(
+          storeKey,
+          () => loadIcon(name.value),
+          { deep: false },
+        )
+      }
 
-    // On client side, we feed Iconify we the data we have from server side to avoid hydration mismatch
-    if (import.meta.client) {
-      const payload = nuxt.payload.data[storeKey]
-      if (payload) {
-        addIcon(name.value, payload)
+      // On client side, we feed Iconify we the data we have from server side to avoid hydration mismatch
+      if (import.meta.client) {
+        const payload = nuxt.payload.data[storeKey]
+        if (payload) {
+          addIcon(name.value, payload)
+        }
       }
     }
 

@@ -283,16 +283,22 @@ export default defineNuxtConfig({
   ],
   icon: {
     clientBundle: {
+      // list of icons to include in the client bundle
       icons: [
         'uil:github',
         'logos:vitejs'
       ],
+
+      // include all custom collections in the client bundle
+      includeCustomCollections: true, 
     },
   },
 })
 ```
 
-Currently, this is a manual config process, we are working on making it more automatic and easier to use.
+`includeCustomCollections` will include all the custom collections you have defined in `icon.customCollections` in the client bundle. It's disabled by default but will automatically enable when `ssr: false` is set.
+
+Currently, `icons` list a manual config process, we are working on making it more automatic and easier to use.
 
 ### Render Function
 

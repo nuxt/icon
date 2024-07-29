@@ -1,15 +1,8 @@
-import { basename, join, isAbsolute } from 'node:path'
-import fs from 'node:fs/promises'
 import { addTemplate, logger } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
-import fg from 'fast-glob'
-import type { IconifyJSON } from '@iconify/types'
-import { isPackageExists } from 'local-pkg'
-import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
-import collectionNames from './collections'
-import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions, RemoteCollection } from './types'
-
-const isFullCollectionExists = isPackageExists('@iconify/json')
+import collectionNames from './collection-names'
+import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
+import { discoverInstalledCollections, isFullCollectionExists, resolveCollection } from './collections'
 
 async function resolveServerBundle(
   nuxt: Nuxt,
@@ -32,7 +25,7 @@ async function resolveServerBundle(
   if (!resolved.collections)
     resolved.collections = resolved.remote
       ? collectionNames
-      : await discoverLocalCollections()
+      : await discoverInstalledCollections()
 
   return {
     disabled: false,
@@ -46,49 +39,6 @@ async function resolveServerBundle(
     ])
       .map(c => resolveCollection(nuxt, c))),
   }
-}
-
-async function resolveCollection(
-  nuxt: Nuxt,
-  collection: string | IconifyJSON | CustomCollection | RemoteCollection,
-): Promise<string | IconifyJSON | RemoteCollection> {
-  if (typeof collection === 'string')
-    return collection
-  // Custom collection
-  if ('dir' in collection) {
-    const dir = isAbsolute(collection.dir) ? collection.dir : join(nuxt.options.rootDir, collection.dir)
-    const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
-      .sort()
-
-    const parsedIcons = await Promise.all(files.map(async (file) => {
-      const name = basename(file, '.svg')
-      let svg = await fs.readFile(join(dir, file), 'utf-8')
-      const cleanupIdx = svg.indexOf('<svg')
-      if (cleanupIdx > 0)
-        svg = svg.slice(cleanupIdx)
-      const data = convertParsedSVG(parseSVGContent(svg)!)
-      if (!data) {
-        logger.error(`Nuxt Icon could not parse the SVG content for icon \`${name}\``)
-        return [name, {}]
-      }
-      if (data.top === 0)
-        delete data.top
-      if (data.left === 0)
-        delete data.left
-      return [name, data]
-    }))
-
-    const successfulIcons = parsedIcons.filter(([_, data]) => Object.keys(data).length > 0)
-    // @ts-expect-error remove extra properties
-    delete collection.dir
-
-    logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${successfulIcons.length} icons`)
-    return {
-      ...collection,
-      icons: Object.fromEntries(successfulIcons),
-    }
-  }
-  return collection
 }
 
 export function registerServerBundle(
@@ -195,15 +145,4 @@ export function registerServerBundle(
   })
   nuxt.options.nitro.alias ||= {}
   nuxt.options.nitro.alias['#nuxt-icon-server-bundle'] = templateServer.dst
-}
-
-async function discoverLocalCollections(): Promise<ServerBundleOptions['collections']> {
-  const collections = isFullCollectionExists
-    ? collectionNames
-    : collectionNames.filter(collection => isPackageExists('@iconify-json/' + collection))
-  if (isFullCollectionExists)
-    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections (@iconify/json)`)
-  else if (collections.length)
-    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
-  return collections
 }

@@ -87,6 +87,12 @@ export interface ClientBundleOptions {
    * List of icons to be bundled, each icon should be in the formatted as `prefix:icon`
    */
   icons?: string[]
+  /**
+   * Bundle all custom collections into client-side
+   *
+   * Default to true when `provider` is not set to `server`
+   */
+  includeCustomCollections?: boolean
 }
 
 export interface ResolvedServerBundleOptions {

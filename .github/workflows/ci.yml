@@ -42,8 +42,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test types
-        run: npm run test:types
+      - name: Typecheck
+        run: npm run typecheck
 
       - name: Prepack
         run: npm run prepack

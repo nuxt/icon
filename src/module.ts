@@ -1,6 +1,6 @@
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
-import collectionNames from './collections'
+import collectionNames from './collection-names'
 import { schema } from './schema'
 import type { ModuleOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
@@ -110,7 +110,7 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     registerServerBundle(options, nuxt, serverBundle)
-    registerClientBundle(options)
+    registerClientBundle(options, nuxt)
 
     // Devtools
     addCustomTab({

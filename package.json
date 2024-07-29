@@ -31,7 +31,7 @@
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "lint": "eslint .",
-    "test:types": "vue-tsc --noEmit",
+    "typecheck": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm lint",
     "release": "release-it"
   },

@@ -120,7 +120,8 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
         if (import.meta.dev) {
           style.dataset.nuxtIconDev = props.name
         }
-        document.head.prepend(style)
+        const firstStyle = document.head.querySelector('style, link[rel="stylesheet"]')
+        firstStyle ? document.head.insertBefore(style, firstStyle) : document.head.appendChild(style)
         selectors.add(selector.value)
       }
 

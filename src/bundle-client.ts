@@ -1,7 +1,7 @@
 import { addTemplate, logger } from '@nuxt/kit'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import type { Nuxt } from 'nuxt/schema'
-import type { CustomCollection, ModuleOptions } from './types'
+import type { ModuleOptions } from './types'
 import { loadCustomCollection } from './collections'
 
 export function registerClientBundle(

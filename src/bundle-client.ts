@@ -7,7 +7,7 @@ import { loadCustomCollection } from './collections'
 export function registerClientBundle(
   options: ModuleOptions,
   nuxt: Nuxt,
-) {
+): void {
   const iconifyCollectionMap = new Map<string, Promise<IconifyJSON | undefined>>()
 
   const {
@@ -27,8 +27,6 @@ export function registerClientBundle(
           options.customCollections.map(collection => loadCustomCollection(collection, nuxt)),
         )
       }
-
-      console.log({ icons })
 
       if (!icons.length)
         return 'export function init() {}'

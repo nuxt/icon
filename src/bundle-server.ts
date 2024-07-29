@@ -45,7 +45,7 @@ export function registerServerBundle(
   options: ModuleOptions,
   nuxt: Nuxt,
   serverBundle: ModuleOptions['serverBundle'],
-) {
+): void {
   // Bundle icons for server
   const bundle = resolveServerBundle(
     nuxt,

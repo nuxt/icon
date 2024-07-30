@@ -51,8 +51,12 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    if (!options.provider)
-      options.provider = nuxt.options.ssr ? 'server' : 'client'
+    if (!options.provider) {
+      // Use `server` provider when SSR is disabled or generate mode
+      options.provider = (!nuxt.options.ssr || nuxt.options._generate)
+        ? 'iconify'
+        : 'server'
+    }
 
     let serverBundle = options.serverBundle
     if (serverBundle === 'auto') {

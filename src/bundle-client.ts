@@ -28,7 +28,7 @@ export function registerClientBundle(
         )
       }
 
-      if (!icons.length)
+      if (!icons.length && !customCollections.length)
         return 'export function init() {}'
 
       const { getIconData } = await import('@iconify/utils')

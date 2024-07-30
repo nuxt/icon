@@ -25,7 +25,9 @@ export async function resolveCollection(
 }
 
 export async function loadCustomCollection(collection: CustomCollection, nuxt: Nuxt): Promise<IconifyJSON> {
-  const dir = isAbsolute(collection.dir) ? collection.dir : join(nuxt.options.rootDir, collection.dir)
+  const dir = isAbsolute(collection.dir)
+    ? collection.dir
+    : join(nuxt.options.rootDir, collection.dir)
   const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
     .sort()
 

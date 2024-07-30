@@ -50,14 +50,15 @@ export async function loadCustomCollection(collection: CustomCollection, nuxt: N
   }))
 
   const successfulIcons = parsedIcons.filter(([_, data]) => Object.keys(data).length > 0)
-  // @ts-expect-error remove extra properties
-  delete collection.dir
 
   logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${successfulIcons.length} icons`)
-  return {
+  const result: IconifyJSON = {
     ...collection,
     icons: Object.fromEntries(successfulIcons),
   }
+  // @ts-expect-error remove extra properties
+  delete result.dir
+  return result
 }
 
 export async function discoverInstalledCollections(): Promise<ServerBundleOptions['collections']> {

@@ -1,4 +1,4 @@
-import { addTemplate, logger } from '@nuxt/kit'
+import { addTemplate } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 import collectionNames from './collection-names'
 import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
@@ -10,9 +10,6 @@ async function resolveServerBundle(
   customCollections: CustomCollection[] = [],
 ): Promise<ResolvedServerBundleOptions> {
   const resolved = await options
-
-  if (resolved.disabled && customCollections.length)
-    logger.warn('Nuxt Icon server bundle is disabled, the custom collections will not be bundled.')
 
   if (resolved.disabled) {
     return {

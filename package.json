@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/icon",
   "packageManager": "pnpm@9.6.0",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "license": "MIT",
   "type": "module",
   "repository": "nuxt/icon",

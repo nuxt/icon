@@ -85,7 +85,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       const icon = _getIcon(name)
       if (icon)
         return icon
-      const payload = nuxt.payload.data[name]
+      const payload = nuxt.payload?.data?.[name]
       if (payload) {
         addIcon(name, payload)
         return payload

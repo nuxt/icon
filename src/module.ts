@@ -1,19 +1,14 @@
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
-import collectionNames from './collection-names'
+import { resolvePath } from 'mlly'
 import { schema } from './schema'
-import type { ModuleOptions } from './types'
+import type { ModuleOptions, NuxtIconRuntimeOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
 import { registerServerBundle } from './bundle-server'
 import { registerClientBundle } from './bundle-client'
+import { NuxtIconModuleContext } from './context'
 
 export type { ModuleOptions }
-
-const KEYWORDS_EDGE_TARGETS: string[] = [
-  'edge',
-  'cloudflare',
-  'worker',
-]
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -58,19 +53,9 @@ export default defineNuxtModule<ModuleOptions>({
         : 'server'
     }
 
-    let serverBundle = options.serverBundle
-    if (serverBundle === 'auto') {
-      serverBundle = nuxt.options.dev
-        ? 'local'
-        : KEYWORDS_EDGE_TARGETS.some(word =>
-          (typeof nuxt.options.nitro.preset === 'string' && nuxt.options.nitro.preset.includes(word))
-          || process.env.NITRO_PRESET?.includes(word)
-          || process.env.SERVER_PRESET?.includes(word),
-        )
-          ? 'remote'
-          : 'local'
-      logger.info(`Nuxt Icon server bundle mode is set to \`${serverBundle}\``)
-    }
+    const ctx = new NuxtIconModuleContext(nuxt, options)
+    if (options.serverBundle === 'auto')
+      logger.info(`Nuxt Icon server bundle mode is set to \`${ctx.serverBundle}\``)
 
     addPlugin(
       resolver.resolve('./runtime/plugin'),
@@ -89,15 +74,9 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeOptions = Object.fromEntries(
       Object.entries(options)
         .filter(([key]) => key in schema),
-    )
+    ) as NuxtIconRuntimeOptions
     if (!runtimeOptions.collections) {
-      runtimeOptions.collections = runtimeOptions.fallbackToApi
-        ? collectionNames
-        : typeof serverBundle === 'string'
-          ? collectionNames
-          : serverBundle
-            ? serverBundle.collections
-            : []
+      runtimeOptions.collections = ctx.getRuntimeCollections(runtimeOptions)
     }
     nuxt.options.appConfig.icon = Object.assign(
       nuxt.options.appConfig.icon || {},
@@ -113,8 +92,8 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
-    registerServerBundle(options, nuxt, serverBundle)
-    registerClientBundle(options, nuxt)
+    registerServerBundle(ctx)
+    registerClientBundle(ctx)
 
     // Devtools
     addCustomTab({

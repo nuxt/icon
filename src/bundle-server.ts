@@ -1,58 +1,17 @@
 import { addTemplate } from '@nuxt/kit'
-import type { Nuxt } from '@nuxt/schema'
-import collectionNames from './collection-names'
-import type { ModuleOptions, ResolvedServerBundleOptions, CustomCollection, ServerBundleOptions, NuxtIconRuntimeOptions } from './types'
-import { discoverInstalledCollections, isFullCollectionExists, resolveCollection } from './collections'
-
-async function resolveServerBundle(
-  nuxt: Nuxt,
-  options: ServerBundleOptions | Promise<ServerBundleOptions>,
-  customCollections: CustomCollection[] = [],
-): Promise<ResolvedServerBundleOptions> {
-  const resolved = await options
-
-  if (resolved.disabled) {
-    return {
-      disabled: true,
-      remote: false,
-      collections: [],
-    }
-  }
-
-  if (!resolved.collections)
-    resolved.collections = resolved.remote
-      ? collectionNames
-      : await discoverInstalledCollections()
-
-  return {
-    disabled: false,
-    remote: resolved.remote === true
-      ? 'jsdelivr' // Default remote source
-      : resolved.remote || false,
-
-    collections: await Promise.all(([
-      ...(resolved.collections || []),
-      ...customCollections,
-    ])
-      .map(c => resolveCollection(nuxt, c))),
-  }
-}
+import type { NuxtIconRuntimeOptions } from './types'
+import { isFullCollectionExists } from './collections'
+import type { NuxtIconModuleContext } from './context'
 
 export function registerServerBundle(
-  options: ModuleOptions,
-  nuxt: Nuxt,
-  serverBundle: ModuleOptions['serverBundle'],
+  ctx: NuxtIconModuleContext,
 ): void {
-  // Bundle icons for server
-  const bundle = resolveServerBundle(
+  const {
     nuxt,
-    (!serverBundle || options.provider !== 'server')
-      ? { disabled: true }
-      : typeof serverBundle === 'string'
-        ? { remote: serverBundle === 'remote' }
-        : serverBundle,
-    options.customCollections,
-  )
+  } = ctx
+
+  // Bundle icons for server
+  const bundle = ctx.resolveServerBundle()
 
   const templateServer = addTemplate({
     filename: 'nuxt-icon-server-bundle.mjs',

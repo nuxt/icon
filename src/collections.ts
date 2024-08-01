@@ -24,6 +24,12 @@ export async function resolveCollection(
   return collection
 }
 
+export function getCollectionPath(collection: string) {
+  return isFullCollectionExists
+    ? `@iconify/json/json/${collection}.json`
+    : `@iconify-json/${collection}/icons.json`
+}
+
 export async function loadCustomCollection(collection: CustomCollection, nuxt: Nuxt): Promise<IconifyJSON> {
   const dir = isAbsolute(collection.dir)
     ? collection.dir

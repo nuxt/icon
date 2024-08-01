@@ -44,7 +44,22 @@ export class NuxtIconModuleContext {
           : []
   }
 
+  private _customCollections: IconifyJSON[] | Promise<IconifyJSON[]> | undefined
+  private _serverBundle: ResolvedServerBundleOptions | Promise<ResolvedServerBundleOptions> | undefined
+
   async resolveServerBundle(): Promise<ResolvedServerBundleOptions> {
+    if (!this._serverBundle) {
+      this._serverBundle = this._resolveServerBundle()
+        .then((bundle) => {
+          if (this._serverBundle)
+            this._serverBundle = bundle
+          return bundle
+        })
+    }
+    return this._serverBundle
+  }
+
+  private async _resolveServerBundle(): Promise<ResolvedServerBundleOptions> {
     const resolved = (!this.serverBundle || this.options.provider !== 'server')
       ? { disabled: true }
       : typeof this.serverBundle === 'string'
@@ -55,6 +70,7 @@ export class NuxtIconModuleContext {
       return {
         disabled: true,
         remote: false,
+        externalizeIconsJson: false,
         collections: [],
       }
     }
@@ -74,7 +90,6 @@ export class NuxtIconModuleContext {
       remote: resolved.remote === true
         ? 'jsdelivr' // Default remote source
         : resolved.remote || false,
-
       collections: [
         ...collections,
         ...await this.loadCustomCollection(),
@@ -82,17 +97,12 @@ export class NuxtIconModuleContext {
     }
   }
 
-  private _customCollections: IconifyJSON[] | Promise<IconifyJSON[]> | undefined
-
   async loadCustomCollection(force = false): Promise<IconifyJSON[]> {
     if (force) {
       this._customCollections = undefined
     }
     if (!this._customCollections) {
-      this._customCollections = Promise.all(
-        (this.options.customCollections || [])
-          .map(collection => loadCustomCollection(collection, this.nuxt)),
-      )
+      this._customCollections = this._loadCustomCollection()
         .then((collections) => {
           if (this._customCollections)
             this._customCollections = collections
@@ -100,5 +110,12 @@ export class NuxtIconModuleContext {
         })
     }
     return this._customCollections
+  }
+
+  private async _loadCustomCollection(): Promise<IconifyJSON[]> {
+    return Promise.all(
+      (this.options.customCollections || [])
+        .map(collection => loadCustomCollection(collection, this.nuxt)),
+    )
   }
 }

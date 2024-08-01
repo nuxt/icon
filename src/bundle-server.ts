@@ -1,14 +1,12 @@
 import { addTemplate } from '@nuxt/kit'
 import type { NuxtIconRuntimeOptions } from './types'
-import { isFullCollectionExists } from './collections'
+import { getCollectionPath } from './collections'
 import type { NuxtIconModuleContext } from './context'
 
 export function registerServerBundle(
   ctx: NuxtIconModuleContext,
 ): void {
-  const {
-    nuxt,
-  } = ctx
+  const { nuxt } = ctx
 
   // Bundle icons for server
   const bundle = ctx.resolveServerBundle()
@@ -17,9 +15,7 @@ export function registerServerBundle(
     filename: 'nuxt-icon-server-bundle.mjs',
     write: true,
     async getContents() {
-      const {
-        collections, remote,
-      } = await bundle
+      const { collections, remote } = await bundle
 
       nuxt.options.appConfig.icon ||= {}
       const appIcons = nuxt.options.appConfig.icon as NuxtIconRuntimeOptions
@@ -54,9 +50,7 @@ export function registerServerBundle(
             return `  '${collection}': createRemoteCollection(${JSON.stringify(getRemoteEndpoint(collection))}),`
           }
 
-          const path = isFullCollectionExists
-            ? `@iconify/json/json/${collection}.json`
-            : `@iconify-json/${collection}/icons.json`
+          const path = getCollectionPath(collection)
 
           // When in dev mode, we avoid bundling the icons to improve performance
           // Get rid of the require() when ESM JSON modules are widely supported

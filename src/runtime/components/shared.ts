@@ -3,12 +3,14 @@ import { loadIcons, getIcon as _getIcon } from '@iconify/vue'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
-import { init } from '#build/nuxt-icon-client-bundle'
+import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
+
+export { initClientBundle }
 
 export async function loadIcon(name: string): Promise<Required<IconifyIcon> | null> {
   if (!name)
     return null
-  init()
+  initClientBundle()
   await new Promise(resolve => loadIcons([name], () => resolve(true)))
     .catch(() => null)
   return _getIcon(name)

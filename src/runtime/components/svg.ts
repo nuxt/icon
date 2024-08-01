@@ -2,7 +2,7 @@ import { Icon as Iconify, addIcon } from '@iconify/vue'
 import { h } from 'vue'
 import type { PropType } from 'vue'
 import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
-import { loadIcon, useResolvedName } from './shared'
+import { initClientBundle, loadIcon, useResolvedName } from './shared'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
@@ -39,6 +39,9 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
         const payload = nuxt.payload.data[storeKey]
         if (payload) {
           addIcon(name.value, payload)
+        }
+        else {
+          initClientBundle()
         }
       }
     }

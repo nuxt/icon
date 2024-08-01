@@ -80,6 +80,15 @@ export interface ServerBundleOptions {
    * Whether to disable server bundle
    */
   disabled?: boolean
+
+  /**
+   * External icon JSON files as in the final `node_modules`, instead of bundling them
+   * This would likely improve the performance of bundling.
+   * Enabling this option would requires your production Node.js server to be able to import JSON modules.
+   *
+   * @default false
+   */
+  externalizeIconsJson?: boolean
 }
 
 export interface ClientBundleOptions {
@@ -99,6 +108,7 @@ export interface ResolvedServerBundleOptions {
   disabled: boolean
   remote: RemoteCollectionSource | false
   collections: (string | IconifyJSON | RemoteCollection)[]
+  externalizeIconsJson: boolean
 }
 
 declare module '@nuxt/schema' {

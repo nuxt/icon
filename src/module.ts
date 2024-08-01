@@ -7,6 +7,7 @@ import { unocssIntegration } from './integrations/unocss'
 import { registerServerBundle } from './bundle-server'
 import { registerClientBundle } from './bundle-client'
 import { NuxtIconModuleContext } from './context'
+import { getCollectionPath } from './collections'
 
 export type { ModuleOptions }
 
@@ -88,6 +89,39 @@ export default defineNuxtModule<ModuleOptions>({
       schemas.push({
         appConfig: {
           icon: schema,
+        },
+      })
+    })
+
+    nuxt.hook('nitro:config', async (nitroConfig) => {
+      const bundle = await ctx.resolveServerBundle()
+      if (bundle.remote || !bundle.externalizeIconsJson)
+        return
+
+      logger.warn('Nuxt Icon\'s `serverBundle.externalizeIconsJson` is en experimental feature, it would require your production Node.js server able to import JSON modules.')
+
+      const collections = bundle.collections
+        .filter(collection => typeof collection === 'string')
+        .map(collection => getCollectionPath(collection))
+      const resolvedPaths = await Promise.all(
+        collections.map(collection => resolvePath(collection, {
+          url: nuxt.options.rootDir,
+        })))
+
+      // Trace iconify-json modules
+      nitroConfig.externals ||= {}
+      nitroConfig.externals.traceInclude ||= []
+      nitroConfig.externals.traceInclude.push(...resolvedPaths)
+
+      // Add rollup plugin to externalize iconify-json
+      nitroConfig.rollupConfig ||= {}
+      nitroConfig.rollupConfig.plugins ||= [];
+      (nitroConfig.rollupConfig.plugins as unknown[]).unshift({
+        name: '@nuxt/icon:rollup',
+        resolveId(id: string) {
+          if (id.match(/(?:[\\/]|^)(@iconify-json[\\/]|@iconify[\\/]json)/)) {
+            return { id, external: true }
+          }
         },
       })
     })

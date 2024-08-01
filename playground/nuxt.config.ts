@@ -17,6 +17,9 @@ export default defineNuxtConfig({
       },
     ],
     serverBundle: 'remote',
+    // serverBundle: {
+    //   externalizeIconsJson: true,
+    // },
     clientBundle: {
       icons: [
         'logos:vitejs',
@@ -27,6 +30,15 @@ export default defineNuxtConfig({
 
   nitro: {
     logLevel: 'verbose',
+    // externals: {
+    //   external: [
+    //     (id) => {
+    //       if (id.match(/(?:[\\/]|^)(@iconify-json[\\/]|@iconify[\\/]json)/)) {
+    //         return true
+    //       }
+    //     },
+    //   ],
+    // },
   },
 
   devtools: {

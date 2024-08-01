@@ -93,6 +93,20 @@ npm i -D @iconify-json/collection-name
 
 For example, to use the `uil:github` icon, install it's collection with `@iconify-json/uil`. This way the icons can be served locally or from your serverless functions, which is faster and more reliable on both SSR and client-side.
 
+> [!NOTE]
+> You may also know you can install `@iconify/json` package to include all iconify icons. This is not recommended because it will increase your server bundle size and building performance. If you choose to do so, we'd recommend to explicitly specify the collection names you need:
+>
+> ```ts
+> export default defineNuxtConfig({
+>   modules: ['@nuxt/icon'],
+>   icon: {
+>     serverBundle: {
+>       collections: ['uil', 'mdi'] // <!--- this
+>     }
+>   }
+> })
+> ```
+
 ### Vue Component
 
 When the `name` matches a global registered component, it will be rendered as that component (in this case `mode` will be ignored):

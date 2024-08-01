@@ -75,5 +75,9 @@ export async function discoverInstalledCollections(): Promise<ServerBundleOption
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections (@iconify/json)`)
   else if (collections.length)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
+
+  if (isFullCollectionExists)
+    logger.warn('Currently all iconify collections are included in the bundle, which might be inefficient, consider explicit name the collections you use in the `icon.serverBundle.collections` option')
+
   return collections
 }

@@ -268,6 +268,29 @@ This would be useful when server bundle size is a concern, like in serverless or
 
 This is the default option, where the module will pick between `local` and `remote` based your deployment environment. `local` will be proffered unless you are deploying to a serverless or worker environment, like Vercel Edge or Cloudflare Workers.
 
+#### Externalize Icons JSON
+
+By default, Nitro will bundle the icon collections you have installed locally (like `@iconify-json/*`), into your server bundle as dynamic chunks. When you have a large number of icons, this might make your bundling process slow and memory-intensive. You can change to externalize the icons JSON files by setting `icon.serverBundle.externalizeIconsJson` to `true`.
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    serverBundle: {
+      externalizeIconsJson: true,
+    }
+  },
+})
+```
+
+Note that this will require your production Node.js server to be able to import JSON files (Note that as in Node.js v22, [JSON modules are still an experimental feature](https://nodejs.org/api/esm.html#json-modules)). In the final build, it will contain statements like `() => import('@iconify-json/ph/icons.json', { with: { type: 'json' } })`.
+
+Also note that in some serverless environments, like Cloudflare Workers, where they don't have dynamic imports, they will always be inlined regardless of this option.
+
+This option will be ignored when `icon.serverBundle.remote` is enabled.
+
 #### Completely Disable Server Bundle
 
 If you want to disable the server bundle completely, you can set `icon.serverBundle` to `false` and `provider` to `iconify`

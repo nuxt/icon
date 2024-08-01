@@ -9,6 +9,8 @@ export default defineNuxtPlugin({
     const config = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore type incompatible
     _api.setFetch($fetch.native)
 
     disableCache('all')

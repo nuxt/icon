@@ -9,7 +9,6 @@ export default defineNuxtPlugin({
     const config = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
 
-    // @ts-expect-error - missing types
     _api.setFetch($fetch.native)
 
     disableCache('all')

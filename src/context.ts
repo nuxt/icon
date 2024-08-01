@@ -90,7 +90,7 @@ export class NuxtIconModuleContext {
       remote: resolved.remote === true
         ? 'jsdelivr' // Default remote source
         : resolved.remote || false,
-      externalizeIconsJson: resolved.externalizeIconsJson !== false,
+      externalizeIconsJson: !!resolved.externalizeIconsJson,
       collections: [
         ...collections,
         ...await this.loadCustomCollection(),

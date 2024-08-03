@@ -21,7 +21,7 @@ export default defineCachedEventHandler(async (ctx) => {
     : null
 
   const apiEndPoint = options.iconifyApiEndpoint || DEFAULT_ENDPOINT
-  const apiUrl = new URL(basename(url), apiEndPoint)
+  const apiUrl = new URL('./' + basename(url), apiEndPoint)
   const icons = apiUrl.searchParams.get('icons')?.split(',')
 
   if (collection) {

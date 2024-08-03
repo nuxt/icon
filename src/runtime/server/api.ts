@@ -2,6 +2,7 @@ import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { consola } from 'consola'
 import { useAppConfig, defineCachedEventHandler } from 'nitropack/runtime'
+import { createError } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 import { collections } from '#nuxt-icon-server-bundle'
 
@@ -47,6 +48,9 @@ export default defineCachedEventHandler(async (ctx) => {
 
   if (options.fallbackToApi) {
     consola.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
+    if (apiUrl.host !== new URL(apiEndPoint).host) {
+      return createError({ status: 400, message: 'Invalid icon request' })
+    }
     const data = await $fetch(apiUrl.href)
     return data
   }

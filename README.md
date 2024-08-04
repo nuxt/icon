@@ -220,6 +220,41 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 
 By default, this module will create a server endpoint `/api/_nuxt_icon/:collection` to serve the icons from your local server bundle (you can override the default path by setting `icon.localApiEndpoint` to your desired path). When requesting an icon that does not exist in the local bundle, it will fallback to requesting [the official Iconify API](https://api.iconify.design). You can disable the fallback by setting `icon.fallbackToApi` to `false`, or set up [your own Iconify API](https://iconify.design/docs/api/hosting.html) and update `icon.iconifyApiEndpoint` to your own API endpoint.
 
+**Customization Stroke Width:**
+
+You can customize the stroke width of all icons in two ways: directly within a component or by defining it in the Nuxt configuration file.
+
+In a Component:
+
+You can define a customize function within a component to modify the stroke width of specific icons.
+
+```ts
+<script setup lang="ts">
+const customize = (content: string) => {
+  return content.replace(/stroke-width="[^"]*"/g, `stroke-width="0.5"`)
+}
+</script>
+
+<template>
+  <Icon name="tabler:123" :customize />
+</template>
+```
+
+In the Nuxt Configuration File:
+
+Alternatively, you can define a global customize function in the nuxt.config.ts file to apply the stroke width modification to all icons throughout your application:
+```ts
+// nuxt.config.ts
+export default defineAppConfig({
+  icon: {
+    customize: (content: string) => {
+      return content.replace(/stroke-width="[^"]*"/g, `stroke-width="0.5"`)
+    },
+  }
+})
+```
+By adding this configuration, the stroke width of all icons will be set to 0.5. This can be useful if you need to maintain a consistent appearance across your application.
+
 ### Server Bundle
 
 Since `@nuxt/icon` v1.0, we have introduced the server bundle concept to serve the icons from Nuxt server endpoints. This keeps the client bundle lean and able to load icons on-demand, while having all the dynamic features to use icons that might now be known at build time.

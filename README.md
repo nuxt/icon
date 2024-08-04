@@ -235,18 +235,18 @@ You have full control over SVG content with these customization options.
 In a Component
 You can define a customize function within a component to apply various modifications to your icons.
 
-```ts
+```vue
 <script setup lang="ts">
 // Define the customize function to modify SVG content
 const customize = (content: string, name: string, prefix: string, provider: string) => {
-  if (prefix === 'tabler'){
-    content = content.replace(/stroke-width="[^"]*"/g, `stroke-width="2"`); // Change stroke width to 2
-    content = content.replace(/fill="[^"]*"/g, `fill="#FF5733"`); // Change fill color to red
-    content = content.replace(/animation-duration="[^"]*"/g, `animation-duration="1s"`); // Change animation duration to 1s (for animated icons)
-    content = content.replace(/opacity="[^"]*"/g, `opacity="0.8"`);// Change opacity to 0.8
-    content = content + '<circle cx="10" cy="10" r="5" fill="blue" />'; // Add an extra circle shape to the icon
-  }
-  return content;
+  if (prefix !== 'tabler') return content // Ignore Prefix
+
+  return content
+    .replace(/stroke-width="[^"]*"/g, `stroke-width="2"`) // Change stroke width to 2
+    .replace(/stroke="[^"]*"/g, `stroke="#FF5733"`) // Change stroke color to red
+    .replace(/fill="[^"]*"/g, `fill="#FF5733"`) // Change fill color to red
+    .replace(/animation-duration="[^"]*"/g, `animation-duration="1s"`) // Change animation duration to 1s (for animated icons)
+    .replace(/opacity="[^"]*"/g, `opacity="0.8"`);// Change opacity to 0.8
 }
 </script>
 

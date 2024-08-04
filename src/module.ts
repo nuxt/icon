@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addTemplate, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
 import { schema } from './schema'
@@ -83,6 +83,11 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.appConfig.icon || {},
       runtimeOptions,
     )
+
+    nuxt.options.alias['#imports-customize'] = addTemplate({
+      filename: 'imports-customize.mjs',
+      getContents: () => `export default ${options.customize}`,
+    }).dst
 
     // Define types for the app.config compatible with Nuxt Studio
     nuxt.hook('schema:extend', (schemas) => {

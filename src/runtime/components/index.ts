@@ -6,6 +6,7 @@ import { NuxtIconCss } from './css'
 import { NuxtIconSvg } from './svg'
 import { useResolvedName } from './shared'
 import { useAppConfig, useNuxtApp } from '#imports'
+import optionCustomize from '#imports-customize'
 
 export default defineComponent({
   name: 'NuxtIcon',
@@ -45,7 +46,7 @@ export default defineComponent({
         ? { fontSize: Number.isNaN(+size) ? size : size + 'px' }
         : null
     })
-    const customize = props.customize || options.customize
+    const customize = props.customize || optionCustomize
 
     return () => h(
       component.value,

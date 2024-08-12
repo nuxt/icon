@@ -220,6 +220,56 @@ The icons will have the default size of `24px` and the `nuxt` icon will be avail
 
 By default, this module will create a server endpoint `/api/_nuxt_icon/:collection` to serve the icons from your local server bundle (you can override the default path by setting `icon.localApiEndpoint` to your desired path). When requesting an icon that does not exist in the local bundle, it will fallback to requesting [the official Iconify API](https://api.iconify.design). You can disable the fallback by setting `icon.fallbackToApi` to `false`, or set up [your own Iconify API](https://iconify.design/docs/api/hosting.html) and update `icon.iconifyApiEndpoint` to your own API endpoint.
 
+**Customizing Icons with the customize Option**
+
+The customize option allows you to modify various aspects of the SVG icons used in your project. With this option, you can:
+
+- Change Stroke Width
+- Change Colors
+- Change Animation Duration
+- Change Opacity
+- Add Extra Shapes
+
+You have full control over SVG content with these customization options.
+
+In a Component
+You can define a customize function within a component to apply various modifications to your icons.
+
+```vue
+<script setup lang="ts">
+// Define the customize function to modify SVG content
+const customize = (content: string, name: string, prefix: string, provider: string) => {
+  if (prefix !== 'tabler') return content // Ignore Prefix
+
+  return content
+    .replace(/stroke-width="[^"]*"/g, `stroke-width="2"`) // Change stroke width to 2
+    .replace(/stroke="[^"]*"/g, `stroke="#FF5733"`) // Change stroke color to red
+    .replace(/fill="[^"]*"/g, `fill="#FF5733"`) // Change fill color to red
+    .replace(/animation-duration="[^"]*"/g, `animation-duration="1s"`) // Change animation duration to 1s (for animated icons)
+    .replace(/opacity="[^"]*"/g, `opacity="0.8"`);// Change opacity to 0.8
+}
+</script>
+
+<template>
+  <Icon name="tabler:star" :customize="customize" />
+</template>
+```
+
+In the Nuxt Configuration File:
+
+Alternatively, you can apply these customizations globally in the nuxt.config.ts file.
+```ts
+// nuxt.config.ts
+export default defineAppConfig({
+  icon: {
+    customize: (content: string, name: string, prefix: string, provider: string) => {
+      ...
+    },
+  }
+})
+```
+With this configuration, all icons throughout your application will have these customizations applied consistently.
+
 ### Server Bundle
 
 Since `@nuxt/icon` v1.0, we have introduced the server bundle concept to serve the icons from Nuxt server endpoints. This keeps the client bundle lean and able to load icons on-demand, while having all the dynamic features to use icons that might now be known at build time.

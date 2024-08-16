@@ -1,5 +1,5 @@
 import type { Nuxt } from 'nuxt/schema'
-import type { IconifyJSON } from '@iconify/types'
+import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import collectionNames from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './collections'
@@ -118,5 +118,79 @@ export class NuxtIconModuleContext {
       (this.options.customCollections || [])
         .map(collection => loadCustomCollection(collection, this.nuxt)),
     )
+  }
+
+  async loadClientBundleCollections(): Promise<{ collections: IconifyJSON[], failed: string[] }> {
+    const {
+      includeCustomCollections = this.options.provider !== 'server',
+    } = this.options.clientBundle || {}
+
+    const icons = [...this.options.clientBundle?.icons || []]
+
+    let customCollections: IconifyJSON[] = []
+    if (includeCustomCollections && this.options.customCollections?.length) {
+      customCollections = await this.loadCustomCollection()
+    }
+
+    if (!icons.length && !customCollections.length) {
+      return {
+        collections: [],
+        failed: [],
+      }
+    }
+
+    const iconifyCollectionMap = new Map<string, Promise<IconifyJSON | undefined>>()
+
+    const { getIconData } = await import('@iconify/utils')
+    const { loadCollectionFromFS } = await import('@iconify/utils/lib/loader/fs')
+
+    const collections = new Map<string, IconifyJSON>()
+    function addIcon(prefix: string, name: string, data: IconifyIcon) {
+      let collection = collections.get(prefix)
+      if (!collection) {
+        collection = {
+          prefix,
+          icons: {},
+        }
+        collections.set(prefix, collection)
+      }
+      collection.icons[name] = data
+    }
+
+    const failed: string[] = []
+
+    await Promise.all(icons.map(async (icon) => {
+      try {
+        const [prefix, name] = icon.split(':')
+        if (!iconifyCollectionMap.has(prefix))
+          iconifyCollectionMap.set(prefix, loadCollectionFromFS(prefix))
+
+        let data: IconifyIcon | null = null
+        const collection = await iconifyCollectionMap.get(prefix)
+        if (collection)
+          data = getIconData(collection, name)
+
+        if (!data)
+          failed.push(icon)
+        else
+          addIcon(prefix, name, data)
+      }
+      catch (e) {
+        console.error(e)
+        failed.push(icon)
+      }
+    }))
+
+    if (customCollections.length) {
+      customCollections.flatMap(collection => Object.entries(collection.icons)
+        .map(([name, data]) => {
+          addIcon(collection.prefix, name, data)
+        }))
+    }
+
+    return {
+      collections: [...collections.values()],
+      failed,
+    }
   }
 }

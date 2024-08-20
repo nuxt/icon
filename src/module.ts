@@ -59,8 +59,6 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     const ctx = new NuxtIconModuleContext(nuxt, options)
-    if (options.serverBundle === 'auto')
-      logger.info(`Nuxt Icon server bundle mode is set to \`${ctx.serverBundle}\``)
 
     addPlugin(
       resolver.resolve('./runtime/plugin'),
@@ -98,6 +96,7 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     nuxt.hook('nitro:config', async (nitroConfig) => {
+      ctx.setNitroPreset(nitroConfig.preset as string)
       const bundle = await ctx.resolveServerBundle()
       if (bundle.remote || !bundle.externalizeIconsJson)
         return

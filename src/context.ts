@@ -1,6 +1,7 @@
 import type { Nuxt } from 'nuxt/schema'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import { provider } from 'std-env'
+import { logger } from '@nuxt/kit'
 import collectionNames from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './collections'
@@ -12,45 +13,29 @@ const KEYWORDS_EDGE_TARGETS: string[] = [
 ]
 
 export class NuxtIconModuleContext {
-  public serverBundle: Exclude<ModuleOptions['serverBundle'], 'auto'>
-
   constructor(
     public readonly nuxt: Nuxt,
     public readonly options: ModuleOptions,
-  ) {
-    if (options.serverBundle === 'auto') {
-      const preset = typeof nuxt.options.nitro.preset === 'string'
-        ? nuxt.options.nitro.preset || provider
-        : provider
-
-      this.serverBundle = 'local'
-
-      if (!nuxt.options.dev && KEYWORDS_EDGE_TARGETS.some(
-        word =>
-          preset.includes(word)
-          || process.env.NITRO_PRESET?.includes(word)
-          || process.env.SERVER_PRESET?.includes(word),
-      ))
-        this.serverBundle = 'remote'
-    }
-    else {
-      this.serverBundle = options.serverBundle
-    }
-  }
+  ) {}
 
   getRuntimeCollections(runtimeOptions: NuxtIconRuntimeOptions): string[] {
     return runtimeOptions.fallbackToApi
       ? collectionNames
-      : typeof this.serverBundle === 'string'
+      : typeof this.options.serverBundle === 'string'
         ? collectionNames
-        : this.serverBundle
-          ? this.serverBundle.collections
+        : this.options.serverBundle
+          ? this.options.serverBundle.collections
             ?.map(c => typeof c === 'string' ? c : c.prefix) || []
           : []
   }
 
   private _customCollections: IconifyJSON[] | Promise<IconifyJSON[]> | undefined
   private _serverBundle: ResolvedServerBundleOptions | Promise<ResolvedServerBundleOptions> | undefined
+  private _nitroPreset: string | undefined
+
+  setNitroPreset(preset: string | undefined): void {
+    this._nitroPreset = preset || this._nitroPreset
+  }
 
   async resolveServerBundle(): Promise<ResolvedServerBundleOptions> {
     if (!this._serverBundle) {
@@ -65,11 +50,30 @@ export class NuxtIconModuleContext {
   }
 
   private async _resolveServerBundle(): Promise<ResolvedServerBundleOptions> {
-    const resolved = (!this.serverBundle || this.options.provider !== 'server')
+    let serverBundle = this.options.serverBundle
+    if (serverBundle === 'auto') {
+      const preset = this._nitroPreset || (typeof this.nuxt.options.nitro.preset === 'string'
+        ? this.nuxt.options.nitro.preset || provider
+        : provider)
+
+      serverBundle = 'local'
+
+      if (!this.nuxt.options.dev && KEYWORDS_EDGE_TARGETS.some(
+        word =>
+          (typeof preset === 'string' && preset.includes(word))
+          || process.env.NITRO_PRESET?.includes(word)
+          || process.env.SERVER_PRESET?.includes(word),
+      ))
+        serverBundle = 'remote'
+
+      logger.info(`Nuxt Icon server bundle mode is set to \`${serverBundle}\``)
+    }
+
+    const resolved = (!serverBundle || this.options.provider !== 'server')
       ? { disabled: true }
-      : typeof this.serverBundle === 'string'
-        ? { remote: this.serverBundle === 'remote' }
-        : this.serverBundle
+      : typeof serverBundle === 'string'
+        ? { remote: serverBundle === 'remote' }
+        : serverBundle
 
     if (resolved.disabled) {
       return {

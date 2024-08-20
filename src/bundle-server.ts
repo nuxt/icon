@@ -9,13 +9,11 @@ export function registerServerBundle(
   const { nuxt } = ctx
 
   // Bundle icons for server
-  const bundle = ctx.resolveServerBundle()
-
   const templateServer = addTemplate({
     filename: 'nuxt-icon-server-bundle.mjs',
     write: true,
     async getContents() {
-      const { collections, remote } = await bundle
+      const { collections, remote } = await ctx.resolveServerBundle()
 
       nuxt.options.appConfig.icon ||= {}
       const appIcons = nuxt.options.appConfig.icon as NuxtIconRuntimeOptions

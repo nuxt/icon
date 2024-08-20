@@ -31,28 +31,28 @@ export default defineComponent({
   },
   async setup(props, { slots }) {
     const nuxtApp = useNuxtApp()
-    const options = useAppConfig().icon as NuxtIconRuntimeOptions
+    const runtimeOptions = useAppConfig().icon as NuxtIconRuntimeOptions
     const name = useResolvedName(() => props.name)
     const component = computed(() =>
       nuxtApp.vueApp?.component(name.value)
-      || ((props.mode || options.mode) === 'svg'
+      || ((props.mode || runtimeOptions.mode) === 'svg'
         ? NuxtIconSvg
         : NuxtIconCss),
     )
     const style = computed(() => {
-      const size = props.size || options.size
+      const size = props.size || runtimeOptions.size
       return size
         ? { fontSize: Number.isNaN(+size) ? size : size + 'px' }
         : null
     })
-    const customize = props.customize || options.customize
+    const customize = props.customize || runtimeOptions.customize
 
     return () => h(
       component.value,
       {
-        ...options.attrs,
+        ...runtimeOptions.attrs,
         name: name.value,
-        class: options.class,
+        class: runtimeOptions.class,
         style: style.value,
         customize,
       },

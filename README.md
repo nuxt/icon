@@ -255,15 +255,15 @@ const customize = (content: string, name: string, prefix: string, provider: stri
 </template>
 ```
 
-In the Nuxt Configuration File:
+In the App Configuration File:
 
-Alternatively, you can apply these customizations globally in the nuxt.config.ts file.
+Alternatively, you can apply these customizations globally in the `app.config.ts` file.
 ```ts
-// nuxt.config.ts
+// app.config.ts
 export default defineAppConfig({
   icon: {
     customize: (content: string, name: string, prefix: string, provider: string) => {
-      ...
+      // ...
     },
   }
 })

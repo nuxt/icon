@@ -46,7 +46,7 @@ export default defineComponent({
         ? { fontSize: Number.isNaN(+size) ? size : size + 'px' }
         : null
     })
-    const customize = props.customize || optionCustomize
+    const customize = props.customize || options.customize || optionCustomize
 
     return () => h(
       component.value,

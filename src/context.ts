@@ -1,5 +1,6 @@
 import type { Nuxt } from 'nuxt/schema'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
+import { provider } from 'std-env'
 import collectionNames from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './collections'
@@ -18,15 +19,19 @@ export class NuxtIconModuleContext {
     public readonly options: ModuleOptions,
   ) {
     if (options.serverBundle === 'auto') {
-      this.serverBundle = nuxt.options.dev
-        ? 'local'
-        : KEYWORDS_EDGE_TARGETS.some(word =>
-          (typeof nuxt.options.nitro.preset === 'string' && nuxt.options.nitro.preset.includes(word))
+      const preset = typeof nuxt.options.nitro.preset === 'string'
+        ? nuxt.options.nitro.preset || provider
+        : provider
+
+      this.serverBundle = 'local'
+
+      if (!nuxt.options.dev && KEYWORDS_EDGE_TARGETS.some(
+        word =>
+          preset.includes(word)
           || process.env.NITRO_PRESET?.includes(word)
           || process.env.SERVER_PRESET?.includes(word),
-        )
-          ? 'remote'
-          : 'local'
+      ))
+        this.serverBundle = 'remote'
     }
     else {
       this.serverBundle = options.serverBundle

@@ -41,6 +41,9 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
+      std-env:
+        specifier: ^3.7.0
+        version: 3.7.0
     devDependencies:
       '@iconify-json/fluent-emoji-high-contrast':
         specifier: ^1.1.15

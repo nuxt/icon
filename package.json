@@ -33,7 +33,8 @@
     "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm lint",
-    "release": "release-it"
+    "release": "release-it",
+    "test": "pnpm -C playground test"
   },
   "dependencies": {
     "@iconify/collections": "^1.0.443",
@@ -64,6 +65,7 @@
     "changelogen": "^0.5.5",
     "eslint": "9.0.0",
     "nuxt": "^3.12.4",
+    "prettier": "^3.3.3",
     "release-it": "^17.6.0",
     "typescript": "^5.5.4",
     "untyped": "^1.4.2",

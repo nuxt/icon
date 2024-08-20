@@ -2,6 +2,7 @@ export default defineNuxtConfig({
   modules: [
     '../src/module',
     '@unocss/nuxt',
+    '@nuxt/test-utils/module',
   ],
 
   extends: [

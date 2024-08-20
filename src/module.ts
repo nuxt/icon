@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addTemplate, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
 import { schema } from './schema'
@@ -42,10 +42,14 @@ export default defineNuxtModule<ModuleOptions>({
     mode: schema['mode'].$default,
     attrs: schema['attrs'].$default,
     collections: schema['collections'].$default,
-    customize: schema['customize'].$default,
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    // @ts-expect-error `customize` is not allowed in module options
+    if (typeof options.customize === 'function') {
+      throw new TypeError('`customize` callback can\'t not be set in module options, use `app.config.ts` or component props instead.')
+    }
 
     if (!options.provider) {
       // Use `server` provider when SSR is disabled or generate mode
@@ -83,11 +87,6 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.appConfig.icon || {},
       runtimeOptions,
     )
-
-    nuxt.options.alias['#imports-customize'] = addTemplate({
-      filename: 'imports-customize.mjs',
-      getContents: () => `export default ${options.customize}`,
-    }).dst
 
     // Define types for the app.config compatible with Nuxt Studio
     nuxt.hook('schema:extend', (schemas) => {

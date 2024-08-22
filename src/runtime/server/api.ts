@@ -51,7 +51,16 @@ export default defineCachedEventHandler(async (ctx) => {
     if (apiUrl.host !== new URL(apiEndPoint).host) {
       return createError({ status: 400, message: 'Invalid icon request' })
     }
-    const data = await $fetch(apiUrl.href)
-    return data
+    try {
+      const data = await $fetch(apiUrl.href)
+      return data
+    }
+    catch (e) {
+      console.error(e)
+      return createError({ status: 404 })
+    }
   }
+  return createError({ status: 404 })
+}, {
+  maxAge: 60 * 60 * 24 * 7, // 1 week
 })

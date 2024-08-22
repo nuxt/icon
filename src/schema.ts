@@ -135,6 +135,14 @@ export const schema = {
       tags: ['@studioIcon material-symbols:api'],
     },
   },
+  fetchTimeout: {
+    $default: 250,
+    $schema: {
+      title: 'Fetch Timeout',
+      description: 'Set the timeout for fetching icons.',
+      tags: ['@studioIcon material-symbols:timer'],
+    },
+  },
   customize: {
     $default: undefined,
     $schema: {

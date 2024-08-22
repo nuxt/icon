@@ -94,7 +94,8 @@ export interface NuxtIconRuntimeOptions {
    * - `server` - Fetch icons with a server handler
    * - `iconify` - Fetch icons with Iconify API, purely client-side
    *
-   * @default "server" when ssr, "iconify" when csr
+   * `server` by default; `iconify` when `ssr: false`
+   *
    *
    * @enum server,iconify
    */
@@ -128,9 +129,19 @@ export interface NuxtIconRuntimeOptions {
   localApiEndpoint: string
 
   /**
-   * Callback to customize iconify data
+   * Fetch Timeout
    *
-   * @default undefined
+   * Set the timeout for fetching icons.
+   *
+   * @default 250
+   */
+  fetchTimeout: number
+
+  /**
+   * Customize callback
+   *
+   * Customize icon content (replace stroke-width, colors, etc...).
+   *
    */
   customize: IconifyIconCustomizeCallback
 }

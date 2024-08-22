@@ -17,6 +17,7 @@
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.0.0",
     "playwright-core": "^1.46.1",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "wrangler": "^3.72.2"
   }
 }

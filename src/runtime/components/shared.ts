@@ -7,11 +7,17 @@ import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
 
 export { initClientBundle }
 
-export async function loadIcon(name: string): Promise<Required<IconifyIcon> | null> {
+export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null> {
   if (!name)
     return null
   initClientBundle()
-  await new Promise(resolve => loadIcons([name], () => resolve(true)))
+  const _icon = _getIcon(name)
+  if (_icon)
+    return _icon
+  await Promise.race([
+    new Promise<void>(resolve => loadIcons([name], () => resolve())),
+    timeout ? new Promise<void>(resolve => setTimeout(() => resolve(), timeout)) : null,
+  ])
     .catch(() => null)
   return _getIcon(name)
 }

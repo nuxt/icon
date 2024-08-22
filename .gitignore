@@ -23,6 +23,7 @@ dist
 .build-*
 .env
 .netlify
+.wrangler
 
 # Env
 .env
@@ -49,3 +50,5 @@ coverage
 Network Trash Folder
 Temporary Items
 .apdisk
+
+.data

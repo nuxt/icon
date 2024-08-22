@@ -136,7 +136,7 @@ export const schema = {
     },
   },
   fetchTimeout: {
-    $default: 250,
+    $default: 500,
     $schema: {
       title: 'Fetch Timeout',
       description: 'Set the timeout for fetching icons.',

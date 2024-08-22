@@ -42,6 +42,7 @@ export default defineNuxtModule<ModuleOptions>({
     mode: schema['mode'].$default,
     attrs: schema['attrs'].$default,
     collections: schema['collections'].$default,
+    fetchTimeout: schema['fetchTimeout'].$default,
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)

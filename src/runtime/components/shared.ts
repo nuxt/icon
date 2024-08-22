@@ -14,11 +14,15 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
   const _icon = _getIcon(name)
   if (_icon)
     return _icon
-  await Promise.race([
-    new Promise<void>(resolve => loadIcons([name], () => resolve())),
-    timeout ? new Promise<void>(resolve => setTimeout(() => resolve(), timeout)) : null,
-  ])
+
+  const load = new Promise<void>(resolve => loadIcons([name], () => resolve()))
     .catch(() => null)
+
+  if (timeout > 0)
+    await Promise.race([load, new Promise<void>(resolve => setTimeout(() => resolve(), timeout))])
+  else
+    await load
+
   return _getIcon(name)
 }
 

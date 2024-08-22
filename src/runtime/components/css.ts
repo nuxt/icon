@@ -54,7 +54,7 @@ function getAllSelectors() {
       const rules = styleSheet.cssRules || styleSheet.rules
       scanCssRules(rules)
     }
-    catch (error) {
+    catch {
       // this typically means the stylesheet is from an inaccessible origin
     }
   }

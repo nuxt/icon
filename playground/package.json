@@ -9,12 +9,12 @@
     "test": "vitest"
   },
   "dependencies": {
-    "nuxt": "^3.12.4"
+    "nuxt": "^3.13.0"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.14.0",
+    "@nuxt/test-utils": "^3.14.1",
     "@vue/test-utils": "^2.4.6",
-    "happy-dom": "^14.12.3",
+    "happy-dom": "^15.0.0",
     "playwright-core": "^1.46.1",
     "vitest": "^2.0.5"
   }

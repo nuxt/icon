@@ -121,14 +121,14 @@ defineProps<{
         :customize
       />
     </p>
-    <!-- <p>
-        Failing:
-        <Icon name="uil:bad">
-          ☀️
-        </Icon>
-        <Icon name="uil:bad" />
-        <Icon name="i-uil-bad" />
-      </p> -->
+    <p>
+      Failing:
+      <Icon name="uil:bad">
+        ☀️
+      </Icon>
+      <Icon name="uil:bad" />
+      <Icon name="i-uil-bad" />
+    </p>
     <p>
       Specials:
       <Icon

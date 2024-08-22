@@ -5,7 +5,7 @@ import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions, IconifyIconCustomizeCallback } from '../../types'
 import { loadIcon } from './shared'
-import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, useAsyncData } from '#imports'
+import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, onServerPrefetch } from '#imports'
 
 // This should only be used in the client side
 let cssSelectors: Set<string> | undefined
@@ -74,7 +74,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       required: false,
     },
   },
-  async setup(props) {
+  setup(props) {
     const nuxt = useNuxtApp()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
     const cssClass = computed(() => props.name ? options.cssSelectorPrefix + props.name : '')
@@ -156,43 +156,38 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
     if (import.meta.server) {
       const configs = (useRuntimeConfig().icon || {}) as NuxtIconRuntimeServerOptions
       if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
-        const storeKey = 'i-' + props.name
-        useAsyncData(
-          storeKey,
-          async () => {
-            const icon = await loadIcon(props.name, options.fetchTimeout).catch(() => null)
-            if (!icon)
-              return null
-            let ssrCSS: Map<string, string> = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS]
-            if (!ssrCSS) {
-              ssrCSS = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS] = new Map()
-              // Bulk all CSS into one tag
-              nuxt.runWithContext(() => {
-                useHead({
-                  style: [
-                    () => {
-                      const sep = import.meta.dev ? '\n' : ''
-                      let css = Array.from(ssrCSS.values()).sort().join(sep)
-                      if (options.cssLayer) {
-                        css = `@layer ${options.cssLayer} {${sep}${css}${sep}}`
-                      }
-                      return { innerHTML: css }
-                    },
-                  ],
-                }, {
-                  tagPriority: 'low',
-                })
-              })
-            }
-            // Dedupe CSS
-            if (props.name && !ssrCSS.has(props.name)) {
-              const css = getCSS(icon, false)
-              ssrCSS.set(props.name, css)
-            }
+        onServerPrefetch(async () => {
+          const icon = await loadIcon(props.name, options.fetchTimeout).catch(() => null)
+          if (!icon)
             return null
-          },
-          { deep: false },
-        )
+          let ssrCSS: Map<string, string> = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS]
+          if (!ssrCSS) {
+            ssrCSS = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS] = new Map()
+            // Bulk all CSS into one tag
+            nuxt.runWithContext(() => {
+              useHead({
+                style: [
+                  () => {
+                    const sep = import.meta.dev ? '\n' : ''
+                    let css = Array.from(ssrCSS.values()).sort().join(sep)
+                    if (options.cssLayer) {
+                      css = `@layer ${options.cssLayer} {${sep}${css}${sep}}`
+                    }
+                    return { innerHTML: css }
+                  },
+                ],
+              }, {
+                tagPriority: 'low',
+              })
+            })
+          }
+          // Dedupe CSS
+          if (props.name && !ssrCSS.has(props.name)) {
+            const css = getCSS(icon, false)
+            ssrCSS.set(props.name, css)
+          }
+          return null
+        })
       }
     }
 

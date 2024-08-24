@@ -112,8 +112,8 @@ importers:
   playground:
     dependencies:
       '@nuxthub/core':
-        specifier: ^0.7.3
-        version: 0.7.3(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.21.0)(vite@5.4.2(@types/node@22.5.0)(terser@5.31.3))
+        specifier: ^0.7.4
+        version: 0.7.4(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.21.0)(vite@5.4.2(@types/node@22.5.0)(terser@5.31.3))
       nuxt:
         specifier: ^3.13.0
         version: 3.13.0(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@22.5.0)(encoding@0.1.13)(eslint@9.0.0)(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.4)(rollup@4.21.0)(terser@5.31.3)(typescript@5.5.4)(vite@5.4.2(@types/node@22.5.0)(terser@5.31.3))(vue-tsc@2.0.29(typescript@5.5.4))
@@ -1320,8 +1320,8 @@ packages:
     peerDependencies:
       vue: ^3.3.4
 
-  '@nuxthub/core@0.7.3':
-    resolution: {integrity: sha512-hP/gB3BAgQGl1lROtIBgPAQQWIQPOuUYPDm7rLQLD+VFuBwlvWYE9yIUR8yaQulzwvIMBiUSzrk0/iPMvqOgUg==}
+  '@nuxthub/core@0.7.4':
+    resolution: {integrity: sha512-UscXCDHANWDsfNTbmtQEYBvSHHahgSRCVfsy8mkb+Y23GHsezLesKAsbSxGceZDlt2x1IXnW5v3jcNRWFF2aCA==}
 
   '@octokit/auth-token@4.0.0':
     resolution: {integrity: sha512-tY/msAuJo6ARbK6SPIxZrPBms3xPbfwBrulZe0Wtr/DIY9lje2HeV1uoebShn6mx7SjCHif6EjMvoREj+gZ+SA==}
@@ -7299,7 +7299,7 @@ snapshots:
       - vti
       - vue-tsc
 
-  '@nuxthub/core@0.7.3(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.21.0)(vite@5.4.2(@types/node@22.5.0)(terser@5.31.3))':
+  '@nuxthub/core@0.7.4(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.21.0)(vite@5.4.2(@types/node@22.5.0)(terser@5.31.3))':
     dependencies:
       '@cloudflare/workers-types': 4.20240815.0
       '@nuxt/devtools-kit': 1.3.14(magicast@0.3.4)(rollup@4.21.0)(vite@5.4.2(@types/node@22.5.0)(terser@5.31.3))

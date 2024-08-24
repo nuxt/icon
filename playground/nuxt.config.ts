@@ -10,6 +10,10 @@ export default defineNuxtConfig({
     './base',
   ],
 
+  hub: {
+    cache: true
+  },
+
   // ssr: false,
   icon: {
     customCollections: [

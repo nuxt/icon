@@ -10,13 +10,13 @@ const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
 
-export default defineCachedEventHandler(async (ctx) => {
-  const url = ctx.node.req.url
+export default defineCachedEventHandler(async (event) => {
+  const url = event.node.req.url
   if (!url)
     return
 
   const options = useAppConfig().icon as NuxtIconRuntimeOptions
-  const collectionName = ctx.context.params?.collection?.replace(/\.json$/, '')
+  const collectionName = event.context.params?.collection?.replace(/\.json$/, '')
   const collection = collectionName
     ? await collections[collectionName]?.()
     : null
@@ -62,5 +62,9 @@ export default defineCachedEventHandler(async (ctx) => {
   }
   return createError({ status: 404 })
 }, {
+  group: 'nuxt',
+  name: 'icon',
+  getKey: (event) => event.context.params?.collection?.replace(/\.json$/, '') || 'all',
+  swr: true,
   maxAge: 60 * 60 * 24 * 7, // 1 week
 })

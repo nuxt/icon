@@ -64,7 +64,7 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   group: 'nuxt',
   name: 'icon',
-  getKey: (event) => event.context.params?.collection?.replace(/\.json$/, '') || 'all',
+  getKey: event => event.context.params?.collection?.replace(/\.json$/, '') || 'all',
   swr: true,
   maxAge: 60 * 60 * 24 * 7, // 1 week
 })

@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   ],
 
   hub: {
-    cache: true
+    cache: true,
   },
 
   // ssr: false,

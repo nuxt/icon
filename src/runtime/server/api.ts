@@ -2,7 +2,7 @@ import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { consola } from 'consola'
 import { useAppConfig, defineCachedEventHandler } from 'nitropack/runtime'
-import { createError } from 'h3'
+import { createError, getQuery } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 import { collections } from '#nuxt-icon-server-bundle'
 
@@ -64,7 +64,11 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   group: 'nuxt',
   name: 'icon',
-  getKey: event => event.context.params?.collection?.replace(/\.json$/, '') || 'all',
+  getKey(event) {
+    const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
+    const icons = String(getQuery(event).icons || '').split(',')
+    return `${collection}_${icons.join('_')}`
+  },
   swr: true,
   maxAge: 60 * 60 * 24 * 7, // 1 week
 })

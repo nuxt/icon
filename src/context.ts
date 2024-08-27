@@ -151,7 +151,7 @@ export class NuxtIconModuleContext {
       customCollections = await this.loadCustomCollection()
     }
 
-    if (!userIcons.size && !customCollections.length) {
+    if (!icons.size && !customCollections.length) {
       return {
         count: 0,
         collections: [],
@@ -192,6 +192,7 @@ export class NuxtIconModuleContext {
           data = getIconData(collection, name)
 
         if (!data) {
+          // We don't warn for scanned icons, because the extraction can have false positives
           if (!scannedIcons.has(icon) || userIcons.has(icon)) {
             failed.push(icon)
           }

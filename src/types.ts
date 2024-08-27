@@ -114,5 +114,6 @@ export interface ResolvedServerBundleOptions {
 declare module '@nuxt/schema' {
   interface NuxtHooks {
     'icon:serverKnownCssClasses'(selectors: string[]): void
+    'icon:clientBundleIcons'(icons: string[]): void
   }
 }

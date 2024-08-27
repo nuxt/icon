@@ -136,6 +136,8 @@ export class NuxtIconModuleContext {
 
     const icons = [...this.options.clientBundle?.icons || []]
 
+    await this.nuxt.callHook('icon:clientBundleIcons', icons)
+
     let customCollections: IconifyJSON[] = []
     if (includeCustomCollections && this.options.customCollections?.length) {
       customCollections = await this.loadCustomCollection()

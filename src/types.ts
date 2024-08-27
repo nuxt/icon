@@ -122,11 +122,12 @@ export interface ClientBundleOptions {
 
 export interface ClientBundleScanOptions {
   /**
-   * Glob patterns or paths to include files for scanning
-   * Relative to the project root
+   * Glob patterns or paths to include files for scanning, relative to the project root.
+   * Plain JavaScript and TypeScript files are not included by default to improve performance.
+   *
    * When specified, the default will be overridden
    *
-   * @default ['**\/*.{vue,js,ts,jsx,tsx,md,mdc,mdx}']
+   * @default ['**\/*.{vue,jsx,tsx,md,mdc,mdx}']
    */
   globInclude?: string[]
   /**

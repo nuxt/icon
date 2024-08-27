@@ -415,7 +415,7 @@ export default defineNuxtConfig({
 ```
 
 > [!TIP]
-> Scan is relying on static analysis, which means only literal usages will be detected. Avoid constructing the icon name dynamically whenever possible.
+> Scanning is relying on static analysis, which means only literal usages will be detected. Avoid constructing the icon name dynamically whenever possible.
 >
 > ```vue
 > <template>

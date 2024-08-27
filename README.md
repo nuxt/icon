@@ -414,6 +414,19 @@ export default defineNuxtConfig({
 })
 ```
 
+> [!TIP]
+> Scan is relying on static analysis, which means only literal usages will be detected. Avoid constructing the icon name dynamically whenever possible.
+>
+> ```vue
+> <template>
+>   <!-- Avoid this -->
+>   <Icon :name="`carbon:${dark ? 'moon' : 'sun'}`" />
+>
+>   <!-- Prefer this -->
+>   <Icon :name="dark ? 'carbon:moon' : 'carbon:sun'" />
+> </template>
+> ```
+
 ### Render Function
 
 You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:

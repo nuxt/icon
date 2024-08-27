@@ -41,7 +41,7 @@ export function registerClientBundle(
 
       logger.info(`Nuxt Icon client bundle consist of \`${count}\` icons with \`${bundleSizeKb.toFixed(2)}KB\`(uncompressed) in size`)
 
-      const collectionsRaw = `JSON.stringify(${JSON.stringify(valuesCompat)})`
+      const collectionsRaw = `JSON.parse(${JSON.stringify(valuesCompat)})`
 
       return [
         'import { addCollection } from "@iconify/vue"',

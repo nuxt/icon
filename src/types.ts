@@ -97,11 +97,49 @@ export interface ClientBundleOptions {
    */
   icons?: string[]
   /**
+   * Scan source files for icon usage to bundle them in client bundle.
+   *
+   * Currently experimental. Once stabled, this option will be enabled by default.
+   *
+   * @default false
+   */
+  scan?: boolean | ClientBundleScanOptions
+  /**
    * Bundle all custom collections into client-side
    *
    * Default to true when `provider` is not set to `server`
    */
   includeCustomCollections?: boolean
+  /**
+   * Size limit of the client bundle in KB, uncompressed.
+   * When exceeded, this will prevent the build process from continuing
+   * Set to `0` to disable the size limit check
+   *
+   * @default 256
+   */
+  sizeLimitKb?: number
+}
+
+export interface ClientBundleScanOptions {
+  /**
+   * Glob patterns or paths to include files for scanning
+   * Relative to the project root
+   * When specified, the default will be overridden
+   *
+   * @default ['**\/*.{vue,js,ts,jsx,tsx,md,mdc,mdx}']
+   */
+  globInclude?: string[]
+  /**
+   * Glob patterns or paths to exclude files for scanning
+   * When specified, the default will be overridden
+   *
+   * @default ['node_modules', 'dist', 'build', 'coverage', 'test', 'tests', '.*']
+   */
+  globExclude?: string[]
+  /**
+   * Collection names to be ignored when scanning
+   */
+  ignoreCollections?: string[]
 }
 
 export interface ResolvedServerBundleOptions {
@@ -114,5 +152,6 @@ export interface ResolvedServerBundleOptions {
 declare module '@nuxt/schema' {
   interface NuxtHooks {
     'icon:serverKnownCssClasses'(selectors: string[]): void
+    'icon:clientBundleIcons'(icons: Set<string>): void
   }
 }

@@ -31,6 +31,7 @@ export default defineNuxtConfig({
         'logos:vitejs',
         'ph:acorn-bold',
       ],
+      scan: true,
     },
   },
 

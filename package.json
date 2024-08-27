@@ -34,7 +34,9 @@
     "typecheck": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm lint",
     "release": "release-it",
-    "test": "pnpm -C playground test"
+    "test:playground": "pnpm -C playground run test",
+    "test:unit": "vitest",
+    "test": "pnpm run test:unit --run && pnpm run test:playground --run"
   },
   "dependencies": {
     "@iconify/collections": "^1.0.453",
@@ -55,6 +57,7 @@
     "@iconify-json/logos": "^1.1.44",
     "@iconify-json/ph": "^1.1.14",
     "@iconify-json/simple-icons": "^1.1.114",
+    "@iconify-json/solar": "^1.1.10",
     "@iconify-json/uil": "^1.1.9",
     "@nuxt/devtools": "^1.4.1",
     "@nuxt/eslint-config": "^0.5.3",

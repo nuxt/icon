@@ -2,9 +2,10 @@ import type { Nuxt } from 'nuxt/schema'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import { provider } from 'std-env'
 import { logger } from '@nuxt/kit'
-import collectionNames from './collection-names'
+import { collectionNames } from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './collections'
+import { scanSourceFiles } from './scan'
 
 const KEYWORDS_EDGE_TARGETS: string[] = [
   'edge',
@@ -129,20 +130,30 @@ export class NuxtIconModuleContext {
     )
   }
 
-  async loadClientBundleCollections(): Promise<{ collections: IconifyJSON[], failed: string[] }> {
+  async loadClientBundleCollections(): Promise<{ collections: IconifyJSON[], count: number, failed: string[] }> {
     const {
       includeCustomCollections = this.options.provider !== 'server',
+      scan = false,
     } = this.options.clientBundle || {}
 
-    const icons = [...this.options.clientBundle?.icons || []]
+    const userIcons = new Set(this.options.clientBundle?.icons || [])
+    const scannedIcons = new Set<string>()
+
+    if (scan)
+      await scanSourceFiles(this.nuxt, scan, scannedIcons)
+
+    const icons = new Set<string>([...userIcons, ...scannedIcons])
+
+    await this.nuxt.callHook('icon:clientBundleIcons', icons)
 
     let customCollections: IconifyJSON[] = []
     if (includeCustomCollections && this.options.customCollections?.length) {
       customCollections = await this.loadCustomCollection()
     }
 
-    if (!icons.length && !customCollections.length) {
+    if (!icons.size && !customCollections.length) {
       return {
+        count: 0,
         collections: [],
         failed: [],
       }
@@ -167,8 +178,9 @@ export class NuxtIconModuleContext {
     }
 
     const failed: string[] = []
+    let count = 0
 
-    await Promise.all(icons.map(async (icon) => {
+    await Promise.all([...icons].map(async (icon) => {
       try {
         const [prefix, name] = icon.split(':')
         if (!iconifyCollectionMap.has(prefix))
@@ -179,10 +191,16 @@ export class NuxtIconModuleContext {
         if (collection)
           data = getIconData(collection, name)
 
-        if (!data)
-          failed.push(icon)
-        else
+        if (!data) {
+          // We don't warn for scanned icons, because the extraction can have false positives
+          if (!scannedIcons.has(icon) || userIcons.has(icon)) {
+            failed.push(icon)
+          }
+        }
+        else {
+          count += 1
           addIcon(prefix, name, data)
+        }
       }
       catch (e) {
         console.error(e)
@@ -199,6 +217,7 @@ export class NuxtIconModuleContext {
 
     return {
       collections: [...collections.values()],
+      count,
       failed,
     }
   }

@@ -272,7 +272,7 @@ With this configuration, all icons throughout your application will have these c
 
 ### Server Bundle
 
-Since `@nuxt/icon` v1.0, we have introduced the server bundle concept to serve the icons from Nuxt server endpoints. This keeps the client bundle lean and able to load icons on-demand, while having all the dynamic features to use icons that might now be known at build time.
+Since `@nuxt/icon` v1.0, we have introduced the server bundle concept to serve the icons from Nuxt server endpoints. This keeps the client bundle lean and able to load icons on-demand, while having all the dynamic features to use icons that might not be known at build time.
 
 #### Server Bundle Mode: `local`
 
@@ -316,7 +316,7 @@ This would be useful when server bundle size is a concern, like in serverless or
 
 #### Server Bundle Mode: `auto`
 
-This is the default option, where the module will pick between `local` and `remote` based your deployment environment. `local` will be proffered unless you are deploying to a serverless or worker environment, like Vercel Edge or Cloudflare Workers.
+This is the default option, where the module will pick between `local` and `remote` based your deployment environment. `local` will be preffered unless you are deploying to a serverless or worker environment, like Vercel Edge or Cloudflare Workers.
 
 #### Externalize Icons JSON
 

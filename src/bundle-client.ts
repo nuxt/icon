@@ -9,10 +9,14 @@ export function registerClientBundle(
     filename: 'nuxt-icon-client-bundle.mjs',
     write: true,
     async getContents() {
-      const { collections, failed } = await ctx.loadClientBundleCollections()
+      const {
+        sizeLimitKb = 256,
+      } = ctx.options.clientBundle || {}
+
+      const { collections, count, failed } = await ctx.loadClientBundleCollections()
 
       if (failed.length) {
-        const msg = `Nuxt Icon could not fetch the icon data for:\n${failed.map(f => ' - ' + f).join('\n')}`
+        const msg = `Nuxt Icon could not fetch the icon data for client bundle:\n${failed.map(f => ' - ' + f).join('\n')}`
         if (ctx.nuxt.options._build)
           throw new Error(msg)
         else
@@ -22,7 +26,22 @@ export function registerClientBundle(
       if (!collections.length)
         return 'export function init() {}'
 
-      const collectionsRaw = JSON.stringify([...collections.values()], null, 2)
+      const values = [...collections.values()]
+      const valuesCompat = JSON.stringify(values)
+      const bundleSizeKb = Buffer.byteLength(valuesCompat, 'utf-8') / 1024
+
+      if (sizeLimitKb > 0) {
+        if (bundleSizeKb > sizeLimitKb) {
+          throw new Error(`Nuxt Icon client bundle size limit exceeded: \`${bundleSizeKb.toFixed(2)}KB\` > \`${sizeLimitKb}KB\``)
+        }
+        if (bundleSizeKb > sizeLimitKb * 0.75) {
+          logger.warn(`Nuxt Icon client bundle size is close to the limit: \`${bundleSizeKb.toFixed(2)}KB\` -> \`${sizeLimitKb}KB\``)
+        }
+      }
+
+      logger.info(`Nuxt Icon client bundle consist of \`${count}\` icons with \`${bundleSizeKb.toFixed(2)}KB\`(uncompressed) in size`)
+
+      const collectionsRaw = `JSON.stringify(${JSON.stringify(valuesCompat)})`
 
       return [
         'import { addCollection } from "@iconify/vue"',

@@ -6,7 +6,7 @@ import fg from 'fast-glob'
 import type { IconifyJSON } from '@iconify/types'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import { isPackageExists } from 'local-pkg'
-import collectionNames from './collection-names'
+import { collectionNames } from './collection-names'
 import type { CustomCollection, ServerBundleOptions, RemoteCollection } from './types'
 
 export const isFullCollectionExists = isPackageExists('@iconify/json')

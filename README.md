@@ -376,8 +376,14 @@ export default defineNuxtConfig({
         'logos:vitejs'
       ],
 
+      // scan all components in the project and include icons 
+      scan: true,
+
       // include all custom collections in the client bundle
       includeCustomCollections: true, 
+
+      // guard for uncompressed bundle size, will fail the build if exceeds
+      sizeLimitKb: 256,
     },
   },
 })
@@ -385,7 +391,28 @@ export default defineNuxtConfig({
 
 `includeCustomCollections` will include all the custom collections you have defined in `icon.customCollections` in the client bundle. It's disabled by default but will automatically enable when `ssr: false` is set.
 
-Currently, `icons` list a manual config process, we are working on making it more automatic and easier to use.
+#### Scan Components
+
+When `scan` is enabled, the module will scan all the components in your project and include the icons used in the client bundle. This would significantly reduce the number of network requests needed for statically known icons, but might also increase the client bundle size depending on the number of icons used in your project.
+
+You can also fine-tune tine scanning targets like:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    clientBundle: {
+      scan: {
+        // note that when you specify those values, the default behavior will be overridden
+        globInclude: ['components/**/*.vue', /* ... */],
+        globExclude: ['node_modules', 'dist', /* ... */],
+      },
+    },
+  },
+})
+```
 
 ### Render Function
 

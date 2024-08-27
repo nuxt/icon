@@ -3,7 +3,7 @@ export default defineNuxtConfig({
     '../src/module',
     '@unocss/nuxt',
     '@nuxt/test-utils/module',
-    '@nuxthub/core',
+    // '@nuxthub/core',
   ],
 
   extends: [
@@ -31,6 +31,7 @@ export default defineNuxtConfig({
         'logos:vitejs',
         'ph:acorn-bold',
       ],
+      scan: true,
     },
   },
 

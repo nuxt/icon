@@ -65,7 +65,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
 }, {
   group: 'nuxt',
   name: 'icon',
-  getKey(event) {
+  getKey(event: H3Event) {
     const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
     const icons = String(getQuery(event).icons || '').split(',')
     return `${collection}_${icons.join('_')}`

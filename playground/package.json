@@ -9,7 +9,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@nuxthub/core": "^0.7.5",
+    "@nuxthub/core": "^0.7.9",
     "nuxt": "^3.13.0"
   },
   "devDependencies": {
@@ -18,6 +18,6 @@
     "happy-dom": "^14.12.3",
     "playwright-core": "^1.46.1",
     "vitest": "^2.0.5",
-    "wrangler": "^3.72.2"
+    "wrangler": "^3.74.0"
   }
 }

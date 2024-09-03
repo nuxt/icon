@@ -1,16 +1,17 @@
 import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { consola } from 'consola'
-import { useAppConfig, defineCachedEventHandler } from 'nitropack/runtime'
-import { createError, getQuery } from 'h3'
+import { createError, getQuery, type H3Event } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
+// @ts-expect-error tsconfig.server has the types
+import { useAppConfig, defineCachedEventHandler } from '#imports'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
 
-export default defineCachedEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event: H3Event) => {
   const url = event.node.req.url
   if (!url)
     return
@@ -64,7 +65,7 @@ export default defineCachedEventHandler(async (event) => {
 }, {
   group: 'nuxt',
   name: 'icon',
-  getKey(event) {
+  getKey(event: H3Event) {
     const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
     const icons = String(getQuery(event).icons || '').split(',')
     return `${collection}_${icons.join('_')}`

@@ -136,7 +136,8 @@ export class NuxtIconModuleContext {
       scan = false,
     } = this.options.clientBundle || {}
 
-    const userIcons = new Set(this.options.clientBundle?.icons || [])
+    // Filter out the `i-` prefix and deduplicate
+    const userIcons = new Set((this.options.clientBundle?.icons || []).map(i => i.replace(/^i[-:]/, '')))
     const scannedIcons = new Set<string>()
 
     if (scan)

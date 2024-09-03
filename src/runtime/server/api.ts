@@ -1,8 +1,9 @@
 import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { consola } from 'consola'
-import { createError, getQuery } from 'h3'
+import { createError, getQuery, type H3Event } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
+// @ts-expect-error tsconfig.server has the types
 import { useAppConfig, defineCachedEventHandler } from '#imports'
 import { collections } from '#nuxt-icon-server-bundle'
 
@@ -10,7 +11,7 @@ const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
 
-export default defineCachedEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event: H3Event) => {
   const url = event.node.req.url
   if (!url)
     return

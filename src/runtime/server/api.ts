@@ -1,9 +1,9 @@
 import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { consola } from 'consola'
-import { useAppConfig, defineCachedEventHandler } from '#imports'
 import { createError, getQuery } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
+import { useAppConfig, defineCachedEventHandler } from '#imports'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()

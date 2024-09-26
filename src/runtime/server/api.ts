@@ -4,7 +4,7 @@ import { consola } from 'consola'
 import { createError, getQuery, type H3Event } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 // @ts-expect-error tsconfig.server has the types
-import { useAppConfig, defineCachedEventHandler } from '#imports'
+import { useAppConfig, getRequestURL, defineCachedEventHandler } from '#imports'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()
@@ -12,9 +12,9 @@ const warnOnceSet = /* @__PURE__ */ new Set<string>()
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
 
 export default defineCachedEventHandler(async (event: H3Event) => {
-  const url = event.node.req.url
+  const url = getRequestURL(event) as URL
   if (!url)
-    return
+    return createError({ status: 400, message: 'Invalid icon request' })
 
   const options = useAppConfig().icon as NuxtIconRuntimeOptions
   const collectionName = event.context.params?.collection?.replace(/\.json$/, '')
@@ -23,8 +23,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
     : null
 
   const apiEndPoint = options.iconifyApiEndpoint || DEFAULT_ENDPOINT
-  const apiUrl = new URL('./' + basename(url), apiEndPoint)
-  const icons = apiUrl.searchParams.get('icons')?.split(',')
+  const icons = url.searchParams.get('icons')?.split(',')
 
   if (collection) {
     if (icons?.length) {
@@ -48,6 +47,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
   }
 
   if (options.fallbackToApi === true || options.fallbackToApi === 'server-only') {
+    const apiUrl = new URL('./' + basename(url.pathname) + url.search, apiEndPoint)
     consola.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
     if (apiUrl.host !== new URL(apiEndPoint).host) {
       return createError({ status: 400, message: 'Invalid icon request' })
@@ -56,9 +56,13 @@ export default defineCachedEventHandler(async (event: H3Event) => {
       const data = await $fetch(apiUrl.href)
       return data
     }
-    catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (e: any) {
       console.error(e)
-      return createError({ status: 404 })
+      if (e.status === 404)
+        return createError({ status: 404 })
+      else
+        return createError({ status: 500, message: 'Failed to fetch fallback icon' })
     }
   }
   return createError({ status: 404 })

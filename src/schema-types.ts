@@ -99,7 +99,7 @@ export interface NuxtIconRuntimeOptions {
    *
    * @enum server,iconify
    */
-  provider: string | undefined
+  provider: 'server' | 'iconify' | undefined
 
   /**
    * Iconify API Endpoint URL
@@ -116,8 +116,10 @@ export interface NuxtIconRuntimeOptions {
    * Fallback to Iconify API if server provider fails to found the collection.
    *
    * @default true
+   *
+   * @enum true,false,server-only,client-only
    */
-  fallbackToApi: boolean
+  fallbackToApi: boolean | 'server-only' | 'client-only'
 
   /**
    * Local API Endpoint Path

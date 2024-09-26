@@ -47,7 +47,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
     }
   }
 
-  if (options.fallbackToApi) {
+  if (options.fallbackToApi === true || options.fallbackToApi === 'server-only') {
     consola.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
     if (apiUrl.host !== new URL(apiEndPoint).host) {
       return createError({ status: 400, message: 'Invalid icon request' })

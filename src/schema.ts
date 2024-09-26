@@ -109,6 +109,7 @@ export const schema = {
       ].join('\n'),
       enum: ['server', 'iconify'],
       tags: ['@studioIcon material-symbols:cloud'],
+      type: '"server" | "iconify" | undefined',
     },
   },
   iconifyApiEndpoint: {
@@ -125,6 +126,8 @@ export const schema = {
       title: 'Fallback to Iconify API',
       description: 'Fallback to Iconify API if server provider fails to found the collection.',
       tags: ['@studioIcon material-symbols:public'],
+      enum: [true, false, 'server-only', 'client-only'],
+      type: 'boolean | "server-only" | "client-only"',
     },
   },
   localApiEndpoint: {
@@ -149,6 +152,7 @@ export const schema = {
       title: 'Customize callback',
       description: 'Customize icon content (replace stroke-width, colors, etc...).',
       tags: ['@studioIcon material-symbols:edit'],
+      type: 'IconifyIconCustomizeCallback',
     },
   },
 } satisfies SchemaDefinition

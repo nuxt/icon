@@ -23,6 +23,7 @@ export default defineNuxtConfig({
       },
     ],
     serverBundle: 'remote',
+    fallbackToApi: 'server-only',
     // serverBundle: {
     //   externalizeIconsJson: true,
     // },

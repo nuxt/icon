@@ -67,7 +67,7 @@ export default defineNuxtModule<ModuleOptions>({
     addComponent({
       name: options.componentName || 'Icon',
       global: true,
-      filePath: resolver.resolve('./runtime/components/index'),
+      filePath: await resolver.resolvePath('./runtime/components/index'),
     })
     addServerHandler({
       route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,

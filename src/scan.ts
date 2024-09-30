@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import type { Nuxt } from 'nuxt/schema'
-import fg from 'fast-glob'
+import { glob } from 'tinyglobby'
 import { iconMatchRegex } from './icon-regex'
 import type { ClientBundleScanOptions } from './types'
 
@@ -19,12 +19,13 @@ export async function scanSourceFiles(nuxt: Nuxt, scanOptions: ClientBundleScanO
     ignoreCollections = [],
   } = scanOptions === true ? {} : scanOptions
 
-  const files = await fg(
+  const files = await glob(
     globInclude,
     {
       ignore: globExclude,
       cwd: nuxt.options.rootDir,
       absolute: true,
+      expandDirectories: false,
     },
   )
 

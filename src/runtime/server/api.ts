@@ -1,6 +1,7 @@
 import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { consola } from 'consola'
+import { hash } from 'ohash'
 import { createError, getQuery, type H3Event } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 // @ts-expect-error tsconfig.server has the types
@@ -71,8 +72,8 @@ export default defineCachedEventHandler(async (event: H3Event) => {
   name: 'icon',
   getKey(event: H3Event) {
     const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
-    const icons = String(getQuery(event).icons || '').split(',')
-    return `${collection}_${icons.join('_')}`
+    const icons = String(getQuery(event).icons || '')
+    return `${collection}_${icons.split(',')[0]}_${icons.length}_${hash(icons)}`
   },
   swr: true,
   maxAge: 60 * 60 * 24 * 7, // 1 week

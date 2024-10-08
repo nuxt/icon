@@ -2,7 +2,7 @@ import { basename, join, isAbsolute } from 'node:path'
 import fs from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
-import fg from 'fast-glob'
+import { glob } from 'tinyglobby'
 import type { IconifyJSON } from '@iconify/types'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import { isPackageExists } from 'local-pkg'
@@ -34,7 +34,7 @@ export async function loadCustomCollection(collection: CustomCollection, nuxt: N
   const dir = isAbsolute(collection.dir)
     ? collection.dir
     : join(nuxt.options.rootDir, collection.dir)
-  const files = (await fg('*.svg', { cwd: dir, onlyFiles: true }))
+  const files = (await glob(['*.svg'], { cwd: dir, onlyFiles: true, expandDirectories: false }))
     .sort()
 
   const parsedIcons = await Promise.all(files.map(async (file) => {

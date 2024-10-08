@@ -46,12 +46,12 @@
     "@nuxt/devtools-kit": "^1.4.1",
     "@nuxt/kit": "^3.13.0",
     "consola": "^3.2.3",
-    "fast-glob": "^3.3.2",
     "local-pkg": "^0.5.0",
     "mlly": "^1.7.1",
     "ohash": "^1.1.4",
     "pathe": "^1.1.2",
-    "std-env": "^3.7.0"
+    "std-env": "^3.7.0",
+    "tinyglobby": "^0.2.6"
   },
   "devDependencies": {
     "@iconify-json/fluent-emoji-high-contrast": "^1.2.0",

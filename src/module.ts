@@ -1,6 +1,7 @@
-import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
+import type { ViteDevServer } from 'vite'
 import { schema } from './schema'
 import type { ModuleOptions, NuxtIconRuntimeOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
@@ -45,6 +46,15 @@ export default defineNuxtModule<ModuleOptions>({
     fetchTimeout: schema['fetchTimeout'].$default,
   },
   async setup(options, nuxt) {
+    let viteDevServer: ViteDevServer
+    addVitePlugin({
+      name: 'nuxt-icon/client-bundle-updater',
+      apply: 'serve',
+      configureServer(server) {
+        viteDevServer = server
+      },
+    })
+
     const resolver = createResolver(import.meta.url)
 
     // @ts-expect-error `customize` is not allowed in module options
@@ -95,6 +105,27 @@ export default defineNuxtModule<ModuleOptions>({
         },
       })
     })
+
+    if (options.customCollections?.length) {
+      const collectionDirs = await Promise.all(options.customCollections.map(x => nuxtResolvePath(x.dir)))
+      nuxt.hook('builder:watch', async (event, path) => {
+        const resolvedPath = await nuxtResolvePath(path)
+        if (collectionDirs.some(cd => resolvedPath.startsWith(cd))) {
+          await ctx.loadCustomCollection(true) // Force re-read icons from fs
+          // Update client and server bundles
+          await updateTemplates({
+            filter: template => template.filename.startsWith('nuxt-icon-'),
+          })
+
+          // Invalidate client bundle in vite dev server cache
+          const nuxtIconClientBundleModule = await viteDevServer.moduleGraph.getModuleByUrl('/.nuxt/nuxt-icon-client-bundle.mjs')
+          if (nuxtIconClientBundleModule) {
+            viteDevServer.moduleGraph.invalidateModule(nuxtIconClientBundleModule)
+            await viteDevServer.reloadModule(nuxtIconClientBundleModule)
+          }
+        }
+      })
+    }
 
     nuxt.hook('nitro:config', async (nitroConfig) => {
       ctx.setNitroPreset(nitroConfig.preset as string)

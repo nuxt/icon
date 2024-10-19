@@ -64,7 +64,7 @@
     "@nuxt/eslint-config": "^0.5.7",
     "@nuxt/module-builder": "^0.8.4",
     "@nuxt/schema": "^3.13.2",
-    "@nuxt/test-utils": "^3.14.3",
+    "@nuxt/test-utils": "^3.14.4",
     "@types/node": "^22.7.5",
     "@unocss/nuxt": "^0.63.4",
     "changelogen": "^0.5.7",

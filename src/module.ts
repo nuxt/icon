@@ -9,7 +9,7 @@ import { registerClientBundle } from './bundle-client'
 import { NuxtIconModuleContext } from './context'
 import { getCollectionPath } from './collections'
 
-export type { ModuleOptions }
+export type { ModuleOptions, NuxtIconRuntimeOptions as RuntimeOptions }
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

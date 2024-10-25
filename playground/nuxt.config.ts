@@ -1,4 +1,9 @@
 export default defineNuxtConfig({
+
+  extends: [
+    './base',
+  ],
+
   modules: [
     '../src/module',
     '@unocss/nuxt',
@@ -6,15 +11,30 @@ export default defineNuxtConfig({
     '@nuxthub/core',
   ],
 
-  extends: [
-    './base',
-  ],
+  imports: {
+    autoImport: false,
+  },
+
+  devtools: {
+    enabled: true,
+  },
+
+  compatibilityDate: '2024-07-18',
+
+  nitro: {
+    logLevel: 'verbose',
+  },
 
   hub: {
     cache: true,
   },
 
+  typescript: {
+    includeWorkspace: true,
+  },
+
   // ssr: false,
+
   icon: {
     customCollections: [
       {
@@ -35,31 +55,4 @@ export default defineNuxtConfig({
       scan: true,
     },
   },
-
-  nitro: {
-    logLevel: 'verbose',
-    // externals: {
-    //   external: [
-    //     (id) => {
-    //       if (id.match(/(?:[\\/]|^)(@iconify-json[\\/]|@iconify[\\/]json)/)) {
-    //         return true
-    //       }
-    //     },
-    //   ],
-    // },
-  },
-
-  devtools: {
-    enabled: true,
-  },
-
-  typescript: {
-    includeWorkspace: true,
-  },
-
-  imports: {
-    autoImport: false,
-  },
-
-  compatibilityDate: '2024-07-18',
 })

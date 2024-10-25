@@ -14,7 +14,7 @@ export function extraIconUsages(code: string, set: Set<string>, ignoreCollection
 
 export async function scanSourceFiles(nuxt: Nuxt, scanOptions: ClientBundleScanOptions | true, set: Set<string> = new Set()) {
   const {
-    globInclude = ['**/*.{vue,jsx,tsx,md,mdc,mdx}'],
+    globInclude = ['**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml}'],
     globExclude = ['node_modules', 'dist', 'build', 'coverage', 'test', 'tests', '.*'],
     ignoreCollections = [],
   } = scanOptions === true ? {} : scanOptions

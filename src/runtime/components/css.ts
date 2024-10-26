@@ -49,13 +49,15 @@ function getAllSelectors() {
     }
   }
 
-  for (const styleSheet of document.styleSheets) {
-    try {
-      const rules = styleSheet.cssRules || styleSheet.rules
-      scanCssRules(rules)
-    }
-    catch {
-      // this typically means the stylesheet is from an inaccessible origin
+  if (typeof document !== 'undefined') {
+    for (const styleSheet of document.styleSheets) {
+      try {
+        const rules = styleSheet.cssRules || styleSheet.rules
+        scanCssRules(rules)
+      }
+      catch {
+        // this typically means the stylesheet is from an inaccessible origin
+      }
     }
   }
 
@@ -114,9 +116,10 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       const selectors = getAllSelectors()
 
       async function mountCSS(icon: IconifyIcon) {
-        if (selectors.has(selector.value)) {
+        if (selectors.has(selector.value))
           return
-        }
+        if (typeof document === 'undefined')
+          return
         const style = document.createElement('style')
         style.textContent = getCSS(icon)
         if (import.meta.dev) {

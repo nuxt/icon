@@ -49,7 +49,6 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
     return () => h(Iconify, {
       icon: name.value,
       ssr: true,
-      class: options.class,
       // Iconify uses `customise`, where we expose `customize` for consistency
       customise: props.customize,
     }, slots)

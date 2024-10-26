@@ -194,6 +194,6 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       }
     }
 
-    return () => h('span', { class: ['iconify', cssClass.value, options.class] })
+    return () => h('span', { class: ['iconify', cssClass.value] })
   },
 })

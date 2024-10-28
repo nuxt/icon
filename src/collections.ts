@@ -30,15 +30,37 @@ export function getCollectionPath(collection: string) {
     : `@iconify-json/${collection}/icons.json`
 }
 
+// https://github.com/iconify/iconify/blob/2274c033b49c01a50dc89b490b89d803d19d95dc/packages/utils/src/icon/name.ts#L15-L18
+export const validIconNameRE = /^[a-z0-9]+(-[a-z0-9]+)*$/
+
 export async function loadCustomCollection(collection: CustomCollection, nuxt: Nuxt): Promise<IconifyJSON> {
   const dir = isAbsolute(collection.dir)
     ? collection.dir
     : join(nuxt.options.rootDir, collection.dir)
-  const files = (await glob(['*.svg'], { cwd: dir, onlyFiles: true, expandDirectories: false }))
+
+  const files = (await glob(['*.svg'], {
+    cwd: dir,
+    onlyFiles: true,
+    expandDirectories: false,
+  }))
     .sort()
 
   const parsedIcons = await Promise.all(files.map(async (file) => {
-    const name = basename(file, '.svg')
+    let name = basename(file, '.svg')
+
+    // Currently Iconify only supports kebab-case icon names
+    // https://github.com/nuxt/icon/issues/265#issuecomment-2441604639
+    // We normalize the icon name to kebab-case and warn user about it
+    if (!validIconNameRE.test(name)) {
+      const normalized = name
+        .replace(/([a-z])([A-Z])/g, '$1-$2')
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+      logger.warn(`Custom icon \`${name}\` is normalized to \`${normalized}\`, we recommend to change the file name to match the icon name`)
+      name = normalized
+    }
+
     let svg = await fs.readFile(join(dir, file), 'utf-8')
     const cleanupIdx = svg.indexOf('<svg')
     if (cleanupIdx > 0)

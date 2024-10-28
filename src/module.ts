@@ -76,7 +76,7 @@ export default defineNuxtModule<ModuleOptions>({
       handler: resolver.resolve('./runtime/server/api'),
     })
 
-    await addCustomCollectionsWatcher(options, nuxt, ctx)
+    await setupCustomCollectionsWatcher(options, nuxt, ctx)
 
     // Merge options to app.config
     const runtimeOptions = Object.fromEntries(
@@ -167,11 +167,13 @@ export default defineNuxtModule<ModuleOptions>({
   },
 })
 
-async function addCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt, ctx: NuxtIconModuleContext) {
-  if (!options.customCollections?.length) return
+async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt, ctx: NuxtIconModuleContext) {
+  if (!options.customCollections?.length)
+    return
 
   let viteDevServer: ViteDevServer
   const collectionDirs = await Promise.all(options.customCollections.map(x => nuxtResolvePath(x.dir)))
+
   if (options.clientBundle?.includeCustomCollections) {
     addVitePlugin({
       name: 'nuxt-icon/client-bundle-updater',

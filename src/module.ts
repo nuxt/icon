@@ -1,6 +1,8 @@
-import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
+import type { ViteDevServer } from 'vite'
+import type { Nuxt } from '@nuxt/schema'
 import { schema } from './schema'
 import type { ModuleOptions, NuxtIconRuntimeOptions } from './types'
 import { unocssIntegration } from './integrations/unocss'
@@ -73,6 +75,8 @@ export default defineNuxtModule<ModuleOptions>({
       route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,
       handler: resolver.resolve('./runtime/server/api'),
     })
+
+    await setupCustomCollectionsWatcher(options, nuxt, ctx)
 
     // Merge options to app.config
     const runtimeOptions = Object.fromEntries(
@@ -162,3 +166,41 @@ export default defineNuxtModule<ModuleOptions>({
     await nuxt.callHook('icon:serverKnownCssClasses', serverKnownCssClasses)
   },
 })
+
+async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt, ctx: NuxtIconModuleContext) {
+  if (!options.customCollections?.length)
+    return
+
+  let viteDevServer: ViteDevServer
+  const collectionDirs = await Promise.all(options.customCollections.map(x => nuxtResolvePath(x.dir)))
+
+  if (options.clientBundle?.includeCustomCollections) {
+    addVitePlugin({
+      name: 'nuxt-icon/client-bundle-updater',
+      apply: 'serve',
+      configureServer(server) {
+        viteDevServer = server
+      },
+    })
+  }
+
+  nuxt.hook('builder:watch', async (event, path) => {
+    const resolvedPath = await nuxtResolvePath(path)
+    if (collectionDirs.some(cd => resolvedPath.startsWith(cd))) {
+      await ctx.loadCustomCollection(true) // Force re-read icons from fs
+      // Update client and server bundles
+      await updateTemplates({
+        filter: template => template.filename.startsWith('nuxt-icon-'),
+      })
+
+      if (viteDevServer) {
+        // Invalidate client bundle in vite dev server cache
+        const nuxtIconClientBundleModule = await viteDevServer.moduleGraph.getModuleByUrl('/.nuxt/nuxt-icon-client-bundle.mjs')
+        if (nuxtIconClientBundleModule) {
+          viteDevServer.moduleGraph.invalidateModule(nuxtIconClientBundleModule)
+          await viteDevServer.reloadModule(nuxtIconClientBundleModule)
+        }
+      }
+    }
+  })
+}

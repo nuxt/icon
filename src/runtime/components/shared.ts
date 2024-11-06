@@ -31,6 +31,7 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
         resolve()
       }, timeout)
     })])
+      .finally(() => clearTimeout(timeoutWarn))
   else
     await load
 

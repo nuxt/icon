@@ -24,12 +24,14 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
     })
 
   if (timeout > 0)
-    await Promise.race([load, new Promise<void>((resolve) => {
-      timeoutWarn = setTimeout(() => {
-        consola.warn(`[Icon] loading icon \`${name}\` timed out after ${timeout}ms`)
-        resolve()
-      }, timeout)
-    })])
+    await Promise.race([
+      load,
+      new Promise<void>((resolve) => {
+        timeoutWarn = setTimeout(() => {
+          consola.warn(`[Icon] loading icon \`${name}\` timed out after ${timeout}ms`)
+          resolve()
+        }, timeout)
+      })])
       .finally(() => clearTimeout(timeoutWarn))
   else
     await load

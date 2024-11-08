@@ -22,7 +22,6 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
       consola.warn(`[Icon] failed to load icon \`${name}\``)
       return null
     })
-    .finally(() => clearTimeout(timeoutWarn))
 
   if (timeout > 0)
     await Promise.race([load, new Promise<void>((resolve) => {

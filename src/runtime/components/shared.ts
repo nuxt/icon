@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { getIcon as _getIcon, loadIcon as _loadIcon } from '@iconify/vue'
+import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon } from '@iconify/vue'
 import { consola } from 'consola'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../../types'
@@ -11,7 +11,7 @@ export { initClientBundle }
 export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null> {
   if (!name)
     return null
-  initClientBundle()
+  initClientBundle(_addIcon)
   const _icon = _getIcon(name)
   if (_icon)
     return _icon

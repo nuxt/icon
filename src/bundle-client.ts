@@ -44,9 +44,8 @@ export function registerClientBundle(
       const collectionsRaw = `JSON.parse(${JSON.stringify(valuesCompat)})`
 
       return [
-        'import { addIcon } from "@iconify/vue"',
         'let _initialized = false',
-        'export function init() {',
+        'export function init(addIcon) {',
         '  if (_initialized)',
         '    return',
         `  const collections = ${collectionsRaw}`,

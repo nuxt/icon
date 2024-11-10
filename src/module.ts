@@ -54,13 +54,20 @@ export default defineNuxtModule<ModuleOptions>({
       throw new TypeError('`customize` callback can\'t not be set in module options, use `app.config.ts` or component props instead.')
     }
 
+    // Use `server` provider when SSR is disabled or generate mode
     if (!options.provider) {
-      // Use `server` provider when SSR is disabled or generate mode
       options.provider = (!nuxt.options.ssr || nuxt.options._generate)
         ? 'iconify'
         : 'server'
     }
 
+    // In some monorepo, `@iconify/vue` might be bundled twice which does not share the loaded data
+    nuxt.options.vite ||= {}
+    nuxt.options.vite.resolve ||= {}
+    nuxt.options.vite.resolve.dedupe ||= []
+    nuxt.options.vite.resolve.dedupe.push('@iconify/vue')
+
+    // Create context
     const ctx = new NuxtIconModuleContext(nuxt, options)
 
     addPlugin(
@@ -90,7 +97,6 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.appConfig.icon || {},
       runtimeOptions,
     )
-
     // Define types for the app.config compatible with Nuxt Studio
     nuxt.hook('schema:extend', (schemas) => {
       schemas.push({

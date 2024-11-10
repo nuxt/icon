@@ -44,14 +44,16 @@ export function registerClientBundle(
       const collectionsRaw = `JSON.parse(${JSON.stringify(valuesCompat)})`
 
       return [
-        'import { addCollection } from "@iconify/vue"',
+        'import { addIcon } from "@iconify/vue"',
         'let _initialized = false',
         'export function init() {',
         '  if (_initialized)',
         '    return',
         `  const collections = ${collectionsRaw}`,
         `  for (const collection of collections) {`,
-        '    addCollection(collection)',
+        `    for (const [name, data] of Object.entries(collection.icons)) {`,
+        `      addIcon(collection.prefix + ':' + name, data)`,
+        `    }`,
         '  }',
         '  _initialized = true',
         '}',

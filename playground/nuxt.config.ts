@@ -41,6 +41,10 @@ export default defineNuxtConfig({
         prefix: 'custom1',
         dir: './icons/custom1',
       },
+      {
+        prefix: '',
+        dir: './icons/no-prefix',
+      },
     ],
     serverBundle: 'remote',
     fallbackToApi: 'server-only',

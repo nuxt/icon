@@ -79,6 +79,15 @@ defineProps<{
       />
     </p>
     <p>
+      Custom icons with `prefix: ''` from local fs:
+      <Icon
+        name="nuxt-v3"
+        size="64"
+        :mode
+        :customize
+      />
+    </p>
+    <p>
       Custom icons from layer:
       <Icon
         name="layer:layer"

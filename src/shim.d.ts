@@ -5,5 +5,7 @@ declare module '#nuxt-icon-server-bundle' {
 }
 
 declare module '#build/nuxt-icon-client-bundle' {
-  export function init(): void
+  import type { IconifyIcon } from '@iconify/types'
+
+  export function init(addIcon: ((name: string, data: IconifyIcon) => void)): void
 }

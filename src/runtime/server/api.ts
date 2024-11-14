@@ -1,6 +1,5 @@
 import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
-import { consola } from 'consola'
 import { hash } from 'ohash'
 import { createError, getQuery, type H3Event } from 'h3'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
@@ -32,14 +31,14 @@ export default defineCachedEventHandler(async (event: H3Event) => {
         collection,
         icons,
       )
-      consola.debug(`[Icon] serving ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from bundled collection`)
+      console.debug(`[Icon] serving ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from bundled collection`)
       return data
     }
   }
   else if (import.meta.dev) {
     // Warn only once per collection, and only with the default endpoint
     if (collectionName && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
-      consola.warn([
+      console.warn([
         `[Icon] Collection \`${collectionName}\` is not found locally`,
         `We suggest to install it via \`npm i -D @iconify-json/${collectionName}\` to provide the best end-user experience.`,
       ].join('\n'))
@@ -49,7 +48,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
 
   if (options.fallbackToApi === true || options.fallbackToApi === 'server-only') {
     const apiUrl = new URL('./' + basename(url.pathname) + url.search, apiEndPoint)
-    consola.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
+    console.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
     if (apiUrl.host !== new URL(apiEndPoint).host) {
       return createError({ status: 400, message: 'Invalid icon request' })
     }

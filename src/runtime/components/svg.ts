@@ -41,7 +41,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
           addIcon(name.value, payload)
         }
         else {
-          initClientBundle()
+          initClientBundle(addIcon)
         }
       }
     }

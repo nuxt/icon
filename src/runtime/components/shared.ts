@@ -1,6 +1,5 @@
 import { computed } from 'vue'
 import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon } from '@iconify/vue'
-import { consola } from 'consola'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
@@ -19,7 +18,7 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
   let timeoutWarn: ReturnType<typeof setTimeout>
   const load = _loadIcon(name)
     .catch(() => {
-      consola.warn(`[Icon] failed to load icon \`${name}\``)
+      console.warn(`[Icon] failed to load icon \`${name}\``)
       return null
     })
 
@@ -28,7 +27,7 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
       load,
       new Promise<void>((resolve) => {
         timeoutWarn = setTimeout(() => {
-          consola.warn(`[Icon] loading icon \`${name}\` timed out after ${timeout}ms`)
+          console.warn(`[Icon] loading icon \`${name}\` timed out after ${timeout}ms`)
           resolve()
         }, timeout)
       })])

@@ -51,7 +51,7 @@ export function registerClientBundle(
         `  const collections = ${collectionsRaw}`,
         `  for (const collection of collections) {`,
         `    for (const [name, data] of Object.entries(collection.icons)) {`,
-        `      addIcon(collection.prefix ? collection.prefix + ':' + name : name, data)`,
+        `      addIcon(collection.prefix ? (collection.prefix + ':' + name) : name, data)`,
         `    }`,
         '  }',
         '  _initialized = true',

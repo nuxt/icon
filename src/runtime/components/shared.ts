@@ -7,7 +7,7 @@ import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
 
 export { initClientBundle }
 
-export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null> {
+export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null | undefined> {
   if (!name)
     return null
   initClientBundle(_addIcon)

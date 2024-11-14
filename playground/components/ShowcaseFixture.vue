@@ -82,7 +82,16 @@ defineProps<{
       Custom icons with `prefix: ''` from local fs:
       <Icon
         name="nuxt-v3"
-        size="64"
+        size="32"
+        :mode
+        :customize
+      />
+    </p>
+    <p>
+      Custom icons with `prefix: 'custom-parts'` from local fs:
+      <Icon
+        name="custom-parts-nuxt-v3"
+        size="32"
         :mode
         :customize
       />

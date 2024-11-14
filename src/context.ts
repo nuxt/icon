@@ -20,7 +20,7 @@ export class NuxtIconModuleContext {
   ) {}
 
   getRuntimeCollections(runtimeOptions: NuxtIconRuntimeOptions): string[] {
-    return runtimeOptions.fallbackToApi
+    const resolved = runtimeOptions.fallbackToApi
       ? collectionNames
       : typeof this.options.serverBundle === 'string'
         ? collectionNames
@@ -28,6 +28,14 @@ export class NuxtIconModuleContext {
           ? this.options.serverBundle.collections
             ?.map(c => typeof c === 'string' ? c : c.prefix) || []
           : []
+
+    // Include custom collections prefixes
+    for (const collection of this.options.customCollections || []) {
+      if (collection.prefix && !resolved.includes(collection.prefix))
+        resolved.push(collection.prefix)
+    }
+
+    return resolved
   }
 
   private _customCollections: IconifyJSON[] | Promise<IconifyJSON[]> | undefined

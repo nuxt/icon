@@ -42,6 +42,10 @@ export default defineNuxtConfig({
         dir: './icons/custom1',
       },
       {
+        prefix: 'custom-parts',
+        dir: './icons/custom-parts',
+      },
+      {
         prefix: '',
         dir: './icons/no-prefix',
       },

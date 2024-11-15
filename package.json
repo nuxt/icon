@@ -45,6 +45,7 @@
     "@iconify/vue": "^4.2.0-dev.2",
     "@nuxt/devtools-kit": "^1.6.0",
     "@nuxt/kit": "^3.14.159",
+    "consola": "^3.2.3",
     "local-pkg": "^0.5.0",
     "mlly": "^1.7.3",
     "ohash": "^1.1.4",

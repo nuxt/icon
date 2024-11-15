@@ -2,6 +2,7 @@ import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { hash } from 'ohash'
 import { createError, getQuery, type H3Event } from 'h3'
+import { consola } from 'consola'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 // @ts-expect-error tsconfig.server has the types
 import { useAppConfig, getRequestURL, defineCachedEventHandler } from '#imports'
@@ -31,14 +32,14 @@ export default defineCachedEventHandler(async (event: H3Event) => {
         collection,
         icons,
       )
-      console.debug(`[Icon] serving ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from bundled collection`)
+      consola.debug(`[Icon] serving ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from bundled collection`)
       return data
     }
   }
   else if (import.meta.dev) {
     // Warn only once per collection, and only with the default endpoint
     if (collectionName && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
-      console.warn([
+      consola.warn([
         `[Icon] Collection \`${collectionName}\` is not found locally`,
         `We suggest to install it via \`npm i -D @iconify-json/${collectionName}\` to provide the best end-user experience.`,
       ].join('\n'))
@@ -48,7 +49,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
 
   if (options.fallbackToApi === true || options.fallbackToApi === 'server-only') {
     const apiUrl = new URL('./' + basename(url.pathname) + url.search, apiEndPoint)
-    console.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
+    consola.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
     if (apiUrl.host !== new URL(apiEndPoint).host) {
       return createError({ status: 400, message: 'Invalid icon request' })
     }
@@ -58,7 +59,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch (e: any) {
-      console.error(e)
+      consola.error(e)
       if (e.status === 404)
         return createError({ status: 404 })
       else

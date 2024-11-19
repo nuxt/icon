@@ -9,6 +9,7 @@ import { useAppConfig, useNuxtApp } from '#imports'
 
 export default defineComponent({
   name: 'NuxtIcon',
+  inheritAttrs: false,
   props: {
     name: {
       type: String,
@@ -34,7 +35,7 @@ export default defineComponent({
       default: true,
     },
   },
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     const nuxtApp = useNuxtApp()
     const runtimeOptions = useAppConfig().icon as NuxtIconRuntimeOptions
     const name = useResolvedName(() => props.name)
@@ -60,9 +61,16 @@ export default defineComponent({
           component.value,
           {
             ...runtimeOptions.attrs,
+            ...attrs,
             name: name.value,
-            class: runtimeOptions.class,
-            style: style.value,
+            class: [
+              runtimeOptions.class,
+              attrs.class,
+            ],
+            style: [
+              style.value,
+              attrs.style,
+            ],
             customize,
           },
           slots,

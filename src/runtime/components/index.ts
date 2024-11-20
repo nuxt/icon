@@ -1,6 +1,6 @@
 import { getIcon as _getIcon } from '@iconify/vue'
 import type { PropType } from 'vue'
-import { computed, defineComponent, h, Suspense } from 'vue'
+import { computed, defineComponent, h } from 'vue'
 import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
 import { NuxtIconCss } from './css'
 import { NuxtIconSvg } from './svg'
@@ -9,7 +9,6 @@ import { useAppConfig, useNuxtApp } from '#imports'
 
 export default defineComponent({
   name: 'NuxtIcon',
-  inheritAttrs: false,
   props: {
     name: {
       type: String,
@@ -29,13 +28,8 @@ export default defineComponent({
       type: Function as PropType<IconifyIconCustomizeCallback>,
       required: false,
     },
-    suspensible: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
   },
-  setup(props, { slots, attrs }) {
+  setup(props, { slots }) {
     const nuxtApp = useNuxtApp()
     const runtimeOptions = useAppConfig().icon as NuxtIconRuntimeOptions
     const name = useResolvedName(() => props.name)
@@ -54,29 +48,15 @@ export default defineComponent({
     const customize = props.customize || runtimeOptions.customize
 
     return () => h(
-      Suspense,
-      { suspensible: props.suspensible },
+      component.value,
       {
-        default: () => h(
-          component.value,
-          {
-            ...runtimeOptions.attrs,
-            ...attrs,
-            name: name.value,
-            class: [
-              runtimeOptions.class,
-              attrs.class,
-            ],
-            style: [
-              style.value,
-              attrs.style,
-            ],
-            customize,
-          },
-          slots,
-        ),
-        fallback: () => h('span', { class: 'iconify iconify-loading' }),
+        ...runtimeOptions.attrs,
+        name: name.value,
+        class: runtimeOptions.class,
+        style: style.value,
+        customize,
       },
+      slots,
     )
   },
 })

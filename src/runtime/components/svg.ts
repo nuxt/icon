@@ -17,7 +17,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       required: false,
     },
   },
-  async setup(props, { slots }) {
+  setup(props, { slots }) {
     const nuxt = useNuxtApp()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
     const name = useResolvedName(() => props.name)

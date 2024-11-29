@@ -133,7 +133,7 @@ export interface NuxtIconRuntimeOptions {
   /**
    * Fetch Timeout
    *
-   * Set the timeout for fetching icons.
+   * Set the timeout for fetching icons on SSR.
    *
    * @default 1500
    */

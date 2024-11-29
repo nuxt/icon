@@ -144,7 +144,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
             mountCSS(data)
           }
           else {
-            loadIcon(props.name, options.fetchTimeout)
+            loadIcon(props.name, import.meta.server ? options.fetchTimeout : -1)
               .then((data) => {
                 if (data)
                   mountCSS(data)

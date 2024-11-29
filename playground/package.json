@@ -6,7 +6,8 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "generate": "nuxi generate",
-    "test": "vitest"
+    "test": "vitest",
+    "deploy": "nuxthub deploy"
   },
   "dependencies": {
     "@nuxthub/core": "^0.8.7",

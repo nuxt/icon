@@ -156,10 +156,14 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       )
     }
 
-    if (import.meta.server) {
-      const configs = (useRuntimeConfig().icon || {}) as NuxtIconRuntimeServerOptions
-      if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
-        onServerPrefetch(async () => {
+    // We need to always call this hook to make use Vue correctly detect this component as async
+    // This makes sure `useId` is consistent across server and client
+    // @see https://github.com/nuxt/icon/issues/310
+    onServerPrefetch(async () => {
+      // For dead code elimination
+      if (import.meta.server) {
+        const configs = (useRuntimeConfig().icon || {}) as NuxtIconRuntimeServerOptions
+        if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
           const icon = await loadIcon(props.name, options.fetchTimeout).catch(() => null)
           if (!icon)
             return null
@@ -190,9 +194,9 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
             ssrCSS.set(props.name, css)
           }
           return null
-        })
+        }
       }
-    }
+    })
 
     return () => h('span', { class: ['iconify', cssClass.value] })
   },

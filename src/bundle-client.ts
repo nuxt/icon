@@ -4,6 +4,9 @@ import type { NuxtIconModuleContext } from './context'
 export function registerClientBundle(
   ctx: NuxtIconModuleContext,
 ): void {
+  let cacheSize = 0
+  let cacheData: string | null = null
+
   // Client bundle
   addTemplate({
     filename: 'nuxt-icon-client-bundle.mjs',
@@ -13,7 +16,12 @@ export function registerClientBundle(
         sizeLimitKb = 256,
       } = ctx.options.clientBundle || {}
 
+      // TODO: find a granular way to cache this
       const { collections, count, failed } = await ctx.loadClientBundleCollections()
+
+      if (cacheSize === count && cacheData) {
+        return cacheData
+      }
 
       if (failed.length) {
         const msg = `Nuxt Icon could not fetch the icon data for client bundle:\n${failed.map(f => ' - ' + f).join('\n')}`
@@ -43,7 +51,7 @@ export function registerClientBundle(
 
       const collectionsRaw = `JSON.parse(${JSON.stringify(valuesCompat)})`
 
-      return [
+      cacheData = [
         'let _initialized = false',
         'export function init(addIcon) {',
         '  if (_initialized)',
@@ -57,6 +65,8 @@ export function registerClientBundle(
         '  _initialized = true',
         '}',
       ].join('\n')
+      cacheSize = count
+      return cacheData
     },
   })
 }

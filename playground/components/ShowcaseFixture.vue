@@ -77,6 +77,18 @@ defineProps<{
         :mode
         :customize
       />
+      <Icon
+        name="custom1:Foo_Bar_Zag"
+        size="64"
+        :mode
+        :customize
+      />
+      <Icon
+        name="custom1:Foo.BarZag"
+        size="64"
+        :mode
+        :customize
+      />
     </p>
     <p>
       Custom icons with `prefix: ''` from local fs:

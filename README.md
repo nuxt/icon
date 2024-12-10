@@ -187,6 +187,31 @@ export default defineNuxtConfig({
 })
 ```
 
+### Case Sensitive Custom Collections
+
+Before `v1.10`, due to the limitation of Iconify's previous convention, all custom icons were normalized to `kebab-case` with a warning. Thanks to the updates on Iconify side, starting from `v1.10`, you can opt-in to use case-sensitive custom collections and by pass the normalization.
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    customCollections: [
+      {
+        prefix: 'my-icon',
+        dir: './assets/my-icons',
+        normalizeIconName: false, // <-- this
+      },
+    ],
+  },
+})
+```
+
+Which enable to use `assets/my-icons/FooBar.svg` as `my-icon:FooBar`, for example.
+
+`normalizeIconName` is default to `true` for backward compatibility, and will be flipped in the future major version. See [#265](https://github.com/nuxt/icon/issues/265) for more context.
+
 ### Icon Customization
 
 To update the default size (`1em`) of the `<Icon />`, create an `app.config.ts` with the `icon.size` property.

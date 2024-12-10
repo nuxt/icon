@@ -40,14 +40,17 @@ export default defineNuxtConfig({
       {
         prefix: 'custom1',
         dir: './icons/custom1',
+        normalizeIconName: false,
       },
       {
         prefix: 'custom-parts',
         dir: './icons/custom-parts',
+        normalizeIconName: false,
       },
       {
         prefix: '',
         dir: './icons/no-prefix',
+        normalizeIconName: false,
       },
     ],
     serverBundle: 'remote',

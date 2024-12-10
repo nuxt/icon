@@ -54,6 +54,19 @@ export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'cus
 
 export interface CustomCollection extends Pick<IconifyJSON, 'prefix' | 'width' | 'height'> {
   dir: string
+  /**
+   * Normalize icon names to kebab-case
+   *
+   * Since v1.10.0, Iconify supports arbitrary icon names.
+   * You can disable this option to keep the original icon names.
+   *
+   * This options is true by default to ensure compatibility with older versions.
+   * In the next major version, this option will be disabled by default.
+   *
+   * @see https://github.com/nuxt/icon/issues/265#issuecomment-2524979176
+   * @default true
+   */
+  normalizeIconName?: boolean
 }
 
 export interface RemoteCollection {

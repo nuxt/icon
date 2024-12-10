@@ -208,7 +208,7 @@ export default defineNuxtConfig({
 })
 ```
 
-To use `FooBar.svg` as `my-icon:FooBar`, for example.
+Which enable to use `assets/my-icons/FooBar.svg` as `my-icon:FooBar`, for example.
 
 `normalizeIconName` is default to `true` for backward compatibility, and will be flipped in the future major version. See [#265](https://github.com/nuxt/icon/issues/265) for more context.
 

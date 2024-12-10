@@ -4,8 +4,8 @@ import { glob } from 'tinyglobby'
 import { iconMatchRegex } from './icon-regex'
 import type { ClientBundleScanOptions } from './types'
 
-export function extraIconUsages(code: string, set: Set<string>, ignoreCollections: string[]) {
-  for (const match of code.matchAll(iconMatchRegex)) {
+export function extraIconUsages(code: string, set: Set<string>, ignoreCollections: string[], iconRegex: RegExp) {
+  for (const match of code.matchAll(iconRegex)) {
     if (match && !ignoreCollections.includes(match[1])) {
       set.add(`${match[1]}:${match[2]}`)
     }
@@ -17,6 +17,7 @@ export async function scanSourceFiles(nuxt: Nuxt, scanOptions: ClientBundleScanO
     globInclude = ['**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml}'],
     globExclude = ['node_modules', 'dist', 'build', 'coverage', 'test', 'tests', '.*'],
     ignoreCollections = [],
+    iconRegex = iconMatchRegex,
   } = scanOptions === true ? {} : scanOptions
 
   const files = await glob(
@@ -32,7 +33,7 @@ export async function scanSourceFiles(nuxt: Nuxt, scanOptions: ClientBundleScanO
   await Promise.all(
     files.map(async (file) => {
       const code = await fs.readFile(file, 'utf-8').catch(() => '')
-      extraIconUsages(code, set, ignoreCollections)
+      extraIconUsages(code, set, ignoreCollections, iconRegex)
     }),
   )
 

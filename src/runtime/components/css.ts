@@ -104,7 +104,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       const css = getIconCSS(icon, {
         iconSelector,
         format: 'compressed',
-        customise: props.customize,
+        customise: props.customize ?? options.customize,
       })
       if (options.cssLayer && withLayer) {
         return `@layer ${options.cssLayer} { ${css} }`

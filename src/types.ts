@@ -154,6 +154,10 @@ export interface ClientBundleScanOptions {
    * Collection names to be ignored when scanning
    */
   ignoreCollections?: string[]
+  /**
+   * Additional collections that are not or not yet inclduded in the `@iconify` collection
+   */
+  additionalCollections?: string[]
 }
 
 export interface ResolvedServerBundleOptions {

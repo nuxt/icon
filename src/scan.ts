@@ -1,24 +1,49 @@
 import fs from 'node:fs/promises'
 import type { Nuxt } from 'nuxt/schema'
 import { glob } from 'tinyglobby'
-import { iconMatchRegex } from './icon-regex'
 import type { ClientBundleScanOptions } from './types'
+import { collectionNames } from './collection-names'
 
-export function extraIconUsages(code: string, set: Set<string>, ignoreCollections: string[], iconRegex: RegExp) {
-  for (const match of code.matchAll(iconRegex)) {
-    if (match && !ignoreCollections.includes(match[1])) {
+export function extraIconUsages(
+  code: string,
+  set: Set<string>,
+  matchRegex: RegExp,
+) {
+  for (const match of code.matchAll(matchRegex)) {
+    if (match) {
       set.add(`${match[1]}:${match[2]}`)
     }
   }
 }
 
-export async function scanSourceFiles(nuxt: Nuxt, scanOptions: ClientBundleScanOptions | true, set: Set<string> = new Set()) {
+export function createMatchRegex(
+  collections: string[] | Set<string>,
+) {
+  const collectionsRegex = [...collections].sort((a, b) => b.length - a.length).join('|')
+  return new RegExp('\\b(?:i-)?(' + collectionsRegex + ')[:-]([a-z0-9-]+)\\b', 'g')
+}
+
+export async function scanSourceFiles(
+  nuxt: Nuxt,
+  scanOptions: ClientBundleScanOptions | true,
+  set: Set<string> = new Set(),
+) {
   const {
     globInclude = ['**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml}'],
     globExclude = ['node_modules', 'dist', 'build', 'coverage', 'test', 'tests', '.*'],
     ignoreCollections = [],
-    iconRegex = iconMatchRegex,
+    additionalCollections = [],
   } = scanOptions === true ? {} : scanOptions
+
+  const collections = new Set([
+    ...collectionNames,
+    ...additionalCollections,
+  ])
+  for (const collection of ignoreCollections) {
+    collections.delete(collection)
+  }
+
+  const matchRegex = createMatchRegex(collections)
 
   const files = await glob(
     globInclude,
@@ -33,7 +58,7 @@ export async function scanSourceFiles(nuxt: Nuxt, scanOptions: ClientBundleScanO
   await Promise.all(
     files.map(async (file) => {
       const code = await fs.readFile(file, 'utf-8').catch(() => '')
-      extraIconUsages(code, set, ignoreCollections, iconRegex)
+      extraIconUsages(code, set, matchRegex)
     }),
   )
 

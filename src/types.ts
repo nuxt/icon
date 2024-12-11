@@ -155,11 +155,9 @@ export interface ClientBundleScanOptions {
    */
   ignoreCollections?: string[]
   /**
-   * Regular expression used to match icons inside all scanned files
-   * 
-   * @default See icon-regex.ts
+   * Additional collections that are not or not yet inclduded in the `@iconify` collection
    */
-  iconRegex?: RegExp
+  additionalCollections?: string[]
 }
 
 export interface ResolvedServerBundleOptions {

@@ -95,6 +95,14 @@ export const schema = {
       tsType: 'string[] | null',
     },
   },
+  customCollections: {
+    $default: null,
+    $schema: {
+      title: 'Custom Icon Collections',
+      tags: ['@studioIcon material-symbols:format-list-bulleted'],
+      tsType: 'string[] | null',
+    },
+  },
   provider: {
     $default: undefined,
     $schema: {

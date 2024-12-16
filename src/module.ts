@@ -96,6 +96,9 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.appConfig.icon = Object.assign(
       nuxt.options.appConfig.icon || {},
       runtimeOptions,
+      {
+        customCollections: options.customCollections?.map(i => i.prefix),
+      },
     )
     // Define types for the app.config compatible with Nuxt Studio
     nuxt.hook('schema:extend', (schemas) => {

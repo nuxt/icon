@@ -1,12 +1,13 @@
-import { addAPIProvider, _api, disableCache } from '@iconify/vue'
+import { addAPIProvider, _api, disableCache, setCustomIconsLoader } from '@iconify/vue'
 import type { Plugin } from 'nuxt/app'
+import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
 import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
   name: '@nuxt/icon',
   setup() {
-    const config = useRuntimeConfig()
+    const configs = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -17,7 +18,7 @@ export default defineNuxtPlugin({
 
     const resources: string[] = []
     if (options.provider === 'server') {
-      const baseURL = config.app?.baseURL?.replace(/\/$/, '') ?? ''
+      const baseURL = configs.app?.baseURL?.replace(/\/$/, '') ?? ''
 
       resources.push(baseURL + (options.localApiEndpoint || '/api/_nuxt_icon'))
       if (options.fallbackToApi === true || options.fallbackToApi === 'client-only') {
@@ -28,6 +29,30 @@ export default defineNuxtPlugin({
       resources.push(options.iconifyApiEndpoint!)
     }
 
+    async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
+      try {
+        const data = await $fetch(resources[0] + '/' + prefix + '.json', {
+          query: {
+            icons: icons.join(','),
+          },
+        }) as IconifyJSON
+        // Simple data validation
+        if (!data || data.prefix !== prefix || !data.icons)
+          throw new Error('Invalid data' + JSON.stringify(data))
+        return data as IconifyJSON
+      }
+      catch (e) {
+        console.error('Failed to load custom icons', e)
+        return null
+      }
+    }
+
     addAPIProvider('', { resources })
+
+    // Register custom collections handlers
+    for (const prefix of options.customCollections || []) {
+      if (prefix)
+        setCustomIconsLoader(customIconLoader, prefix)
+    }
   },
 }) as Plugin

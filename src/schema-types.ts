@@ -87,6 +87,12 @@ export interface NuxtIconRuntimeOptions {
   collections: string[] | null
 
   /**
+   * Custom Icon Collections
+   *
+   */
+  customCollections: string[] | null
+
+  /**
    * Icon Provider
    *
    * Provider to use for fetching icons
@@ -133,7 +139,7 @@ export interface NuxtIconRuntimeOptions {
   /**
    * Fetch Timeout
    *
-   * Set the timeout for fetching icons on SSR.
+   * Set the timeout for fetching icons.
    *
    * @default 1500
    */

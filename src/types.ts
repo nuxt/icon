@@ -17,7 +17,7 @@ export interface NuxtIconRuntimeServerOptions {
   serverKnownCssClasses?: string[]
 }
 
-export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'customize'>> {
+export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'customize' | 'customCollections'>> {
   /**
    * Name of the component to be registered
    * @default 'Icon'

@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@nuxthub/core": "^0.8.7",
-    "nuxt": "^3.14.159"
+    "nuxt": "^3.14.1592"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.14.4",
+    "@nuxt/test-utils": "^3.15.1",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.6",
     "playwright-core": "^1.49.0",

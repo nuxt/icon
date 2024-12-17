@@ -40,9 +40,9 @@
     "test": "pnpm run test:unit --run && pnpm run test:playground --run"
   },
   "dependencies": {
-    "@iconify/collections": "^1.0.493",
+    "@iconify/collections": "^1.0.496",
     "@iconify/types": "^2.0.0",
-    "@iconify/utils": "^2.2.0",
+    "@iconify/utils": "^2.2.1",
     "@iconify/vue": "^4.2.0",
     "@nuxt/devtools-kit": "^1.6.4",
     "@nuxt/kit": "^3.14.1592",
@@ -55,12 +55,12 @@
     "tinyglobby": "^0.2.10"
   },
   "devDependencies": {
-    "@iconify-json/fluent-emoji-high-contrast": "^1.2.1",
-    "@iconify-json/logos": "^1.2.3",
-    "@iconify-json/ph": "^1.2.1",
-    "@iconify-json/simple-icons": "^1.2.15",
-    "@iconify-json/solar": "^1.2.1",
-    "@iconify-json/uil": "^1.2.1",
+    "@iconify-json/fluent-emoji-high-contrast": "^1.2.2",
+    "@iconify-json/logos": "^1.2.4",
+    "@iconify-json/ph": "^1.2.2",
+    "@iconify-json/simple-icons": "^1.2.16",
+    "@iconify-json/solar": "^1.2.2",
+    "@iconify-json/uil": "^1.2.3",
     "@nuxt/devtools": "^1.6.4",
     "@nuxt/eslint-config": "^0.7.3",
     "@nuxt/module-builder": "^0.8.4",
@@ -72,10 +72,10 @@
     "changelogen": "^0.5.7",
     "eslint": "^9.17.0",
     "nuxt": "^3.14.1592",
-    "nuxthub": "^0.7.4",
+    "nuxthub": "^0.7.6",
     "prettier": "^3.4.2",
     "typescript": "~5.6.3",
-    "untyped": "^1.5.1",
+    "untyped": "^1.5.2",
     "vite": "^6.0.3",
     "vue-tsc": "^2.1.10"
   },

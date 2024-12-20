@@ -5,7 +5,7 @@ import { logger } from '@nuxt/kit'
 import { collectionNames } from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './collections'
-import { scanSourceFiles } from './scan'
+import { IconUsageScanner } from './scan'
 
 const KEYWORDS_EDGE_TARGETS: string[] = [
   'edge',
@@ -18,6 +18,10 @@ export class NuxtIconModuleContext {
     public readonly nuxt: Nuxt,
     public readonly options: ModuleOptions,
   ) {}
+
+  public clientBundleVersion = 0
+  public scannedIcons = new Set<string>()
+  public scanner: IconUsageScanner | undefined
 
   getRuntimeCollections(runtimeOptions: NuxtIconRuntimeOptions): string[] {
     const resolved = runtimeOptions.fallbackToApi
@@ -118,6 +122,7 @@ export class NuxtIconModuleContext {
 
   async loadCustomCollection(force = false): Promise<IconifyJSON[]> {
     if (force) {
+      this.clientBundleVersion += 1
       this._customCollections = undefined
     }
     if (!this._customCollections) {
@@ -146,12 +151,13 @@ export class NuxtIconModuleContext {
 
     // Filter out the `i-` prefix and deduplicate
     const userIcons = new Set((this.options.clientBundle?.icons || []).map(i => i.replace(/^i[-:]/, '')))
-    const scannedIcons = new Set<string>()
 
-    if (scan)
-      await scanSourceFiles(this.nuxt, scan, scannedIcons)
+    if (scan && !this.scanner) {
+      this.scanner = new IconUsageScanner(scan)
+      await this.scanner.scanFiles(this.nuxt, this.scannedIcons)
+    }
 
-    const icons = new Set<string>([...userIcons, ...scannedIcons])
+    const icons = new Set<string>([...userIcons, ...this.scannedIcons])
 
     await this.nuxt.callHook('icon:clientBundleIcons', icons)
 
@@ -202,7 +208,7 @@ export class NuxtIconModuleContext {
 
         if (!data) {
           // We don't warn for scanned icons, because the extraction can have false positives
-          if (!scannedIcons.has(icon) || userIcons.has(icon)) {
+          if (!this.scannedIcons.has(icon) || userIcons.has(icon)) {
             failed.push(icon)
           }
         }

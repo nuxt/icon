@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
@@ -195,8 +196,19 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
 
   nuxt.hook('builder:watch', async (event, path) => {
     const resolvedPath = await nuxtResolvePath(path)
+
+    if (ctx.scanner) {
+      const matched = ctx.scanner.isFileMatch(path)
+      console.log({ path, matched })
+      ctx.scanner.extractFromCode(
+        await fs.readFile(resolvedPath, 'utf-8').catch(() => ''),
+        ctx.scannedIcons,
+      )
+    }
+
     if (collectionDirs.some(cd => resolvedPath.startsWith(cd))) {
       await ctx.loadCustomCollection(true) // Force re-read icons from fs
+
       // Update client and server bundles
       await updateTemplates({
         filter: template => template.filename.startsWith('nuxt-icon-'),

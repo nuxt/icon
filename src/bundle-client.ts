@@ -5,6 +5,7 @@ export function registerClientBundle(
   ctx: NuxtIconModuleContext,
 ): void {
   let cacheSize = 0
+  let cacheVersion = -1
   let cacheData: string | null = null
 
   // Client bundle
@@ -19,7 +20,7 @@ export function registerClientBundle(
       // TODO: find a granular way to cache this
       const { collections, count, failed } = await ctx.loadClientBundleCollections()
 
-      if (cacheSize === count && cacheData) {
+      if (cacheSize === count && cacheData && cacheVersion === ctx.clientBundleVersion) {
         return cacheData
       }
 
@@ -66,6 +67,7 @@ export function registerClientBundle(
         '}',
       ].join('\n')
       cacheSize = count
+      cacheVersion = ctx.clientBundleVersion
       return cacheData
     },
   })

@@ -25,7 +25,12 @@ export default defineComponent({
       default: null,
     },
     customize: {
-      type: Function as PropType<IconifyIconCustomizeCallback>,
+      type: [
+        Function as PropType<IconifyIconCustomizeCallback>,
+        Boolean as PropType<boolean>,
+        null,
+      ],
+      default: true,
       required: false,
     },
   },
@@ -45,7 +50,6 @@ export default defineComponent({
         ? { fontSize: Number.isNaN(+size) ? size : size + 'px' }
         : null
     })
-    const customize = props.customize || runtimeOptions.customize
 
     return () => h(
       component.value,
@@ -54,7 +58,7 @@ export default defineComponent({
         name: name.value,
         class: runtimeOptions.class,
         style: style.value,
-        customize,
+        customize: props.customize,
       },
       slots,
     )

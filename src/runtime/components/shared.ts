@@ -60,3 +60,13 @@ export function useResolvedName(getName: () => string) {
     return resolved
   })
 }
+
+export function useResolveCustomization(
+  customize: PropType<IconifyIconCustomizeCallback> | undefined,
+  globalCustomize: PropType<IconifyIconCustomizeCallback> | undefined,
+):
+    PropType<IconifyIconCustomizeCallback> | undefined {
+  if (customize === false || customize === null) return undefined
+  if (customize === true) return globalCustomize
+  return customize
+}

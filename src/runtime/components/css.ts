@@ -72,8 +72,8 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       required: true,
     },
     customize: {
-      type: [Function, Boolean] as PropType<IconifyIconCustomizeCallback | boolean>,
-      default: true,
+      type: [Function, Boolean, null] as PropType<IconifyIconCustomizeCallback | boolean | null>,
+      default: null,
       required: false,
     },
   },

@@ -66,7 +66,7 @@ export function useResolveCustomization(
   globalCustomize: IconifyIconCustomizeCallback | undefined,
 ):
     IconifyIconCustomizeCallback | undefined {
-  if (customize === false || customize === null) return undefined
-  if (customize === true) return globalCustomize
+  if (customize === false) return undefined
+  if (customize === true || customize === null) return globalCustomize
   return customize
 }

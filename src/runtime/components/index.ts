@@ -25,11 +25,7 @@ export default defineComponent({
       default: null,
     },
     customize: {
-      type: [
-        Function as PropType<IconifyIconCustomizeCallback>,
-        Boolean as PropType<boolean>,
-        null,
-      ],
+      type: [Function, Boolean] as PropType<IconifyIconCustomizeCallback | boolean>,
       default: true,
       required: false,
     },

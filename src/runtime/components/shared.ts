@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon } from '@iconify/vue'
 import type { IconifyIcon } from '@iconify/types'
-import type { NuxtIconRuntimeOptions } from '../../types'
+import type { IconifyIconCustomizeCallback, NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
 import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
 
@@ -62,10 +62,10 @@ export function useResolvedName(getName: () => string) {
 }
 
 export function useResolveCustomization(
-  customize: PropType<IconifyIconCustomizeCallback> | undefined,
-  globalCustomize: PropType<IconifyIconCustomizeCallback> | undefined,
+  customize: IconifyIconCustomizeCallback | boolean | null | undefined,
+  globalCustomize: IconifyIconCustomizeCallback | undefined,
 ):
-    PropType<IconifyIconCustomizeCallback> | undefined {
+    IconifyIconCustomizeCallback | undefined {
   if (customize === false || customize === null) return undefined
   if (customize === true) return globalCustomize
   return customize

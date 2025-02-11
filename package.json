@@ -70,7 +70,7 @@
     "@types/node": "^22.10.2",
     "@types/picomatch": "^3.0.1",
     "@unocss/nuxt": "^0.65.1",
-    "bumpp": "^9.9.1",
+    "bumpp": "^10.0.3",
     "changelogen": "^0.5.7",
     "eslint": "^9.17.0",
     "nuxt": "^3.14.1592",

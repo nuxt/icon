@@ -10,7 +10,7 @@ import { unocssIntegration } from './integrations/unocss'
 import { registerServerBundle } from './bundle-server'
 import { registerClientBundle } from './bundle-client'
 import { NuxtIconModuleContext } from './context'
-import { getCollectionPath } from './collections'
+import { getCollectionPath, setupIconTypes } from './collections'
 
 export type { ModuleOptions, NuxtIconRuntimeOptions as RuntimeOptions }
 
@@ -27,6 +27,7 @@ export default defineNuxtModule<ModuleOptions>({
     componentName: 'Icon',
     serverBundle: 'auto',
     serverKnownCssClasses: [],
+    generateTypes: false,
     clientBundle: {
       icons: [],
     },
@@ -85,6 +86,10 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     await setupCustomCollectionsWatcher(options, nuxt, ctx)
+
+    if (options.generateTypes) {
+      setupIconTypes(nuxt)
+    }
 
     // Merge options to app.config
     const runtimeOptions = Object.fromEntries(

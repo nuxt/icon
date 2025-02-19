@@ -50,6 +50,12 @@ export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'cus
    * List of pre-compiled CSS classnames to be used for server-side CSS icon rendering
    */
   serverKnownCssClasses?: string[]
+
+  /**
+   * Enable type generation for local custom SVG collections
+   * @default false
+   */
+  generateTypes?: boolean
 }
 
 export interface CustomCollection extends Pick<IconifyJSON, 'prefix' | 'width' | 'height'> {

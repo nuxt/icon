@@ -103,6 +103,13 @@ export const schema = {
       tsType: 'string[] | null',
     },
   },
+  generateTypes: {
+    $default: false,
+    $schema: {
+      type: 'boolean',
+      description: 'Enable type generation for local custom SVG collections',
+    },
+  },
   provider: {
     $default: undefined,
     $schema: {

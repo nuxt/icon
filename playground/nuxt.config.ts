@@ -36,6 +36,7 @@ export default defineNuxtConfig({
   // ssr: false,
 
   icon: {
+    generateTypes: false,
     customCollections: [
       {
         prefix: 'custom1',

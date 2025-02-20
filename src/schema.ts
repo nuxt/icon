@@ -103,7 +103,7 @@ export const schema = {
       tsType: 'string[] | null',
     },
   },
-  generateTypes: {
+  generateLocalSVGTypes: {
     $default: false,
     $schema: {
       type: 'boolean',

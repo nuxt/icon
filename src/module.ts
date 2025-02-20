@@ -27,7 +27,7 @@ export default defineNuxtModule<ModuleOptions>({
     componentName: 'Icon',
     serverBundle: 'auto',
     serverKnownCssClasses: [],
-    generateTypes: false,
+    generateLocalSVGTypes: false,
     clientBundle: {
       icons: [],
     },
@@ -87,7 +87,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     await setupCustomCollectionsWatcher(options, nuxt, ctx)
 
-    if (options.generateTypes) {
+    if (options.generateLocalSVGTypes) {
       setupIconTypes(nuxt)
     }
 

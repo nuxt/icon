@@ -46,7 +46,7 @@ export function setupIconTypes(nuxt: Nuxt) {
   }
 
   // Function to generate types
-  const generateTypes = () => {
+  const generateLocalSVGTypes = () => {
     // Collect icons from all collections
     const iconNames = resolvedCollections
       .filter(({ dir }) => fs.existsSync(dir))
@@ -91,13 +91,13 @@ export {}
 
   // Generate types during dev server preparation
   nuxt.hook('prepare:types', ({ references }) => {
-    generateTypes()
+    generateLocalSVGTypes()
     references.push({ path: outputFile })
   })
 
   // Generate types on build
   nuxt.hook('build:before', () => {
-    generateTypes()
+    generateLocalSVGTypes()
   })
 
   // Watch for changes in development
@@ -117,7 +117,7 @@ export {}
       watcher.on('all', (event, filepath) => {
         if (filepath.endsWith('.svg')) {
           console.log('Icon files changed, regenerating types...')
-          generateTypes()
+          generateLocalSVGTypes()
         }
       })
     })

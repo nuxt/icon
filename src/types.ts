@@ -55,7 +55,7 @@ export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'cus
    * Enable type generation for local custom SVG collections
    * @default false
    */
-  generateTypes?: boolean
+  generateLocalSVGTypes?: boolean
 }
 
 export interface CustomCollection extends Pick<IconifyJSON, 'prefix' | 'width' | 'height'> {

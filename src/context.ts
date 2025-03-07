@@ -224,9 +224,12 @@ export class NuxtIconModuleContext {
     }))
 
     if (customCollections.length) {
-      customCollections.flatMap(collection => Object.entries(collection.icons)
-        .map(([name, data]) => {
-          addIcon(collection.prefix, name, data)
+      customCollections.flatMap(collection => Object.keys(collection.icons)
+        .map((name) => {
+          const data = getIconData(collection, name)
+          if (data) {
+            addIcon(collection.prefix, name, data)
+          }
         }))
     }
 

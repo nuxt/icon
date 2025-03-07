@@ -182,7 +182,7 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
     return
 
   let viteDevServer: ViteDevServer
-  const collectionDirs = await Promise.all(options.customCollections.map(x => nuxtResolvePath(x.dir)))
+  const collectionDirs = await Promise.all(options.customCollections.filter(x => 'dir' in x).map(x => nuxtResolvePath(x.dir)))
 
   if (options.clientBundle?.includeCustomCollections) {
     addVitePlugin({

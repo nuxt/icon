@@ -152,19 +152,21 @@ export class NuxtIconModuleContext {
     // Filter out the `i-` prefix and deduplicate
     const userIcons = new Set((this.options.clientBundle?.icons || []).map(i => i.replace(/^i[-:]/, '')))
 
+    let customCollections: IconifyJSON[] = []
+    if (this.options.customCollections?.length) {
+      customCollections = await this.loadCustomCollection()
+    }
+
     if (scan && !this.scanner) {
-      this.scanner = new IconUsageScanner(scan)
+      const additionalCollections = customCollections.map(c => c.prefix)
+      const scanOptions = scan === true ? { additionalCollections } : { additionalCollections, ...scan }
+      this.scanner = new IconUsageScanner(scanOptions)
       await this.scanner.scanFiles(this.nuxt, this.scannedIcons)
     }
 
     const icons = new Set<string>([...userIcons, ...this.scannedIcons])
 
     await this.nuxt.callHook('icon:clientBundleIcons', icons)
-
-    let customCollections: IconifyJSON[] = []
-    if (includeCustomCollections && this.options.customCollections?.length) {
-      customCollections = await this.loadCustomCollection()
-    }
 
     if (!icons.size && !customCollections.length) {
       return {
@@ -182,7 +184,20 @@ export class NuxtIconModuleContext {
     const failed: string[] = []
     let count = 0
 
+    const customCollectionNames = new Set(customCollections.map(c => c.prefix))
     const collections = new Map<string, IconifyJSON>()
+
+    function loadCollection(prefix: string) {
+      if (customCollectionNames.has(prefix)) {
+        const collection = customCollections.find(c => c.prefix === prefix)
+        if (collection) {
+          return Promise.resolve(collection)
+        }
+      }
+
+      return loadCollectionFromFS(prefix)
+    }
+
     function addIcon(prefix: string, name: string, data: IconifyIcon) {
       let collection = collections.get(prefix)
       if (!collection) {
@@ -192,15 +207,17 @@ export class NuxtIconModuleContext {
         }
         collections.set(prefix, collection)
       }
+      if (!collection.icons[name]) {
+        count += 1
+      }
       collection.icons[name] = data
-      count += 1
     }
 
     await Promise.all([...icons].map(async (icon) => {
       try {
         const [prefix, name] = icon.split(':')
         if (!iconifyCollectionMap.has(prefix))
-          iconifyCollectionMap.set(prefix, loadCollectionFromFS(prefix))
+          iconifyCollectionMap.set(prefix, loadCollection(prefix))
 
         let data: IconifyIcon | null = null
         const collection = await iconifyCollectionMap.get(prefix)
@@ -223,7 +240,7 @@ export class NuxtIconModuleContext {
       }
     }))
 
-    if (customCollections.length) {
+    if (includeCustomCollections && customCollections.length) {
       customCollections.flatMap(collection => Object.keys(collection.icons)
         .map((name) => {
           const data = getIconData(collection, name)

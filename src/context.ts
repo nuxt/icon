@@ -179,6 +179,9 @@ export class NuxtIconModuleContext {
     const { getIconData } = await import('@iconify/utils')
     const { loadCollectionFromFS } = await import('@iconify/utils/lib/loader/fs')
 
+    const failed: string[] = []
+    let count = 0
+
     const collections = new Map<string, IconifyJSON>()
     function addIcon(prefix: string, name: string, data: IconifyIcon) {
       let collection = collections.get(prefix)
@@ -190,10 +193,8 @@ export class NuxtIconModuleContext {
         collections.set(prefix, collection)
       }
       collection.icons[name] = data
+      count += 1
     }
-
-    const failed: string[] = []
-    let count = 0
 
     await Promise.all([...icons].map(async (icon) => {
       try {
@@ -213,7 +214,6 @@ export class NuxtIconModuleContext {
           }
         }
         else {
-          count += 1
           addIcon(prefix, name, data)
         }
       }

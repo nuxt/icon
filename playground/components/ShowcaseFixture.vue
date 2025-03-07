@@ -109,6 +109,15 @@ defineProps<{
       />
     </p>
     <p>
+      Custom icons with `prefix: 'json-collection'` from IconifyJSON:
+      <Icon
+        name="json-collection:nuxt-v3"
+        size="32"
+        :mode
+        :customize
+      />
+    </p>
+    <p>
       Custom icons from layer:
       <Icon
         name="layer:layer"

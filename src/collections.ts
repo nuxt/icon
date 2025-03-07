@@ -33,7 +33,22 @@ export function getCollectionPath(collection: string) {
 // https://github.com/iconify/iconify/blob/2274c033b49c01a50dc89b490b89d803d19d95dc/packages/utils/src/icon/name.ts#L15-L18
 const validIconNameRE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
-export async function loadCustomCollection(collection: CustomCollection, nuxt: Nuxt): Promise<IconifyJSON> {
+export async function loadCustomCollection(
+  collection: IconifyJSON | CustomCollection,
+  nuxt: Nuxt,
+): Promise<IconifyJSON> {
+  if ('dir' in collection) {
+    return parseCustomCollection(collection, nuxt)
+  }
+
+  logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${Object.keys(collection.icons).length} icons`)
+  return collection
+}
+
+async function parseCustomCollection(
+  collection: CustomCollection,
+  nuxt: Nuxt,
+): Promise<IconifyJSON> {
   const dir = isAbsolute(collection.dir)
     ? collection.dir
     : join(nuxt.options.rootDir, collection.dir)

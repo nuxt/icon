@@ -14,6 +14,6 @@ it('mount fixtures', async () => {
     '<html><body>' + component.html() + '</body></html>',
     { parser: 'html' },
   )
-  expect(html)
+  await expect(html)
     .toMatchFileSnapshot('./output/fixtures.html')
 })

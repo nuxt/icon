@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon } from '@iconify/vue'
 import type { IconifyIcon } from '@iconify/types'
-import type { NuxtIconRuntimeOptions } from '../../types'
+import type { IconifyIconCustomizeCallback, NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
 import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
 
@@ -59,4 +59,14 @@ export function useResolvedName(getName: () => string) {
     }
     return resolved
   })
+}
+
+export function useResolveCustomization(
+  customize: IconifyIconCustomizeCallback | boolean | null | undefined,
+  globalCustomize: IconifyIconCustomizeCallback | undefined,
+):
+    IconifyIconCustomizeCallback | undefined {
+  if (customize === false) return undefined
+  if (customize === true || customize === null) return globalCustomize
+  return customize
 }

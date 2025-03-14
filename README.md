@@ -75,6 +75,20 @@ When using an icon from Iconify, an `<span>` or `<svg>` will be created based on
 <Icon name="uil:github" style="color: black" />
 ```
 
+**TailwindCSS v4**:
+
+When using TailwindCSS v4 with the `css` mode, you should configure the `cssLayer` in Nuxt's Application configuration file:
+
+```ts
+// ~/app.config.ts
+export default defineAppConfig({
+  icon: {
+    mode: 'css',
+    cssLayer: 'base'
+  }
+})
+```
+
 ### Iconify Dataset
 
 You can use any name from the https://icones.js.org collection:
@@ -232,7 +246,8 @@ export default defineAppConfig({
     mode: 'css', // default <Icon> mode applied
     aliases: {
       'nuxt': 'logos:nuxt-icon',
-    }
+    },
+    cssLayer: 'base' // required for TailwindCSS v4.
   }
 })
 ```

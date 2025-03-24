@@ -26,7 +26,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
 
     if (name.value) {
       // On server side, we fetch the icon data and store it in the payload
-      // Apply server prefetch function used for CSS icons. 
+      // Apply server prefetch function used for CSS icons.
       // @See https://github.com/nuxt/icon/issues/356
       onServerPrefetch(async () => {
         if (import.meta.server) {

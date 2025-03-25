@@ -30,7 +30,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       // @See https://github.com/nuxt/icon/issues/356
       onServerPrefetch(async () => {
         if (import.meta.server) {
-          useAsyncData(
+          await useAsyncData(
             storeKey,
             () => loadIcon(name.value, options.fetchTimeout),
             { deep: false },

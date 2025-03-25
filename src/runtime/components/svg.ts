@@ -32,7 +32,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
         if (import.meta.server) {
           await useAsyncData(
             storeKey,
-            async ()  => await loadIcon(name.value, options.fetchTimeout),
+            async () => await loadIcon(name.value, options.fetchTimeout),
             { deep: false },
           )
         }

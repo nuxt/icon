@@ -45,7 +45,7 @@
     "@iconify/utils": "^2.3.0",
     "@iconify/vue": "^4.3.0",
     "@nuxt/devtools-kit": "^2.2.1",
-    "@nuxt/kit": "^3.16.0",
+    "@nuxt/kit": "^3.16.2",
     "consola": "^3.4.0",
     "local-pkg": "^1.1.1",
     "mlly": "^1.7.4",
@@ -65,7 +65,7 @@
     "@nuxt/devtools": "^2.2.1",
     "@nuxt/eslint-config": "^1.2.0",
     "@nuxt/module-builder": "^0.8.4",
-    "@nuxt/schema": "^3.16.0",
+    "@nuxt/schema": "^3.16.2",
     "@nuxt/test-utils": "^3.17.2",
     "@types/node": "^22.13.10",
     "@types/picomatch": "^3.0.2",
@@ -73,7 +73,7 @@
     "bumpp": "^10.1.0",
     "changelogen": "^0.6.1",
     "eslint": "^9.22.0",
-    "nuxt": "^3.16.0",
+    "nuxt": "^3.16.2",
     "nuxthub": "^0.8.9",
     "prettier": "^3.5.3",
     "typescript": "~5.8.2",
@@ -82,7 +82,7 @@
     "vue-tsc": "^2.2.8"
   },
   "resolutions": {
-    "nuxt": "^3.16.0",
+    "nuxt": "^3.16.2",
     "vite": "^6.2.1"
   }
 }

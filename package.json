@@ -78,7 +78,7 @@
     "prettier": "^3.5.3",
     "typescript": "~5.8.2",
     "untyped": "^2.0.0",
-    "vite": "^6.2.1",
+    "vite": "^6.2.5",
     "vue-tsc": "^2.2.8"
   },
   "resolutions": {

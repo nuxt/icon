@@ -19,6 +19,6 @@
     "happy-dom": "^17.4.4",
     "playwright-core": "^1.51.0",
     "vitest": "^3.0.8",
-    "wrangler": "^3.114.1"
+    "wrangler": "^4.9.1"
   }
 }

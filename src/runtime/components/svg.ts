@@ -2,7 +2,7 @@ import { Icon as Iconify, addIcon } from '@iconify/vue'
 import { h } from 'vue'
 import type { PropType } from 'vue'
 import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
-import { initClientBundle, loadIcon, useResolvedName } from './shared'
+import { initClientBundle, loadIcon, useResolvedName, resolveCustomizeFn } from './shared'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
@@ -13,7 +13,8 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       required: true,
     },
     customize: {
-      type: Function as PropType<IconifyIconCustomizeCallback>,
+      type: [Function, Boolean, null] as PropType<IconifyIconCustomizeCallback | boolean | null>,
+      default: null,
       required: false,
     },
   },
@@ -54,7 +55,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       icon: name.value,
       ssr: true,
       // Iconify uses `customise`, where we expose `customize` for consistency
-      customise: props.customize ?? options.customize,
+      customise: resolveCustomizeFn(props.customize, options.customize),
     }, slots)
   },
 })

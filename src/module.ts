@@ -52,7 +52,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // @ts-expect-error `customize` is not allowed in module options
     if (typeof options.customize === 'function') {
-      throw new TypeError('`customize` callback can\'t not be set in module options, use `app.config.ts` or component props instead.')
+      throw new TypeError('`customize` callback cannot be set in module options, use `app.config.ts` or component props instead.')
     }
 
     // Use `server` provider when SSR is disabled or generate mode
@@ -116,7 +116,7 @@ export default defineNuxtModule<ModuleOptions>({
       if (bundle.remote || !bundle.externalizeIconsJson)
         return
 
-      logger.warn('Nuxt Icon\'s `serverBundle.externalizeIconsJson` is en experimental feature, it would require your production Node.js server able to import JSON modules.')
+      logger.warn('Nuxt Icon\'s `serverBundle.externalizeIconsJson` is an experimental feature, it requires that your production Node.js server is able to import JSON modules.')
 
       const collections = bundle.collections
         .filter(collection => typeof collection === 'string')

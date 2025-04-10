@@ -1,5 +1,5 @@
 import { getIcon as _getIcon } from '@iconify/vue'
-import type { PropType } from 'vue'
+import type { PropType, Component } from 'vue'
 import { computed, defineComponent, h } from 'vue'
 import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
 import { NuxtIconCss } from './css'
@@ -59,4 +59,4 @@ export default defineComponent({
       slots,
     )
   },
-})
+}) as Component

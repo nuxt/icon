@@ -77,7 +77,7 @@ When using an icon from Iconify, an `<span>` or `<svg>` will be created based on
 
 **TailwindCSS v4**:
 
-When using TailwindCSS v4 with the `css` mode, you should configure the `cssLayer` in Nuxt's Application configuration file:
+When using TailwindCSS v4 with the `css` mode, you should configure the `cssLayer` in Nuxt's app config:
 
 ```ts
 // ~/app.config.ts
@@ -247,7 +247,7 @@ export default defineAppConfig({
     aliases: {
       'nuxt': 'logos:nuxt-icon',
     },
-    cssLayer: 'base' // required for TailwindCSS v4.
+    cssLayer: 'base' // set the css layer to inject to
   }
 })
 ```

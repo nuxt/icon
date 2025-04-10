@@ -44,7 +44,7 @@ export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'cus
   /**
    * Custom icon collections
    */
-  customCollections?: CustomCollection[]
+  customCollections?: (CustomCollection | IconifyJSON)[]
 
   /**
    * List of pre-compiled CSS classnames to be used for server-side CSS icon rendering

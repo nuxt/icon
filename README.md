@@ -181,6 +181,28 @@ Then you can use the icons like this:
 </template>
 ```
 
+You can also pass a full custom `IconifyJSON` object:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    customCollections: [
+      {
+        prefix: 'paid-icons',
+        icons: {
+          'nuxt': { body: '<path d="M281.44 ... />' },
+        },
+        width: 512,
+        height: 512,
+      }
+    ],
+  },
+})
+```
+
 Note that custom local collections require you to have a server to serve the API. When setting `ssr: false`, the provider will default to the Iconify API (which does not have your custom icons). If you want to build a SPA with server endpoints, you can explicitly set `provider: 'server'`:
 
 ```ts

@@ -279,7 +279,7 @@ const customize = (content: string, name: string, prefix: string, provider: stri
   <Icon name="tabler:star" :customize="customize" />
 </template>
 
-You can use :customize="false" to skip the global customization function.
+<!-- You can also use `:customize="false"` to disabled the global customization function per-usage -->
 ```
 
 In the App Configuration File:

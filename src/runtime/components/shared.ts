@@ -61,7 +61,7 @@ export function useResolvedName(getName: () => string) {
   })
 }
 
-export function useResolveCustomization(
+export function resolveCustomizeFn(
   customize: IconifyIconCustomizeCallback | boolean | null | undefined,
   globalCustomize: IconifyIconCustomizeCallback | undefined,
 ):

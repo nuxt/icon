@@ -3,7 +3,7 @@ import { h } from 'vue'
 import type { PropType } from 'vue'
 import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
 import { initClientBundle, loadIcon, useResolvedName } from './shared'
-import { useAsyncData, useNuxtApp, defineComponent, useAppConfig } from '#imports'
+import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
   name: 'NuxtIconSvg',
@@ -26,13 +26,17 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
 
     if (name.value) {
       // On server side, we fetch the icon data and store it in the payload
-      if (import.meta.server) {
-        useAsyncData(
-          storeKey,
-          () => loadIcon(name.value, options.fetchTimeout),
-          { deep: false },
-        )
-      }
+      // Apply server prefetch function used for CSS icons.
+      // @See https://github.com/nuxt/icon/issues/356
+      onServerPrefetch(async () => {
+        if (import.meta.server) {
+          await useAsyncData(
+            storeKey,
+            async () => await loadIcon(name.value, options.fetchTimeout),
+            { deep: false },
+          )
+        }
+      })
 
       // On client side, we feed Iconify we the data we have from server side to avoid hydration mismatch
       if (import.meta.client) {

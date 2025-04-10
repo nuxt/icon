@@ -69,10 +69,24 @@ If you have the legacy module `nuxt-icon` installed, you might want to remove it
 
 **Attributes**:
 
-When using an icon from Iconify, an `<span>` or `<svg>` will be created based on the rendering mode, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the native element.
+When using an icon from Iconify, a `<span>` or `<svg>` will be created based on the rendering mode, you can give [all the attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute) of the native element.
 
 ```html
 <Icon name="uil:github" style="color: black" />
+```
+
+**TailwindCSS v4**:
+
+When using TailwindCSS v4 with the `css` mode, you should configure the `cssLayer` in Nuxt's app config:
+
+```ts
+// ~/app.config.ts
+export default defineAppConfig({
+  icon: {
+    mode: 'css',
+    cssLayer: 'base'
+  }
+})
 ```
 
 ### Iconify Dataset
@@ -254,7 +268,8 @@ export default defineAppConfig({
     mode: 'css', // default <Icon> mode applied
     aliases: {
       'nuxt': 'logos:nuxt-icon',
-    }
+    },
+    cssLayer: 'base' // set the css layer to inject to
   }
 })
 ```

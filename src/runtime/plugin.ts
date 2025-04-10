@@ -1,5 +1,4 @@
-import { addAPIProvider, _api, disableCache, setCustomIconsLoader } from '@iconify/vue'
-import type { Plugin } from 'nuxt/app'
+import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
 import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from '#imports'
@@ -13,8 +12,6 @@ export default defineNuxtPlugin({
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore type incompatible
     _api.setFetch($fetch.native)
-
-    disableCache('all')
 
     const resources: string[] = []
     if (options.provider === 'server') {
@@ -55,4 +52,7 @@ export default defineNuxtPlugin({
         setCustomIconsLoader(customIconLoader, prefix)
     }
   },
-}) as Plugin
+
+// For type portability
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}) as any

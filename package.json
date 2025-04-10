@@ -1,25 +1,18 @@
 {
   "name": "@nuxt/icon",
-  "packageManager": "pnpm@10.6.2",
+  "packageManager": "pnpm@10.8.0",
   "version": "1.11.0",
   "license": "MIT",
   "type": "module",
   "repository": "nuxt/icon",
   "exports": {
-    ".": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
-    },
-    "./module": {
-      "types": "./dist/module.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
-    },
+    ".": "./dist/module.mjs",
+    "./module": "./dist/module.mjs",
     "./*": "./dist/*"
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
+  "module": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
   "files": [
     "dist"
   ],
@@ -40,49 +33,49 @@
     "test": "pnpm run test:unit --run && pnpm run test:playground --run"
   },
   "dependencies": {
-    "@iconify/collections": "^1.0.526",
+    "@iconify/collections": "^1.0.536",
     "@iconify/types": "^2.0.0",
     "@iconify/utils": "^2.3.0",
     "@iconify/vue": "^4.3.0",
-    "@nuxt/devtools-kit": "^2.2.1",
-    "@nuxt/kit": "^3.16.0",
-    "consola": "^3.4.0",
+    "@nuxt/devtools-kit": "^2.3.2",
+    "@nuxt/kit": "^3.16.2",
+    "consola": "^3.4.2",
     "local-pkg": "^1.1.1",
     "mlly": "^1.7.4",
     "ohash": "^2.0.11",
     "pathe": "^2.0.3",
     "picomatch": "^4.0.2",
-    "std-env": "^3.8.1",
+    "std-env": "^3.9.0",
     "tinyglobby": "^0.2.12"
   },
   "devDependencies": {
     "@iconify-json/fluent-emoji-high-contrast": "^1.2.3",
     "@iconify-json/logos": "^1.2.4",
     "@iconify-json/ph": "^1.2.2",
-    "@iconify-json/simple-icons": "^1.2.28",
+    "@iconify-json/simple-icons": "^1.2.31",
     "@iconify-json/solar": "^1.2.2",
     "@iconify-json/uil": "^1.2.3",
-    "@nuxt/devtools": "^2.2.1",
-    "@nuxt/eslint-config": "^1.2.0",
-    "@nuxt/module-builder": "^0.8.4",
-    "@nuxt/schema": "^3.16.0",
+    "@nuxt/devtools": "^2.3.2",
+    "@nuxt/eslint-config": "^1.3.0",
+    "@nuxt/module-builder": "^1.0.1",
+    "@nuxt/schema": "^3.16.2",
     "@nuxt/test-utils": "^3.17.2",
-    "@types/node": "^22.13.10",
-    "@types/picomatch": "^3.0.2",
-    "@unocss/nuxt": "^66.1.0-beta.3",
+    "@types/node": "^22.14.0",
+    "@types/picomatch": "^4.0.0",
+    "@unocss/nuxt": "^66.1.0-beta.10",
     "bumpp": "^10.1.0",
     "changelogen": "^0.6.1",
-    "eslint": "^9.22.0",
-    "nuxt": "^3.16.0",
-    "nuxthub": "^0.8.9",
+    "eslint": "^9.24.0",
+    "nuxt": "^3.16.2",
+    "nuxthub": "^0.8.11",
     "prettier": "^3.5.3",
-    "typescript": "~5.8.2",
+    "typescript": "~5.8.3",
     "untyped": "^2.0.0",
-    "vite": "^6.2.1",
+    "vite": "^6.2.5",
     "vue-tsc": "^2.2.8"
   },
   "resolutions": {
-    "nuxt": "^3.16.0",
-    "vite": "^6.2.1"
+    "nuxt": "^3.16.2",
+    "vite": "^6.2.5"
   }
 }

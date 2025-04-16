@@ -1,6 +1,6 @@
 // This file is generated from scripts/schema.ts
 
-import type { IconifyIconCustomizeCallback } from './types'
+import type { IconifyIconCustomizeCallback } from './runtime/components/shared'
 
 export interface NuxtIconRuntimeOptions {
   /**

@@ -3,13 +3,6 @@ import type { NuxtIconRuntimeOptions } from './schema-types'
 
 export type { NuxtIconRuntimeOptions }
 
-export type IconifyIconCustomizeCallback = (
-  content: string,
-  name?: string,
-  prefix?: string,
-  provider?: string
-) => string
-
 export interface NuxtIconRuntimeServerOptions {
   /**
    * List of pre-compiled CSS classnames to be used for server-side CSS icon rendering

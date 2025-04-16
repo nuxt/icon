@@ -1,7 +1,8 @@
 import { Icon as Iconify, addIcon } from '@iconify/vue'
 import { h } from 'vue'
 import type { PropType } from 'vue'
-import type { NuxtIconRuntimeOptions, IconifyIconCustomizeCallback } from '../../types'
+import type { NuxtIconRuntimeOptions } from '../../types'
+import type { IconifyIconCustomizeCallback } from './shared'
 import { initClientBundle, loadIcon, useResolvedName, resolveCustomizeFn } from './shared'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 

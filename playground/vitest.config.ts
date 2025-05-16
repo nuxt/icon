@@ -4,6 +4,6 @@ export default defineVitestConfig({
   test: {
     exclude: [
       '**/.DS_Store',
-    ]
+    ],
   },
 })

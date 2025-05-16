@@ -1,11 +1,18 @@
 import { computed } from 'vue'
 import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon } from '@iconify/vue'
 import type { IconifyIcon } from '@iconify/types'
-import type { IconifyIconCustomizeCallback, NuxtIconRuntimeOptions } from '../../types'
+import type { NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
 import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
 
 export { initClientBundle }
+
+export type IconifyIconCustomizeCallback = (
+  content: string,
+  name?: string,
+  prefix?: string,
+  provider?: string
+) => string
 
 export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null | undefined> {
   if (!name)

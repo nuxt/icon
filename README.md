@@ -223,6 +223,20 @@ export default defineNuxtConfig({
 })
 ```
 
+Or if you want to disable the dynamic icon fetching completely and only use icons from the [client bundle](#client-bundle), you can set `provider: 'none'`:
+
+```ts
+export default defineNuxtConfig({
+  icon: {
+    provider: 'none',
+    clientBundle: {
+      scan: true,
+      // ...or other bundle options
+    },
+  }
+})
+```
+
 ### Case Sensitive Custom Collections
 
 Before `v1.10`, due to the limitation of Iconify's previous convention, all custom icons were normalized to `kebab-case` with a warning. Thanks to the updates on Iconify side, starting from `v1.10`, you can opt-in to use case-sensitive custom collections and by pass the normalization.

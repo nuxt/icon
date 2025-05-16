@@ -22,6 +22,10 @@ export default defineNuxtPlugin({
         resources.push(options.iconifyApiEndpoint!)
       }
     }
+    else if (options.provider === 'none') {
+      // Provide a no-op fetch function to prevent Iconify from fetching icons
+      _api.setFetch(() => Promise.resolve(new Response()))
+    }
     else {
       resources.push(options.iconifyApiEndpoint!)
     }

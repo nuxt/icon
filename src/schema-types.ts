@@ -99,13 +99,13 @@ export interface NuxtIconRuntimeOptions {
    *
    * - `server` - Fetch icons with a server handler
    * - `iconify` - Fetch icons with Iconify API, purely client-side
+   * - `none` - Do not fetch icons (use bundled icons only)
    *
    * `server` by default; `iconify` when `ssr: false`
    *
-   *
-   * @enum server,iconify
+   * @enum server,iconify,none
    */
-  provider: 'server' | 'iconify' | undefined
+  provider: 'server' | 'iconify' | 'none' | undefined
 
   /**
    * Iconify API Endpoint URL

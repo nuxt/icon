@@ -171,6 +171,8 @@ export default defineNuxtConfig({
   },
 })
 ```
+> [!NOTE]
+> If you are running on Nuxt4 with the new `app` directory, make sure your directory is `'./app/assets/my-icons'` instead of `'./assets/my-icons'`.
 
 Then you can use the icons like this:
 

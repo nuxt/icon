@@ -172,6 +172,9 @@ export default defineNuxtConfig({
 })
 ```
 
+> [!NOTE]
+> If you are running on Nuxt 4 with the new `app` directory, the assets directory is `'./app/assets/*'` instead of `'./assets/*'`.
+
 Then you can use the icons like this:
 
 ```vue

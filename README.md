@@ -206,7 +206,7 @@ export default defineNuxtConfig({
 })
 ```
 
-Note that custom local collections require you to have a server to serve the API. When setting `ssr: false`, the provider will default to the Iconify API (which does not have your custom icons). If you want to build a SPA with server endpoints, you can explicitly set `provider: 'server'`:
+Note that custom local collections require you to have a server to serve the API. When setting `ssr: false`, or when generating a static app using `nuxt generate` (which is equivalent to ssr: false), the provider will default to the Iconify API (which does not have your custom icons). If you want to build a SPA with server endpoints, you can explicitly set `provider: 'server'`:
 
 ```ts
 export default defineNuxtConfig({

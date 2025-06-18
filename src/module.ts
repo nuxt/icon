@@ -58,7 +58,7 @@ export default defineNuxtModule<ModuleOptions>({
     // Use `server` provider when SSR is disabled or generate mode
     if (!options.provider) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      options.provider = (!nuxt.options.ssr || (nuxt.options.nitro.static || (nuxt.options as any)._generate))
+      options.provider = (!nuxt.options.ssr || nuxt.options.nitro.static || (nuxt.options as any)._generate)
         ? 'iconify'
         : 'server'
     }

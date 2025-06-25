@@ -53,6 +53,11 @@ export default defineNuxtConfig({
         normalizeIconName: false,
       },
       {
+        prefix: 'nested',
+        dir: './icons/nesting',
+        normalizeIconName: false,
+      },
+      {
         prefix: 'json-collection',
         icons: {
           'nuxt-v3': {

@@ -1,4 +1,4 @@
-import { basename, join, isAbsolute } from 'node:path'
+import { join, isAbsolute, normalize, parse } from 'node:path'
 import fs from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
@@ -55,10 +55,10 @@ async function parseCustomCollection(
     ? collection.dir
     : join(nuxt.options.rootDir, collection.dir)
 
-  const files = (await glob(['*.svg'], {
+  const files = (await glob(['**/*.svg'], {
     cwd: dir,
     onlyFiles: true,
-    expandDirectories: false,
+    expandDirectories: true,
   }))
     .sort()
 
@@ -68,7 +68,9 @@ async function parseCustomCollection(
   } = collection
 
   const parsedIcons: (ParsedIcon | null)[] = await Promise.all(files.map(async (file) => {
-    let name = basename(file, '.svg')
+    const { dir: path, name: filename } = parse(file)
+    const pathNormalized = path ? normalize(path).replace(/[/\\]/g, '-') : ''
+    let name = pathNormalized ? `${pathNormalized}-${filename}` : filename
 
     // Currently Iconify only supports kebab-case icon names
     // https://github.com/nuxt/icon/issues/265#issuecomment-2441604639

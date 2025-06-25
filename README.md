@@ -149,9 +149,10 @@ You can use local SVG files to create a custom Iconify collection.
 For example, place your icons' SVG files under a folder of your choice, for example, `./assets/my-icons`:
 
 ```bash
-assets/my-icons
-├── foo.svg
-├── bar-outline.svg
+assets/my-icons/
+  ├── bar/
+  │   └── outline.svg
+  ├── foo.svg
 ```
 
 In your `nuxt.config.ts`, add an item in `icon.customCollections`:

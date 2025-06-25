@@ -91,6 +91,45 @@ defineProps<{
       />
     </p>
     <p>
+      Custom icons with nested subfolders from local fs:
+      <Icon
+        name="nested:nuxt-v1"
+        size="32"
+        :mode
+        :customize
+      />
+      <Icon
+        name="i-nested-nuxt-v2"
+        size="32"
+        :mode
+        :customize
+      />
+      <Icon
+        name="i-nested-nuxt-v3"
+        size="32"
+        :mode
+        :customize
+      />
+      <Icon
+        name="i-nested-nuxt-v3-beta"
+        size="32"
+        :mode
+        :customize
+      />
+      <Icon
+        name="nested:subfolder-Foo.BarZag"
+        size="32"
+        :mode
+        :customize
+      />
+      <Icon
+        name="nested:subfolder-Foo_Bar_Zag"
+        size="32"
+        :mode
+        :customize
+      />
+    </p>
+    <p>
       Custom icons with `prefix: ''` from local fs:
       <Icon
         name="nuxt-v3"

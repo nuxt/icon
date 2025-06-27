@@ -55,17 +55,20 @@ async function parseCustomCollection(
     ? collection.dir
     : join(nuxt.options.rootDir, collection.dir)
 
-  const files = (await glob(['**/*.svg'], {
-    cwd: dir,
-    onlyFiles: true,
-    expandDirectories: true,
-  }))
-    .sort()
-
   const {
     // TODO: next major flip this
     normalizeIconName = true,
+    recursive = false,
   } = collection
+
+  const pattern = recursive ? '**/*.svg' : '*.svg'
+
+  const files = (await glob([pattern], {
+    cwd: dir,
+    onlyFiles: true,
+    expandDirectories: recursive,
+  }))
+    .sort()
 
   const parsedIcons: (ParsedIcon | null)[] = await Promise.all(files.map(async (file) => {
     const { dir: path, name: filename } = parse(file)

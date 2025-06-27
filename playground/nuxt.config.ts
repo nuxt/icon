@@ -56,6 +56,7 @@ export default defineNuxtConfig({
         prefix: 'nested',
         dir: './icons/nesting',
         normalizeIconName: false,
+        recursive: true,
       },
       {
         prefix: 'json-collection',

@@ -26,7 +26,7 @@ export function registerClientBundle(
 
       if (failed.length) {
         const msg = `Nuxt Icon could not fetch the icon data for client bundle:\n${failed.map(f => ' - ' + f).join('\n')}`
-        if (ctx.nuxt.options._build)
+        if (!ctx.nuxt.options.dev)
           throw new Error(msg)
         else
           logger.warn(msg)

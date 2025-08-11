@@ -17,7 +17,7 @@ export class NuxtIconModuleContext {
   constructor(
     public readonly nuxt: Nuxt,
     public readonly options: ModuleOptions,
-  ) {}
+  ) { }
 
   public clientBundleVersion = 0
   public scannedIcons = new Set<string>()
@@ -216,6 +216,9 @@ export class NuxtIconModuleContext {
     await Promise.all([...icons].map(async (icon) => {
       try {
         const [prefix, name] = icon.split(':')
+        if (prefix === undefined || name === undefined) {
+          throw new Error(`Invalid icon ${icon}. Expected "prefix:name" format.`)
+        }
         if (!iconifyCollectionMap.has(prefix))
           iconifyCollectionMap.set(prefix, loadCollection(prefix))
 

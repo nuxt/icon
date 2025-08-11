@@ -35,7 +35,7 @@
   "dependencies": {
     "@iconify/collections": "^1.0.563",
     "@iconify/types": "^2.0.0",
-    "@iconify/utils": "^2.3.0",
+    "@iconify/utils": "^3.0.0",
     "@iconify/vue": "^5.0.0",
     "@nuxt/devtools-kit": "^2.5.0",
     "@nuxt/kit": "^4.0.3",

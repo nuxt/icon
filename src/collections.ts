@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 import { glob } from 'tinyglobby'
-import type { IconifyJSON } from '@iconify/types'
+import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
 import { isPackageExists } from 'local-pkg'
 import { collectionNames } from './collection-names'
@@ -45,6 +45,8 @@ export async function loadCustomCollection(
   return collection
 }
 
+type ParsedIcon = [string, IconifyIcon]
+
 async function parseCustomCollection(
   collection: CustomCollection,
   nuxt: Nuxt,
@@ -65,7 +67,7 @@ async function parseCustomCollection(
     normalizeIconName = true,
   } = collection
 
-  const parsedIcons = await Promise.all(files.map(async (file) => {
+  const parsedIcons: (ParsedIcon | null)[] = await Promise.all(files.map(async (file) => {
     let name = basename(file, '.svg')
 
     // Currently Iconify only supports kebab-case icon names
@@ -89,7 +91,7 @@ async function parseCustomCollection(
     const data = convertParsedSVG(parseSVGContent(svg)!)
     if (!data) {
       logger.error(`Nuxt Icon could not parse the SVG content for icon \`${name}\``)
-      return [name, {}]
+      return null
     }
     if (data.top === 0)
       delete data.top
@@ -98,7 +100,7 @@ async function parseCustomCollection(
     return [name, data]
   }))
 
-  const successfulIcons = parsedIcons.filter(([_, data]) => Object.keys(data).length > 0)
+  const successfulIcons: ParsedIcon[] = parsedIcons.filter((entry): entry is ParsedIcon => entry !== null)
 
   logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${successfulIcons.length} icons`)
   const result: IconifyJSON = {

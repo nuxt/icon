@@ -199,8 +199,6 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
     const resolvedPath = await nuxtResolvePath(path)
 
     if (ctx.scanner) {
-      const matched = ctx.scanner.isFileMatch(path)
-      console.log({ path, matched })
       ctx.scanner.extractFromCode(
         await fs.readFile(resolvedPath, 'utf-8').catch(() => ''),
         ctx.scannedIcons,

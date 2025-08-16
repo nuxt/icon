@@ -18,6 +18,6 @@
     "@vue/test-utils": "^2.4.6",
     "playwright-core": "^1.54.2",
     "vitest": "^3.2.4",
-    "wrangler": "^4.28.1"
+    "wrangler": "^4.30.0"
   }
 }

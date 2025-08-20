@@ -16,8 +16,8 @@
   "devDependencies": {
     "@nuxt/test-utils": "^3.19.2",
     "@vue/test-utils": "^2.4.6",
-    "playwright-core": "^1.54.2",
+    "playwright-core": "^1.55.0",
     "vitest": "^3.2.4",
-    "wrangler": "^4.28.1"
+    "wrangler": "^4.31.0"
   }
 }

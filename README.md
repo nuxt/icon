@@ -105,7 +105,7 @@ It's highly recommended to install the icon data locally with
 npm i -D @iconify-json/collection-name
 ```
 
-For example, to use the `uil:github` icon, install it's collection with `@iconify-json/uil`. This way the icons can be served locally or from your serverless functions, which is faster and more reliable on both SSR and client-side.
+For example, to use the `uil:github` icon, install its collection with `@iconify-json/uil`. This way the icons can be served locally or from your serverless functions, which is faster and more reliable on both SSR and client-side.
 
 > [!NOTE]
 > You may also know you can install `@iconify/json` package to include all iconify icons. This is not recommended because it will increase your server bundle size and building performance. If you choose to do so, we'd recommend to explicitly specify the collection names you need:

@@ -60,6 +60,17 @@ export interface CustomCollection extends Pick<IconifyJSON, 'prefix' | 'width' |
    * @default true
    */
   normalizeIconName?: boolean
+  /**
+   * Enables recursive scanning of the specified directory.
+   * The folder structure determines icon names.
+   *
+   * Disabled by default to ensure compatibility with older versions.
+   *
+   * @example `path/to/icon.svg` → `path-to-icon`
+   * @see https://github.com/nuxt/icon/issues/374
+   * @default false
+   */
+  recursive?: boolean
 }
 
 export interface RemoteCollection {

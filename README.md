@@ -165,7 +165,9 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: 'my-icon',
-        dir: './assets/my-icons'
+        dir: './assets/my-icons',
+        // if you want to include all the icons in nested directories:
+        // recursive: true,
       },
     ],
   },

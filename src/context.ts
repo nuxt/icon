@@ -253,6 +253,11 @@ export class NuxtIconModuleContext {
         }))
     }
 
+    for (const collection of collections.values()) {
+      const sortedEntries = Object.entries(collection.icons).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+      collection.icons = Object.fromEntries(sortedEntries)
+    }
+
     return {
       collections: [...collections.values()],
       count,

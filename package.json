@@ -55,7 +55,7 @@
     "@iconify-json/simple-icons": "^1.2.55",
     "@iconify-json/solar": "^1.2.4",
     "@iconify-json/uil": "^1.2.3",
-    "@nuxt/devtools": "^2.6.5",
+    "@nuxt/devtools": "^3.1.1",
     "@nuxt/eslint-config": "^1.9.0",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.1.3",

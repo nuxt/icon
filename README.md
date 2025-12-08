@@ -157,31 +157,6 @@ assets/my-icons
 In your `nuxt.config.ts`, add an item in `icon.customCollections`:
 
 ```ts
-export default defineNuxtConfig({
-  modules: [
-    '@nuxt/icon'
-  ],
-  icon: {
-    customCollections: [
-      {
-        prefix: 'my-icon',
-        dir: './assets/my-icons',
-        // if you want to include all the icons in nested directories:
-        // recursive: true,
-      },
-    ],
-  },
-})
-```
-
-> [!NOTE]
-> If you are running on Nuxt 4 with the new `app` directory, the assets directory is `'./app/assets/*'` instead of `'./assets/*'`.
-
-#### Using as an Extendable Layer
-
-If your Nuxt project is designed to be used as an extendable layer by other projects, you should use `createResolver` from `@nuxt/kit` to ensure paths resolve correctly relative to your layer's directory:
-
-```ts
 import { createResolver } from "@nuxt/kit"
 
 const { resolve } = createResolver(import.meta.url)
@@ -194,15 +169,20 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: 'my-icon',
-        dir: resolve('./assets/my-icons'), // <-- use resolve() for layer compatibility
+        dir: resolve('./assets/my-icons'),
+        // if you want to include all the icons in nested directories:
+        // recursive: true,
       },
     ],
   },
 })
 ```
 
-This ensures that when another Nuxt project extends your layer, the icon paths will correctly resolve to your layer's directory rather than the consuming project's directory. Without using `resolve()`, the paths would be relative to the project that extends your layer, causing icons to not be found.
+> [!NOTE]
+> We use `createResolver` and `resolve()` to ensure paths work correctly both in regular projects and when your project is used as an extendable layer by other Nuxt projects. This ensures icon paths resolve relative to your project's directory rather than the consuming project's directory.
 
+> [!NOTE]
+> If you are running on Nuxt 4 with the new `app` directory, the assets directory is `'./app/assets/*'` instead of `'./assets/*'`.
 
 Then you can use the icons like this:
 

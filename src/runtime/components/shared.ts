@@ -11,7 +11,7 @@ export type IconifyIconCustomizeCallback = (
   content: string,
   name?: string,
   prefix?: string,
-  provider?: string
+  provider?: string,
 ) => string
 
 export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null | undefined> {

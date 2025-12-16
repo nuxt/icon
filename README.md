@@ -532,6 +532,61 @@ const MyIcon = h(Icon, { name: 'uil:twitter' })
 </template>
 ```
 
+### Rendering Icons in Component Tests
+
+In in-browser component testing environments (such as [**Vitest Browser Mode**](https://vitest.dev/guide/browser/) or [**Cypress Component Testing**](https://on.cypress.io/component-testing)), the internal Nuxt server routes used to fetch icons on demand are **not available**. As a result, icons may fail to render during tests.
+
+To ensure icons render correctly in component tests, configure **@nuxt/icon** to use the **client bundle** when running in test mode.
+
+> **Note**
+> Projects using [**@nuxt/ui**](https://ui.nuxt.com/) must do this to see any UI icons during component testing.
+
+#### Requirements
+
+* Install the icon collections you use locally (for example, `@iconify-json/lucide`).
+* Icons will **not** be fetched remotely when using the client bundle.
+
+#### Test-only Configuration
+
+Conditionally switch to the client bundle in your Nuxt config when `NODE_ENV === 'test'`:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon',
+  ],
+
+  icon: process.env.NODE_ENV !== 'test'
+    ? {
+        // Production or development icon configuration
+      }
+    : {
+        // Disable all network icon fetching in component tests
+        provider: 'none',
+
+        clientBundle: {
+          // Explicitly include dynamically constructed icons
+          icons: ['lucide:check'],
+
+          // Scan your app and Nuxt UI runtime for static icon usage
+          scan: {
+            globInclude: [
+              '{app,shared}/**',
+              'node_modules/@nuxt/ui/dist/**',
+            ],
+            globExclude: ['node_modules'],
+          },
+        },
+      },
+})
+```
+
+> **Tips**
+>
+> * Dynamically generated icon names may not be detected by static scanning—add them explicitly to `icons`.
+> * For large apps, consider moving test-only configuration into `vitest.config.ts` or `cypress.config.ts` for clarity.
+
+
 ## Contributing 🙏
 
 1. Clone this repository

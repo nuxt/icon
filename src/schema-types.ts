@@ -1,5 +1,4 @@
 // This file is generated from scripts/schema.ts
-
 import type { IconifyIconCustomizeCallback } from './runtime/components/shared'
 
 export interface NuxtIconRuntimeOptions {
@@ -99,9 +98,10 @@ export interface NuxtIconRuntimeOptions {
    *
    * - `server` - Fetch icons with a server handler
    * - `iconify` - Fetch icons with Iconify API, purely client-side
-   * - `none` - Do not fetch icons (use bundled icons only)
+   * - `none` - Do not fetch icons (use client bundle only)
    *
    * `server` by default; `iconify` when `ssr: false`
+   *
    *
    * @enum server,iconify,none
    */

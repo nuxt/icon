@@ -118,7 +118,7 @@ export const schema = {
       ].join('\n'),
       enum: ['server', 'iconify', 'none'],
       tags: ['@studioIcon material-symbols:cloud'],
-      type: '"server" | "iconify" | undefined',
+      type: '"server" | "iconify" | "none" | undefined',
     },
   },
   iconifyApiEndpoint: {

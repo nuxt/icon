@@ -3,7 +3,6 @@
   "exclude": [
     "playground",
     "dist",
-    "node_modules",
-    ".nuxt"
+    "node_modules"
   ]
 }

@@ -1,3 +1,5 @@
+import Module from '../src/module'
+
 export default defineNuxtConfig({
 
   extends: [
@@ -5,7 +7,7 @@ export default defineNuxtConfig({
   ],
 
   modules: [
-    '../src/module',
+    Module,
     '@unocss/nuxt',
     '@nuxt/test-utils/module',
     '@nuxthub/core',

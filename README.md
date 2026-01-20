@@ -43,7 +43,7 @@ That's it, you can now use the `<Icon />` in your components!
 You can install the module manually with:
 
 ```bash
-npm i -D @nuxt/icon
+npm i @nuxt/icon
 ```
 
 Update your `nuxt.config.ts`

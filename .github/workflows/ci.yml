@@ -16,15 +16,20 @@ jobs:
         node: ['lts/*']
 
     steps:
-      - uses: actions/setup-node@v5
-        with:
-          node-version: ${{ matrix.node }}
-
       - name: Checkout
         uses: actions/checkout@v5
         with:
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set node
+        uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: pnpm
 
       - name: Dependencies
         run: pnpm install

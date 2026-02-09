@@ -65,7 +65,7 @@
     "@unocss/nuxt": "^66.6.0",
     "bumpp": "^10.4.0",
     "changelogen": "^0.6.2",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "nuxt": "^4.2.2",
     "nuxthub": "^0.9.4",
     "prettier": "^3.8.0",

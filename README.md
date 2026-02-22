@@ -446,6 +446,65 @@ This will make requests to Iconify API every time the client requests an icon. W
 
 For icons that you know you are going to use frequently, you can bundle them with your client bundle to avoid network requests.
 
+#### Prefetch (Preload) Icons
+
+If you want icons to be available on first render, use the client bundle as the prefetch mechanism:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon',
+  ],
+  icon: {
+    clientBundle: {
+      // Explicitly pre-bundle known icons
+      icons: ['uil:github', 'heroicons:home'],
+      // Keep disabled if you only want explicit entries
+      scan: false,
+    },
+  },
+})
+```
+
+You can also enable static scanning to pre-bundle icons referenced literally in your source files:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon',
+  ],
+  icon: {
+    clientBundle: {
+      // Automatically includes statically-detected icon usages
+      scan: true,
+      // Keep explicit entries for dynamic icon names
+      icons: ['uil:github'],
+    },
+  },
+})
+```
+
+If you want to disable runtime icon fetching entirely, combine client bundle with `provider: 'none'`:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon',
+  ],
+  icon: {
+    provider: 'none',
+    clientBundle: {
+      scan: true,
+      icons: ['uil:github'],
+    },
+  },
+})
+```
+
+> [!TIP]
+> Static scanning relies on literal values. Dynamically generated icon names are not reliably detected, so add them explicitly in `clientBundle.icons`.
+> This is also useful for component-test setups documented in [Rendering Icons in Component Tests](#rendering-icons-in-component-tests).
+
 ```ts
 export default defineNuxtConfig({
   modules: [

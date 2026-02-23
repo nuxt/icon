@@ -228,6 +228,8 @@ export default defineNuxtConfig({
 })
 ```
 
+#### Disabling Runtime Fetching
+
 Or if you want to disable the dynamic icon fetching completely and only use icons from the [client bundle](#client-bundle), you can set `provider: 'none'`:
 
 ```ts
@@ -484,7 +486,7 @@ export default defineNuxtConfig({
 })
 ```
 
-If you want to disable runtime icon fetching entirely, see [Custom Local Collections](#custom-local-collections) for the `provider: 'none'` + client bundle pattern.
+If you want to disable runtime icon fetching entirely, see [Disabling Runtime Fetching](#disabling-runtime-fetching) for the `provider: 'none'` + client bundle pattern.
 
 > [!TIP]
 > Static scanning only detects literal icon names. See [Scan Components](#scan-components) for details and examples, and [Rendering Icons in Component Tests](#rendering-icons-in-component-tests) for test-environment setup.

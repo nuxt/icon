@@ -484,26 +484,12 @@ export default defineNuxtConfig({
 })
 ```
 
-If you want to disable runtime icon fetching entirely, combine client bundle with `provider: 'none'`:
-
-```ts
-export default defineNuxtConfig({
-  modules: [
-    '@nuxt/icon',
-  ],
-  icon: {
-    provider: 'none',
-    clientBundle: {
-      scan: true,
-      icons: ['uil:github'],
-    },
-  },
-})
-```
+If you want to disable runtime icon fetching entirely, see [Custom Local Collections](#custom-local-collections) for the `provider: 'none'` + client bundle pattern.
 
 > [!TIP]
-> Static scanning relies on literal values. Dynamically generated icon names are not reliably detected, so add them explicitly in `clientBundle.icons`.
-> This is also useful for component-test setups documented in [Rendering Icons in Component Tests](#rendering-icons-in-component-tests).
+> Static scanning only detects literal icon names. See [Scan Components](#scan-components) for details and examples, and [Rendering Icons in Component Tests](#rendering-icons-in-component-tests) for test-environment setup.
+
+#### Available Options
 
 ```ts
 export default defineNuxtConfig({

@@ -5,7 +5,7 @@ import { createError, getQuery, type H3Event } from 'h3'
 import { consola } from 'consola'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 // @ts-expect-error tsconfig.server has the types
-import { useAppConfig, getRequestURL, defineCachedEventHandler } from '#imports'
+import { useAppConfig, useRuntimeConfig, getRequestURL, defineCachedEventHandler } from '#imports'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()
@@ -39,9 +39,10 @@ export default defineCachedEventHandler(async (event: H3Event) => {
   else if (import.meta.dev) {
     // Warn only once per collection, and only with the default endpoint
     if (collectionName && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
+      const installCmd = useRuntimeConfig().public?.nuxtIconInstallCommand || 'npm i -D'
       consola.warn([
         `[Icon] Collection \`${collectionName}\` is not found locally`,
-        `We suggest to install it via \`npm i -D @iconify-json/${collectionName}\` to provide the best end-user experience.`,
+        `We suggest to install it via \`${installCmd} @iconify-json/${collectionName}\` to provide the best end-user experience.`,
       ].join('\n'))
       warnOnceSet.add(collectionName)
     }

@@ -1,4 +1,6 @@
 import fs from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { resolve as pathResolve } from 'node:path'
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
@@ -86,6 +88,10 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     await setupCustomCollectionsWatcher(options, nuxt, ctx)
+
+    // Detect package manager for install suggestions
+    const pmInstallCommand = detectInstallCommand(nuxt.options.rootDir)
+    nuxt.options.runtimeConfig.public.nuxtIconInstallCommand = pmInstallCommand
 
     // Merge options to app.config
     const runtimeOptions = Object.fromEntries(
@@ -223,4 +229,17 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
       }
     }
   })
+}
+
+function detectInstallCommand(rootDir: string): string {
+  if (existsSync(pathResolve(rootDir, 'pnpm-lock.yaml'))) {
+    return 'pnpm add -D'
+  }
+  if (existsSync(pathResolve(rootDir, 'yarn.lock'))) {
+    return 'yarn add -D'
+  }
+  if (existsSync(pathResolve(rootDir, 'bun.lockb')) || existsSync(pathResolve(rootDir, 'bun.lock'))) {
+    return 'bun add -D'
+  }
+  return 'npm i -D'
 }

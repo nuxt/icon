@@ -231,6 +231,13 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
   })
 }
 
+/**
+ * Detects the project's package manager by checking for lockfiles
+ * and returns the corresponding install command.
+ *
+ * @param rootDir - The root directory of the Nuxt project
+ * @returns The install command string (e.g. 'pnpm add -D', 'yarn add -D')
+ */
 function detectInstallCommand(rootDir: string): string {
   if (existsSync(pathResolve(rootDir, 'pnpm-lock.yaml'))) {
     return 'pnpm add -D'

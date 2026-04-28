@@ -12,6 +12,14 @@ const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
 
+function getInstallCommand(pkg: string): string {
+  const ua = process.env.npm_config_user_agent || ''
+  if (ua.startsWith('pnpm')) return `pnpm add -D ${pkg}`
+  if (ua.startsWith('yarn')) return `yarn add -D ${pkg}`
+  if (ua.startsWith('bun')) return `bun add -D ${pkg}`
+  return `npm i -D ${pkg}`
+}
+
 export default defineCachedEventHandler(async (event: H3Event) => {
   const url = getRequestURL(event) as URL
   if (!url)
@@ -41,7 +49,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
     if (collectionName && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
       consola.warn([
         `[Icon] Collection \`${collectionName}\` is not found locally`,
-        `We suggest to install it via \`npm i -D @iconify-json/${collectionName}\` to provide the best end-user experience.`,
+        `We suggest to install it via \`${getInstallCommand(`@iconify-json/${collectionName}`)}\` to provide the best end-user experience.`,
       ].join('\n'))
       warnOnceSet.add(collectionName)
     }

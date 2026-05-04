@@ -179,7 +179,7 @@ export default defineNuxtConfig({
 ```
 
 > [!NOTE]
-> We use `createResolver` and `resolve()` to ensure paths work correctly both in regular projects and when your project is used as an extendable layer by other Nuxt projects. This ensures icon paths resolve relative to your project's directory rather than the consuming project's directory.
+> We use `createResolver` and `resolve()` to ensure paths work correctly both in regular projects and when your project is used as an [extendable layer](https://nuxt.com/docs/4.x/getting-started/layers) by other Nuxt projects. This ensures icon paths resolve relative to your project's directory rather than the consuming project's directory.
 
 > [!NOTE]
 > If you are running on Nuxt 4 with the new `app` directory, the assets directory is `'./app/assets/*'` instead of `'./assets/*'`.

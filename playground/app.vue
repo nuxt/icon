@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import collections from '@iconify/collections/collections.json'
 import { useCookie } from '#imports'
 

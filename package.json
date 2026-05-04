@@ -59,7 +59,7 @@
     "@nuxt/eslint-config": "^1.15.2",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.4.4",
-    "@nuxt/test-utils": "^3.23.0",
+    "@nuxt/test-utils": "^4.0.3",
     "@types/node": "^25.6.0",
     "@types/picomatch": "^4.0.3",
     "@unocss/nuxt": "^66.6.8",

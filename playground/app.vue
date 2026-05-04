@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import collections from '@iconify/collections/collections.json'
 import { useCookie } from '#imports'
 
@@ -109,6 +109,7 @@ function clear() {
         </div>
         <div class="flex border border-solid border-hex-8885 rounded p2 text-4em">
           <Icon
+            :key="stroke"
             :name="icon"
             :mode="mode"
             :customize

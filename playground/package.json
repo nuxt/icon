@@ -6,11 +6,9 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "generate": "nuxi generate",
-    "test": "vitest",
-    "deploy": "nuxthub deploy"
+    "test": "vitest"
   },
   "dependencies": {
-    "@nuxthub/core": "^0.10.4",
     "nuxt": "^4.2.2"
   },
   "devDependencies": {

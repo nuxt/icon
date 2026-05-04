@@ -1,7 +1,6 @@
 import Module from '../src/module'
 
 export default defineNuxtConfig({
-
   extends: [
     './base',
   ],
@@ -10,7 +9,6 @@ export default defineNuxtConfig({
     Module,
     '@unocss/nuxt',
     '@nuxt/test-utils/module',
-    '@nuxthub/core',
   ],
 
   imports: {
@@ -25,10 +23,6 @@ export default defineNuxtConfig({
 
   nitro: {
     logLevel: 'verbose',
-  },
-
-  hub: {
-    cache: true,
   },
 
   typescript: {

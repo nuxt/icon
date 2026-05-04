@@ -157,7 +157,7 @@ assets/my-icons
 In your `nuxt.config.ts`, add an item in `icon.customCollections`:
 
 ```ts
-import { createResolver } from "@nuxt/kit"
+import { createResolver } from "nuxt/kit"
 
 const { resolve } = createResolver(import.meta.url)
 

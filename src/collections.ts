@@ -9,7 +9,15 @@ import { isPackageExists } from 'local-pkg'
 import { collectionNames } from './collection-names'
 import type { CustomCollection, ServerBundleOptions, RemoteCollection } from './types'
 
-export const isFullCollectionExists = isPackageExists('@iconify/json')
+function getResolvePaths(nuxt: Nuxt): string[] {
+  return Array.from(new Set(
+    [nuxt.options.rootDir, nuxt.options.workspaceDir].filter(Boolean),
+  ))
+}
+
+export function hasFullCollection(nuxt: Nuxt): boolean {
+  return isPackageExists('@iconify/json', { paths: getResolvePaths(nuxt) })
+}
 
 export async function resolveCollection(
   nuxt: Nuxt,
@@ -24,8 +32,8 @@ export async function resolveCollection(
   return collection
 }
 
-export function getCollectionPath(collection: string) {
-  return isFullCollectionExists
+export function getCollectionPath(collection: string, nuxt: Nuxt) {
+  return hasFullCollection(nuxt)
     ? `@iconify/json/json/${collection}.json`
     : `@iconify-json/${collection}/icons.json`
 }
@@ -117,16 +125,18 @@ async function parseCustomCollection(
   return result
 }
 
-export async function discoverInstalledCollections(): Promise<ServerBundleOptions['collections']> {
-  const collections = isFullCollectionExists
+export async function discoverInstalledCollections(nuxt: Nuxt): Promise<ServerBundleOptions['collections']> {
+  const paths = getResolvePaths(nuxt)
+  const fullCollectionInstalled = hasFullCollection(nuxt)
+  const collections = fullCollectionInstalled
     ? collectionNames
-    : collectionNames.filter(collection => isPackageExists('@iconify-json/' + collection))
-  if (isFullCollectionExists)
+    : collectionNames.filter(collection => isPackageExists('@iconify-json/' + collection, { paths }))
+  if (fullCollectionInstalled)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections (@iconify/json)`)
   else if (collections.length)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
 
-  if (isFullCollectionExists)
+  if (fullCollectionInstalled)
     logger.warn('Currently all iconify collections are included in the bundle, which might be inefficient, consider explicit name the collections you use in the `icon.serverBundle.collections` option')
 
   return collections

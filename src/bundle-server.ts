@@ -48,7 +48,7 @@ export function registerServerBundle(
             return `  '${collection}': createRemoteCollection(${JSON.stringify(getRemoteEndpoint(collection))}),`
           }
 
-          const path = getCollectionPath(collection)
+          const path = getCollectionPath(collection, nuxt)
 
           // When in dev mode, we avoid bundling the icons to improve performance
           // Get rid of the require() when ESM JSON modules are widely supported

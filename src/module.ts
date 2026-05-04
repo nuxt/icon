@@ -121,7 +121,7 @@ export default defineNuxtModule<ModuleOptions>({
 
       const collections = bundle.collections
         .filter(collection => typeof collection === 'string')
-        .map(collection => getCollectionPath(collection))
+        .map(collection => getCollectionPath(collection, nuxt))
       const resolvedPaths = await Promise.all(
         collections.map(collection => resolvePath(collection, {
           url: nuxt.options.rootDir,

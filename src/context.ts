@@ -100,7 +100,7 @@ export class NuxtIconModuleContext {
     if (!resolved.collections)
       resolved.collections = resolved.remote
         ? collectionNames
-        : await discoverInstalledCollections()
+        : await discoverInstalledCollections(this.nuxt)
 
     const collections = await Promise.all(
       (resolved.collections || [])

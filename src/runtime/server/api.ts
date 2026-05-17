@@ -27,7 +27,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
 
   const options = useAppConfig().icon as NuxtIconRuntimeOptions
   const collectionName = event.context.params?.collection?.replace(/\.json$/, '')
-  const collection = collectionName
+  const collection = collectionName && Object.hasOwn(collections, collectionName)
     ? await collections[collectionName]?.()
     : null
 

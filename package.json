@@ -67,7 +67,7 @@
     "changelogen": "^0.6.2",
     "eslint": "^10.3.0",
     "happy-dom": "^20.9.0",
-    "nuxt": "^4.4.4",
+    "nuxt": "^4.4.6",
     "prettier": "^3.8.3",
     "typescript": "~6.0.3",
     "untyped": "^2.0.0",

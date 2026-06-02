@@ -5,6 +5,7 @@ import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
+import { hash } from 'ohash'
 import { loadIcon, resolveCustomizeFn } from './shared'
 import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, onServerPrefetch } from '#imports'
 
@@ -81,7 +82,16 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
   setup(props) {
     const nuxt = useNuxtApp()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
-    const cssClass = computed(() => props.name ? options.cssSelectorPrefix + props.name : '')
+    const cssClass = computed(() => {
+      if (!props.name) return ''
+      const base = options.cssSelectorPrefix + props.name
+      // When a per-instance customize function is provided, append a hash of its source
+      // so that distinct customizations get their own selector and CSS rule.
+      if (typeof props.customize === 'function') {
+        return base + '--customized-' + hash(props.customize.toString())
+      }
+      return base
+    })
 
     function getIcon(name: string) {
       if (!name)
@@ -191,10 +201,10 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
               })
             })
           }
-          // Dedupe CSS
-          if (props.name && !ssrCSS.has(props.name)) {
+          // Dedupe CSS (use cssClass as key to support per-instance customization)
+          if (cssClass.value && !ssrCSS.has(cssClass.value)) {
             const css = getCSS(icon, false)
-            ssrCSS.set(props.name, css)
+            ssrCSS.set(cssClass.value, css)
           }
           return null
         }

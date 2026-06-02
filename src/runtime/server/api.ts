@@ -5,12 +5,19 @@ import { createError, type H3Event } from 'h3'
 import { consola } from 'consola'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
 // @ts-expect-error tsconfig.server has the types
-import { useAppConfig, getRequestURL, defineCachedEventHandler } from '#imports'
+import { useAppConfig, defineCachedEventHandler } from '#imports'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
+
+// `getRequestURL` from h3 throws `ERR_INVALID_URL` under h3 v2 when `event.req.url`
+// is a relative path (e.g. internal SSR requests). `event.path` is relative in both
+// h3 v1 and v2, so parse it against a dummy base to safely access the query params.
+function getRequestURL(event: H3Event): URL {
+  return new URL(event.path, 'http://localhost')
+}
 
 function getInstallCommand(pkg: string): string {
   const ua = process.env.npm_config_user_agent || ''
@@ -21,7 +28,7 @@ function getInstallCommand(pkg: string): string {
 }
 
 export default defineCachedEventHandler(async (event: H3Event) => {
-  const url = getRequestURL(event) as URL
+  const url = getRequestURL(event)
   if (!url)
     return createError({ status: 400, message: 'Invalid icon request' })
 
@@ -80,7 +87,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
   name: 'icon',
   getKey(event: H3Event) {
     const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
-    const url = getRequestURL(event) as URL
+    const url = getRequestURL(event)
     const icons = url.searchParams.get('icons') || ''
     return `${collection}_${icons.split(',')[0]}_${icons.length}_${hash(icons)}`
   },

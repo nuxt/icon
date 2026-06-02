@@ -13,13 +13,6 @@ const warnOnceSet = /* @__PURE__ */ new Set<string>()
 
 const DEFAULT_ENDPOINT = 'https://api.iconify.design'
 
-// `getRequestURL` from h3 throws `ERR_INVALID_URL` under h3 v2 when `event.req.url`
-// is a relative path (e.g. internal SSR requests). `event.path` is relative in both
-// h3 v1 and v2, so parse it against a dummy base to safely access the query params.
-function getRequestURL(event: H3Event): URL {
-  return new URL(event.path, 'http://localhost')
-}
-
 function getInstallCommand(pkg: string): string {
   const ua = process.env.npm_config_user_agent || ''
   if (ua.startsWith('pnpm')) return `pnpm add -D ${pkg}`

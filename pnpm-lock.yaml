@@ -50,6 +50,9 @@ importers:
       tinyglobby:
         specifier: ^0.2.16
         version: 0.2.16
+      ufo:
+        specifier: ^1.6.4
+        version: 1.6.4
     devDependencies:
       '@iconify-json/fluent-emoji-high-contrast':
         specifier: ^1.2.5

@@ -30,28 +30,26 @@ export default defineCachedEventHandler(async (event: H3Event) => {
   const apiEndPoint = options.iconifyApiEndpoint || DEFAULT_ENDPOINT
   const icons = String(parseQuery(parsePath(event.path).search).icons || '').split(',')
 
-  if (collection) {
-    if (icons?.length) {
-      const data = getIcons(
-        collection,
-        icons,
-      )
-      consola.debug(`[Icon] serving ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from bundled collection`)
-      return data
-    }
-  }
-  else if (import.meta.dev) {
-    // Warn only once per collection, and only with the default endpoint
-    if (collectionName && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
-      consola.warn([
-        `[Icon] Collection \`${collectionName}\` is not found locally`,
-        `We suggest to install it via \`${getInstallCommand(`@iconify-json/${collectionName}`)}\` to provide the best end-user experience.`,
-      ].join('\n'))
-      warnOnceSet.add(collectionName)
-    }
+  if (!collectionName) return createError({ status: 400, message: 'No collection specified' })
+  if (!icons.length) return createError({ status: 400, message: 'No icons specified' })
+  if (!collection && import.meta.dev && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
+    consola.warn([
+      `[Icon] Collection \`${collectionName}\` is not found locally`,
+      `We suggest to install it via \`${getInstallCommand(`@iconify-json/${collectionName}`)}\` to provide the best end-user experience.`,
+    ].join('\n'))
+    warnOnceSet.add(collectionName)
   }
 
-  if (collectionName && (options.fallbackToApi === true || options.fallbackToApi === 'server-only')) {
+  if (collection) {
+    const data = getIcons(
+      collection,
+      icons,
+    )
+    consola.debug(`[Icon] serving ${(icons).map(i => '`' + collectionName + ':' + i + '`').join(',')} from bundled collection`)
+    return data
+  }
+
+  if (options.fallbackToApi === true || options.fallbackToApi === 'server-only') {
     const apiUrl = new URL(`./${collectionName}.json?icons=${icons.join(',')}`, apiEndPoint)
     consola.debug(`[Icon] fetching ${(icons).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
     if (apiUrl.host !== new URL(apiEndPoint).host) {

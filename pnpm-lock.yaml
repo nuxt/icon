@@ -38,9 +38,6 @@ importers:
       ohash:
         specifier: ^2.0.11
         version: 2.0.11
-      pathe:
-        specifier: ^2.0.3
-        version: 2.0.3
       picomatch:
         specifier: ^4.0.4
         version: 4.0.4
@@ -50,6 +47,9 @@ importers:
       tinyglobby:
         specifier: ^0.2.16
         version: 0.2.16
+      ufo:
+        specifier: ^1.6.4
+        version: 1.6.4
     devDependencies:
       '@iconify-json/fluent-emoji-high-contrast':
         specifier: ^1.2.5

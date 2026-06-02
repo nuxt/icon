@@ -1,4 +1,3 @@
-import { basename } from 'pathe'
 import { getIcons } from '@iconify/utils'
 import { hash } from 'ohash'
 import { createError, type H3Event } from 'h3'
@@ -29,8 +28,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
     : null
 
   const apiEndPoint = options.iconifyApiEndpoint || DEFAULT_ENDPOINT
-  const iconsQuery = parseQuery(parsePath(event.path).search).icons || ''
-  const icons = (Array.isArray(iconsQuery) ? iconsQuery.join(',') : iconsQuery).split(',')
+  const icons = String(parseQuery(parsePath(event.path).search).icons || '').split(',')
 
   if (collection) {
     if (icons?.length) {
@@ -53,9 +51,9 @@ export default defineCachedEventHandler(async (event: H3Event) => {
     }
   }
 
-  if (options.fallbackToApi === true || options.fallbackToApi === 'server-only') {
-    const apiUrl = new URL('./' + basename(url.pathname) + url.search, apiEndPoint)
-    consola.debug(`[Icon] fetching ${(icons || []).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
+  if (collectionName && (options.fallbackToApi === true || options.fallbackToApi === 'server-only')) {
+    const apiUrl = new URL(`./${collectionName}.json?icons=${icons.join(',')}`, apiEndPoint)
+    consola.debug(`[Icon] fetching ${(icons).map(i => '`' + collectionName + ':' + i + '`').join(',')} from iconify api`)
     if (apiUrl.host !== new URL(apiEndPoint).host) {
       return createError({ status: 400, message: 'Invalid icon request' })
     }
@@ -78,8 +76,7 @@ export default defineCachedEventHandler(async (event: H3Event) => {
   name: 'icon',
   getKey(event: H3Event) {
     const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
-    const iconsQuery = parseQuery(parsePath(event.path).search).icons || ''
-    const icons = (Array.isArray(iconsQuery) ? iconsQuery.join(',') : iconsQuery).split(',')
+    const icons = String(parseQuery(parsePath(event.path).search).icons || '').split(',')
     return `${collection}_${icons[0]}_${icons.length}_${hash(icons.join(','))}`
   },
   swr: true,

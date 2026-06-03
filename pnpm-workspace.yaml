@@ -1,6 +1,10 @@
 packages:
   - playground
-onlyBuiltDependencies:
-  - esbuild
-  - sharp
-  - unrs-resolver
+shamefullyHoist: true
+strictPeerDependencies: false
+ignoreWorkspaceRootCheck: true
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

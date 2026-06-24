@@ -127,17 +127,58 @@ async function parseCustomCollection(
 
 export async function discoverInstalledCollections(nuxt: Nuxt): Promise<ServerBundleOptions['collections']> {
   const paths = getResolvePaths(nuxt)
-  const fullCollectionInstalled = hasFullCollection(nuxt)
-  const collections = fullCollectionInstalled
-    ? collectionNames
-    : collectionNames.filter(collection => isPackageExists('@iconify-json/' + collection, { paths }))
-  if (fullCollectionInstalled)
-    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections (@iconify/json)`)
-  else if (collections.length)
+
+  if (hasFullCollection(nuxt)) {
+    logger.success(`Nuxt Icon discovered local-installed ${collectionNames.length} collections (@iconify/json)`)
+    logger.warn('Currently all iconify collections are included in the bundle, which might be inefficient, consider explicit name the collections you use in the `icon.serverBundle.collections` option')
+    return collectionNames
+  }
+
+  // Find which `@iconify-json/*` packages are installed;
+  // Special for Yarn PnP, which does not have a `node_modules` folder.
+  const found = new Set<string>()
+  if (process.versions.pnp) {
+    for (const collection of collectionNames) {
+      if (isPackageExists('@iconify-json/' + collection, { paths }))
+        found.add(collection)
+    }
+  }
+  else {
+    await Promise.all(iconifyScopeDirs(paths).map(async (scope) => {
+      const entries = await fs.readdir(scope).catch(() => [] as string[])
+      await Promise.all(entries.map(async (name) => {
+        if (name.startsWith('.'))
+          return
+        // A real Iconify collection package ships an `icons.json`.
+        const hasIconsJson = await fs.access(join(scope, name, 'icons.json')).then(() => true, () => false)
+        if (hasIconsJson)
+          found.add(name)
+      }))
+    }))
+  }
+
+  const collections = collectionNames.filter(collection => found.has(collection))
+  if (collections.length)
     logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
 
-  if (fullCollectionInstalled)
-    logger.warn('Currently all iconify collections are included in the bundle, which might be inefficient, consider explicit name the collections you use in the `icon.serverBundle.collections` option')
-
   return collections
+}
+
+/**
+ * Returns the `@iconify-json` scope directory inside every `node_modules`,
+ * deduped, walking up the tree like the Node resolver.
+ */
+function iconifyScopeDirs(paths: string[]): string[] {
+  const dirs = new Set<string>()
+  for (const base of paths) {
+    let dir = base
+    while (true) {
+      dirs.add(join(dir, 'node_modules', '@iconify-json'))
+      const parent = join(dir, '..')
+      if (parent === dir)
+        break
+      dir = parent
+    }
+  }
+  return [...dirs]
 }

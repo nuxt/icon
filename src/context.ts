@@ -4,7 +4,7 @@ import { provider } from 'std-env'
 import { logger } from '@nuxt/kit'
 import { collectionNames } from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
-import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './collections'
+import { discoverInstalledCollections, getResolvePaths, loadCustomCollection, resolveCollection } from './collections'
 import { IconUsageScanner } from './scan'
 
 const KEYWORDS_EDGE_TARGETS: string[] = [
@@ -187,15 +187,26 @@ export class NuxtIconModuleContext {
     const customCollectionNames = new Set(customCollections.map(c => c.prefix))
     const collections = new Map<string, IconifyJSON>()
 
-    function loadCollection(prefix: string) {
+    // Resolve collections from the Nuxt root (and workspace root as a fallback)
+    // instead of `process.cwd()`, so collections installed in a subproject are
+    // found when the command is launched from a workspace root.
+    const resolvePaths = getResolvePaths(this.nuxt)
+
+    async function loadCollection(prefix: string): Promise<IconifyJSON | undefined> {
       if (customCollectionNames.has(prefix)) {
         const collection = customCollections.find(c => c.prefix === prefix)
         if (collection) {
-          return Promise.resolve(collection)
+          return collection
         }
       }
 
-      return loadCollectionFromFS(prefix)
+      for (const cwd of resolvePaths) {
+        const collection = await loadCollectionFromFS(prefix, false, '@iconify-json', cwd)
+        if (collection) {
+          return collection
+        }
+      }
+      return undefined
     }
 
     function addIcon(prefix: string, name: string, data: IconifyIcon) {

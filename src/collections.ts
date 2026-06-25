@@ -9,7 +9,7 @@ import { isPackageExists } from 'local-pkg'
 import { collectionNames } from './collection-names'
 import type { CustomCollection, ServerBundleOptions, RemoteCollection } from './types'
 
-function getResolvePaths(nuxt: Nuxt): string[] {
+export function getResolvePaths(nuxt: Nuxt): string[] {
   return Array.from(new Set(
     [nuxt.options.rootDir, nuxt.options.workspaceDir].filter(Boolean),
   ))

@@ -13,8 +13,8 @@
   },
   "devDependencies": {
     "@nuxt/test-utils": "^4.0.3",
-    "@vue/test-utils": "^2.4.10",
-    "playwright-core": "^1.60.0",
-    "vitest": "^4.1.8"
+    "@vue/test-utils": "^2.4.11",
+    "playwright-core": "^1.61.1",
+    "vitest": "^4.1.9"
   }
 }

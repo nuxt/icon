@@ -260,7 +260,14 @@ export class NuxtIconModuleContext {
       }
       catch (e) {
         console.error(e)
-        failed.push(icon)
+        // Mirror the best-effort handling above: only explicit user icons hard-fail,
+        // scanned/hook-contributed icons fall back to runtime loading.
+        if (userIcons.has(icon)) {
+          failed.push(icon)
+        }
+        else if (!this.scannedIcons.has(icon)) {
+          dropped.push(icon)
+        }
       }
     }))
 

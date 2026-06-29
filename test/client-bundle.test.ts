@@ -27,10 +27,14 @@ function installCollection(dir: string, prefix: string, icon: string) {
   }))
 }
 
-function createContext(rootDir: string, workspaceDir: string, icons: string[]) {
+function createContext(rootDir: string, workspaceDir: string, icons: string[], hookIcons: string[] = []) {
   const nuxt = {
     options: { rootDir, workspaceDir },
-    callHook: async () => {},
+    // Mimic a module contributing icons through the `icon:clientBundleIcons` hook
+    callHook: async (_name: string, set: Set<string>) => {
+      for (const icon of hookIcons)
+        set.add(icon)
+    },
   }
   return new NuxtIconModuleContext(nuxt as never, {
     clientBundle: { icons },
@@ -74,4 +78,37 @@ it('falls back to workspaceDir when the collection is not under rootDir', async 
   expect(result.failed).toEqual([])
   expect(result.count).toBe(1)
   expect(result.collections.find(c => c.prefix === 'nuxt-icon-test-ws')?.icons.bar).toBeTruthy()
+})
+
+it('does not hard-fail when a hook-contributed icon cannot be resolved', async () => {
+  // A module adds an icon from a collection that is not installed. It must be
+  // best-effort: omitted from the bundle (so it falls back to runtime loading)
+  // and never added to `failed` (which would throw in a production build).
+  const context = createContext(appDir(), appDir(), ['nuxt-icon-test:foo'], ['not-installed:missing'])
+  const result = await context.loadClientBundleCollections()
+
+  expect(result.failed).toEqual([])
+  expect(result.dropped).toEqual(['not-installed:missing'])
+  expect(result.count).toBe(1)
+  expect(result.collections.find(c => c.prefix === 'not-installed')).toBeUndefined()
+  expect(result.collections.find(c => c.prefix === 'nuxt-icon-test')?.icons.foo).toBeTruthy()
+})
+
+it('does not hard-fail when a hook-contributed icon name does not exist in an installed collection', async () => {
+  // The collection is installed but the specific icon name does not exist
+  // (e.g. version skew). Still best-effort, not a hard failure.
+  const context = createContext(appDir(), appDir(), [], ['nuxt-icon-test:does-not-exist'])
+  const result = await context.loadClientBundleCollections()
+
+  expect(result.failed).toEqual([])
+  expect(result.dropped).toEqual(['nuxt-icon-test:does-not-exist'])
+  expect(result.count).toBe(0)
+})
+
+it('still hard-fails when an icon explicitly listed in clientBundle.icons cannot be resolved', async () => {
+  const context = createContext(appDir(), appDir(), ['not-installed:missing'])
+  const result = await context.loadClientBundleCollections()
+
+  expect(result.failed).toEqual(['not-installed:missing'])
+  expect(result.dropped).toEqual([])
 })

@@ -18,7 +18,7 @@ export function registerClientBundle(
       } = ctx.options.clientBundle || {}
 
       // TODO: find a granular way to cache this
-      const { collections, count, failed } = await ctx.loadClientBundleCollections()
+      const { collections, count, failed, dropped } = await ctx.loadClientBundleCollections()
 
       if (cacheSize === count && cacheData && cacheVersion === ctx.clientBundleVersion) {
         return cacheData
@@ -30,6 +30,10 @@ export function registerClientBundle(
           throw new Error(msg)
         else
           logger.warn(msg)
+      }
+
+      if (dropped.length) {
+        logger.warn(`Nuxt Icon could not resolve these icons for the client bundle, falling back to runtime loading:\n${dropped.map(f => ' - ' + f).join('\n')}`)
       }
 
       if (!collections.length)

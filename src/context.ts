@@ -143,7 +143,7 @@ export class NuxtIconModuleContext {
     )
   }
 
-  async loadClientBundleCollections(): Promise<{ collections: IconifyJSON[], count: number, failed: string[] }> {
+  async loadClientBundleCollections(): Promise<{ collections: IconifyJSON[], count: number, failed: string[], dropped: string[] }> {
     const {
       includeCustomCollections = this.options.provider !== 'server',
       scan = false,
@@ -173,6 +173,7 @@ export class NuxtIconModuleContext {
         count: 0,
         collections: [],
         failed: [],
+        dropped: [],
       }
     }
 
@@ -182,6 +183,7 @@ export class NuxtIconModuleContext {
     const { loadCollectionFromFS } = await import('@iconify/utils/lib/loader/fs')
 
     const failed: string[] = []
+    const dropped: string[] = []
     let count = 0
 
     const customCollectionNames = new Set(customCollections.map(c => c.prefix))
@@ -239,9 +241,17 @@ export class NuxtIconModuleContext {
           data = getIconData(collection, name)
 
         if (!data) {
-          // We don't warn for scanned icons, because the extraction can have false positives
-          if (!this.scannedIcons.has(icon) || userIcons.has(icon)) {
+          // Only icons the user explicitly listed in `clientBundle.icons` hard-fail
+          // the build. Scanned and hook-contributed icons are best-effort: drop them
+          // from the bundle and fall back to runtime loading.
+          if (userIcons.has(icon)) {
             failed.push(icon)
+          }
+          // We don't warn for scanned icons, because the extraction can have false
+          // positives; hook-contributed icons are surfaced so module authors get a
+          // heads-up that something couldn't be bundled.
+          else if (!this.scannedIcons.has(icon)) {
+            dropped.push(icon)
           }
         }
         else {
@@ -250,7 +260,14 @@ export class NuxtIconModuleContext {
       }
       catch (e) {
         console.error(e)
-        failed.push(icon)
+        // Mirror the best-effort handling above: only explicit user icons hard-fail,
+        // scanned/hook-contributed icons fall back to runtime loading.
+        if (userIcons.has(icon)) {
+          failed.push(icon)
+        }
+        else if (!this.scannedIcons.has(icon)) {
+          dropped.push(icon)
+        }
       }
     }))
 
@@ -273,6 +290,7 @@ export class NuxtIconModuleContext {
       collections: [...collections.values()],
       count,
       failed,
+      dropped,
     }
   }
 }

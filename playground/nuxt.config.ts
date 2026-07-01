@@ -3,6 +3,7 @@ import Module from '../src/module'
 export default defineNuxtConfig({
   extends: [
     './base',
+    '../dummy',
   ],
 
   modules: [

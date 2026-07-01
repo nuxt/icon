@@ -50,15 +50,19 @@ export class IconUsageScanner {
     nuxt: Nuxt,
     set: Set<string> = new Set(),
   ) {
-    const files = await glob(
-      this.globInclude,
-      {
-        ignore: this.globExclude,
-        cwd: nuxt.options.rootDir,
-        absolute: true,
-        expandDirectories: false,
-      },
-    )
+    const files = []
+
+    for (const layer of nuxt.options._layers) {
+      files.push(...await glob(
+        this.globInclude,
+        {
+          ignore: this.globExclude,
+          cwd: layer.cwd,
+          absolute: true,
+          expandDirectories: false,
+        },
+      ))
+    }
 
     await Promise.all(
       files.map(async (file) => {

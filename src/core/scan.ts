@@ -1,9 +1,8 @@
 import fs from 'node:fs/promises'
-import type { Nuxt } from 'nuxt/schema'
 import { glob } from 'tinyglobby'
 import pm from 'picomatch'
 import type { ClientBundleScanOptions } from './types'
-import { collectionNames } from './collection-names'
+import { collectionNames } from '../collection-names'
 
 export class IconUsageScanner {
   globInclude: string[]
@@ -47,25 +46,26 @@ export class IconUsageScanner {
   }
 
   async scanFiles(
-    nuxt: Nuxt,
+    cwd: string | string[],
     set: Set<string> = new Set(),
   ) {
-    const files = []
-
-    for (const layer of nuxt.options._layers) {
-      files.push(...await glob(
-        this.globInclude,
-        {
-          ignore: this.globExclude,
-          cwd: layer.cwd,
-          absolute: true,
-          expandDirectories: false,
-        },
-      ))
-    }
+    const dirs = Array.isArray(cwd) ? cwd : [cwd]
+    const files = new Set(
+      (await Promise.all(
+        dirs.map(dir => glob(
+          this.globInclude,
+          {
+            ignore: this.globExclude,
+            cwd: dir,
+            absolute: true,
+            expandDirectories: false,
+          },
+        )),
+      )).flat(),
+    )
 
     await Promise.all(
-      files.map(async (file) => {
+      [...files].map(async (file) => {
         const code = await fs.readFile(file, 'utf-8').catch(() => '')
         this.extractFromCode(code, set)
       }),

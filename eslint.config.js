@@ -8,7 +8,8 @@ export default createConfigForNuxt({
   },
   dirs: {
     src: [
-      './playground',
+      './playgrounds/nuxt',
+      './playgrounds/vite',
     ],
   },
 })

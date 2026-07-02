@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IconifyIconCustomizeCallback } from '../../src/types'
+import type { IconifyIconCustomizeCallback } from '../../../src/types'
 
 defineProps<{
   mode?: 'svg' | 'css'

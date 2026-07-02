@@ -1,0 +1,177 @@
+import { join, isAbsolute, normalize, parse } from 'node:path'
+import fs from 'node:fs/promises'
+import { consola } from 'consola'
+import { glob } from 'tinyglobby'
+import type { IconifyIcon, IconifyJSON } from '@iconify/types'
+import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
+import { isPackageExists } from 'local-pkg'
+import { collectionNames } from '../collection-names'
+import type { CustomCollection, ServerBundleOptions, RemoteCollection } from './types'
+
+const logger = consola.withTag('nuxt:icon')
+
+export function hasFullCollection(resolvePaths: string[]): boolean {
+  return isPackageExists('@iconify/json', { paths: resolvePaths })
+}
+
+export async function resolveCollection(
+  collection: string | IconifyJSON | CustomCollection | RemoteCollection,
+  rootDir: string,
+): Promise<string | IconifyJSON | RemoteCollection> {
+  if (typeof collection === 'string')
+    return collection
+  // Custom collection
+  if ('dir' in collection) {
+    return await loadCustomCollection(collection, rootDir)
+  }
+  return collection
+}
+
+export function getCollectionPath(collection: string, resolvePaths: string[]) {
+  return hasFullCollection(resolvePaths)
+    ? `@iconify/json/json/${collection}.json`
+    : `@iconify-json/${collection}/icons.json`
+}
+
+// https://github.com/iconify/iconify/blob/2274c033b49c01a50dc89b490b89d803d19d95dc/packages/utils/src/icon/name.ts#L15-L18
+const validIconNameRE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+export async function loadCustomCollection(
+  collection: IconifyJSON | CustomCollection,
+  rootDir: string,
+): Promise<IconifyJSON> {
+  if ('dir' in collection) {
+    return parseCustomCollection(collection, rootDir)
+  }
+
+  logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${Object.keys(collection.icons).length} icons`)
+  return collection
+}
+
+type ParsedIcon = [string, IconifyIcon]
+
+async function parseCustomCollection(
+  collection: CustomCollection,
+  rootDir: string,
+): Promise<IconifyJSON> {
+  const dir = isAbsolute(collection.dir)
+    ? collection.dir
+    : join(rootDir, collection.dir)
+
+  const {
+    // TODO: next major flip this
+    normalizeIconName = true,
+    recursive = false,
+  } = collection
+
+  const pattern = recursive ? '**/*.svg' : '*.svg'
+
+  const files = (await glob([pattern], {
+    cwd: dir,
+    onlyFiles: true,
+    expandDirectories: recursive,
+  }))
+    .sort()
+
+  const parsedIcons: (ParsedIcon | null)[] = await Promise.all(files.map(async (file) => {
+    const { dir: path, name: filename } = parse(file)
+    const pathNormalized = path ? normalize(path).replace(/[/\\]/g, '-') : ''
+    let name = pathNormalized ? `${pathNormalized}-${filename}` : filename
+
+    // Currently Iconify only supports kebab-case icon names
+    // https://github.com/nuxt/icon/issues/265#issuecomment-2441604639
+    // We normalize the icon name to kebab-case and warn user about it
+    if (normalizeIconName && !validIconNameRE.test(name)) {
+      const normalized = name
+        .replace(/([a-z])([A-Z])/g, '$1-$2')
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+      if (normalized !== name)
+        logger.warn(`Custom icon \`${name}\` is normalized to \`${normalized}\`, we recommend to change the file name to match the icon name, or pass \`normalizeIconName: false\` to your custom collection options`)
+      name = normalized
+    }
+
+    let svg = await fs.readFile(join(dir, file), 'utf-8')
+    const cleanupIdx = svg.indexOf('<svg')
+    if (cleanupIdx > 0)
+      svg = svg.slice(cleanupIdx)
+    const data = convertParsedSVG(parseSVGContent(svg)!)
+    if (!data) {
+      logger.error(`Nuxt Icon could not parse the SVG content for icon \`${name}\``)
+      return null
+    }
+    if (data.top === 0)
+      delete data.top
+    if (data.left === 0)
+      delete data.left
+    return [name, data]
+  }))
+
+  const successfulIcons: ParsedIcon[] = parsedIcons.filter((entry): entry is ParsedIcon => entry !== null)
+
+  logger.success(`Nuxt Icon loaded local collection \`${collection.prefix}\` with ${successfulIcons.length} icons`)
+  const result: IconifyJSON = {
+    ...collection,
+    icons: Object.fromEntries(successfulIcons),
+  }
+  // @ts-expect-error remove extra properties
+  delete result.dir
+  return result
+}
+
+export async function discoverInstalledCollections(resolvePaths: string[]): Promise<ServerBundleOptions['collections']> {
+  if (hasFullCollection(resolvePaths)) {
+    logger.success(`Nuxt Icon discovered local-installed ${collectionNames.length} collections (@iconify/json)`)
+    logger.warn('Currently all iconify collections are included in the bundle, which might be inefficient, consider explicit name the collections you use in the `icon.serverBundle.collections` option')
+    return collectionNames
+  }
+
+  // Find which `@iconify-json/*` packages are installed;
+  // Special for Yarn PnP, which does not have a `node_modules` folder.
+  const found = new Set<string>()
+  if (process.versions.pnp) {
+    for (const collection of collectionNames) {
+      if (isPackageExists('@iconify-json/' + collection, { paths: resolvePaths }))
+        found.add(collection)
+    }
+  }
+  else {
+    await Promise.all(iconifyScopeDirs(resolvePaths).map(async (scope) => {
+      const entries = await fs.readdir(scope).catch(() => [] as string[])
+      await Promise.all(entries.map(async (name) => {
+        if (name.startsWith('.'))
+          return
+        // A real Iconify collection package ships an `icons.json`.
+        const hasIconsJson = await fs.access(join(scope, name, 'icons.json')).then(() => true, () => false)
+        if (hasIconsJson)
+          found.add(name)
+      }))
+    }))
+  }
+
+  const collections = collectionNames.filter(collection => found.has(collection))
+  if (collections.length)
+    logger.success(`Nuxt Icon discovered local-installed ${collections.length} collections:`, collections.join(', '))
+
+  return collections
+}
+
+/**
+ * Returns the `@iconify-json` scope directory inside every `node_modules`,
+ * deduped, walking up the tree like the Node resolver.
+ */
+function iconifyScopeDirs(paths: string[]): string[] {
+  const dirs = new Set<string>()
+  for (const base of paths) {
+    let dir = base
+    while (true) {
+      dirs.add(join(dir, 'node_modules', '@iconify-json'))
+      const parent = join(dir, '..')
+      if (parent === dir)
+        break
+      dir = parent
+    }
+  }
+  return [...dirs]
+}

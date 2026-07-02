@@ -1,5 +1,5 @@
 packages:
-  - playground
+  - playgrounds/*
 shamefullyHoist: true
 strictPeerDependencies: false
 ignoreWorkspaceRootCheck: true

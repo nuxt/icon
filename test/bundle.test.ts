@@ -33,6 +33,9 @@ let root: string
 beforeAll(() => {
   root = mkdtempSync(join(tmpdir(), 'nuxt-icon-bundle-'))
   installCollection(root, 'test-bundle', 'foo')
+  // Same prefix and icon name as the custom collection in the precedence test,
+  // but with a different body (`<path .../>` instead of `<rect .../>`)
+  installCollection(root, 'test-conflict', 'baz')
 })
 
 afterAll(() => {
@@ -114,12 +117,14 @@ it('bundles whole custom collections when includeCustomCollections is set', asyn
 })
 
 it('resolves icons from custom collections before installed packages', async () => {
+  // `@iconify-json/test-conflict` is installed with a different `baz` body
+  // (see `beforeAll`), so this proves the custom collection takes precedence
   const result = await resolveBundleIcons({
-    icons: ['custom:baz'],
+    icons: ['test-conflict:baz'],
     customCollections: [{
-      prefix: 'custom',
+      prefix: 'test-conflict',
       icons: {
-        baz: { body: '<path d="M0 0h24v24H0z"/>' },
+        baz: { body: '<rect width="24" height="24"/>' },
       },
     }],
     resolvePaths: [root],
@@ -127,6 +132,8 @@ it('resolves icons from custom collections before installed packages', async () 
 
   expect(result.failed).toEqual([])
   expect(result.count).toBe(1)
+  expect(result.collections.find(c => c.prefix === 'test-conflict')?.icons.baz?.body)
+    .toBe('<rect width="24" height="24"/>')
 })
 
 it('generates an executable init module', async () => {

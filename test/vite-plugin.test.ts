@@ -36,9 +36,10 @@ beforeAll(() => {
   installCollection(root, 'test-scan', 'foo')
 
   mkdirSync(join(root, 'src'), { recursive: true })
-  // Icon usage that only the scanner can discover
+  // Icon usages that only the scanner can discover
   writeFileSync(join(root, 'src', 'App.vue'), `<template>
   <span class="i-test-scan-foo" />
+  <span class="i-custom-baz" />
 </template>
 `)
   // Entry collecting the bundled icons, so the output can be asserted
@@ -101,6 +102,31 @@ it('bundles explicit, scanned and custom collection icons into the build', async
   expect(Object.keys(icons).sort()).toEqual([
     'custom:baz',
     'test-explicit:bar',
+    'test-scan:foo',
+  ])
+})
+
+it('merges custom collection prefixes with user-provided scan.additionalCollections', async () => {
+  // `custom` is not passed in `additionalCollections`, so `i-custom-baz` in
+  // `src/App.vue` is only detected if the custom collection prefix is merged
+  // (not overwritten) into the user-supplied scan options
+  const code = await buildFixture(NuxtIconBundle({
+    scan: { additionalCollections: ['test-scan'] },
+    customCollections: [{
+      prefix: 'custom',
+      icons: {
+        baz: { body: '<circle cx="12" cy="12" r="12"/>' },
+      },
+      width: 24,
+      height: 24,
+    }],
+    includeCustomCollections: false,
+  }))
+
+  const dataUrl = `data:text/javascript,${encodeURIComponent(code)}`
+  const { icons } = await import(dataUrl)
+  expect(Object.keys(icons).sort()).toEqual([
+    'custom:baz',
     'test-scan:foo',
   ])
 })

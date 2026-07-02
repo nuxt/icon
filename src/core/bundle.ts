@@ -164,19 +164,20 @@ export async function resolveBundleIcons(options: ResolveBundleIconsOptions): Pr
       }
     }
     catch (e) {
-      console.error(e)
+      logger.error(e)
       markUnresolved(icon)
     }
   }))
 
   if (includeCustomCollections && customCollections.length) {
-    customCollections.flatMap(collection => Object.keys(collection.icons)
-      .map((name) => {
+    for (const collection of customCollections) {
+      for (const name of Object.keys(collection.icons)) {
         const data = getIconData(collection, name)
         if (data) {
           addIcon(collection.prefix, name, data)
         }
-      }))
+      }
+    }
   }
 
   for (const collection of collections.values()) {
@@ -224,8 +225,7 @@ export function generateClientBundleCode(
     }
   }
 
-  const values = [...collections.values()]
-  const valuesCompat = JSON.stringify(values)
+  const valuesCompat = JSON.stringify(collections)
   const bundleSizeKb = Buffer.byteLength(valuesCompat, 'utf-8') / 1024
 
   if (sizeLimitKb > 0) {

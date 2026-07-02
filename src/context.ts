@@ -160,8 +160,18 @@ export class NuxtIconModuleContext {
     }
 
     if (scan && !this.scanner) {
+      // Merge (not overwrite) custom collection prefixes with user-provided
+      // additional collections, so custom icons stay detectable by the scanner
       const additionalCollections = customCollections.map(c => c.prefix)
-      const scanOptions = scan === true ? { additionalCollections } : { additionalCollections, ...scan }
+      const scanOptions = scan === true
+        ? { additionalCollections }
+        : {
+            ...scan,
+            additionalCollections: [
+              ...additionalCollections,
+              ...scan.additionalCollections || [],
+            ],
+          }
       this.scanner = new IconUsageScanner(scanOptions)
       await this.scanner.scanFiles(this.nuxt.options.rootDir, this.scannedIcons)
     }

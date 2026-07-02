@@ -602,7 +602,7 @@ Make sure the icon collections you use are installed locally (e.g. `npm i -D @ic
 }
 ```
 
-The plugin accepts the same options as `icon.clientBundle` (`icons`, `scan`, `sizeLimitKb`), plus `customCollections` — with one difference: `scan` is enabled by default, since bundling is the whole point of the plugin.
+The plugin accepts the same options as `icon.clientBundle` (`icons`, `scan`, `sizeLimitKb`), plus `customCollections` — with two differences in defaults: `scan` is enabled by default (bundling is the whole point of the plugin), and `includeCustomCollections` is always enabled by default (there is no server provider to fall back to).
 
 For library and framework authors integrating icons themselves: `virtual:nuxt-icon-bundle` exports `init(addIcon)` so you can register the bundled data on your own copy of `@iconify/vue` (or any compatible store), and the underlying primitives (`IconUsageScanner`, `resolveBundleIcons`, `generateClientBundleCode`, ...) are exported from `@nuxt/icon/utils`.
 

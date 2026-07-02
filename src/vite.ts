@@ -150,8 +150,18 @@ export function NuxtIconBundle(options: NuxtIconVitePluginOptions = {}): Plugin 
       const collections = await loadCustomCollections()
 
       if (scan && !scanner) {
+        // Merge (not overwrite) custom collection prefixes with user-provided
+        // additional collections, so custom icons stay detectable by the scanner
         const additionalCollections = collections.map(c => c.prefix)
-        const scanOptions = scan === true ? { additionalCollections } : { additionalCollections, ...scan }
+        const scanOptions = scan === true
+          ? { additionalCollections }
+          : {
+              ...scan,
+              additionalCollections: [
+                ...additionalCollections,
+                ...scan.additionalCollections || [],
+              ],
+            }
         scanner = new IconUsageScanner(scanOptions)
       }
       if (scanner && !scanned) {
@@ -187,7 +197,8 @@ export function NuxtIconBundle(options: NuxtIconVitePluginOptions = {}): Plugin 
       if (!scanner || !server)
         return
 
-      const path = relative(root, file)
+      // Normalize to forward slashes so picomatch matches on Windows too
+      const path = relative(root, file).replace(/\\/g, '/')
       if (path.startsWith('..') || !scanner.isFileMatch(path))
         return
 

@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "nuxt-icon-playground-vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "@iconify/vue": "^5.0.1",
+    "vue": "^3.5.39"
+  },
+  "devDependencies": {
+    "@iconify-json/ph": "^1.2.2",
+    "@iconify-json/uil": "^1.2.3",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "vite": "^8.1.0"
+  }
+}

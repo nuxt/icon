@@ -2,6 +2,7 @@
   "extends": "./.nuxt/tsconfig.json",
   "exclude": [
     "playground",
+    "playground-vite",
     "dist",
     "node_modules"
   ]

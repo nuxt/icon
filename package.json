@@ -34,6 +34,8 @@
     "play": "nuxi dev playground",
     "play:build": "nuxi build playground",
     "play:deploy": "nr -C playground deploy",
+    "play:vite": "pnpm -C playground-vite dev",
+    "play:vite:build": "pnpm -C playground-vite build",
     "dev": "nuxi dev playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "lint": "eslint .",

@@ -606,6 +606,8 @@ The plugin accepts the same options as `icon.clientBundle` (`icons`, `scan`, `si
 
 For library and framework authors integrating icons themselves: `virtual:nuxt-icon-bundle` exports `init(addIcon)` so you can register the bundled data on your own copy of `@iconify/vue` (or any compatible store), and the underlying primitives (`IconUsageScanner`, `resolveBundleIcons`, `generateClientBundleCode`, ...) are exported from `@nuxt/icon/utils`.
 
+See [`playground-vite/`](./playground-vite/) for a working example (`pnpm play:vite` to run it locally).
+
 ### Render Function
 
 You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:

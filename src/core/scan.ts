@@ -1,9 +1,8 @@
 import fs from 'node:fs/promises'
-import type { Nuxt } from 'nuxt/schema'
 import { glob } from 'tinyglobby'
 import pm from 'picomatch'
 import type { ClientBundleScanOptions } from './types'
-import { collectionNames } from './collection-names'
+import { collectionNames } from '../collection-names'
 
 export class IconUsageScanner {
   globInclude: string[]
@@ -47,14 +46,14 @@ export class IconUsageScanner {
   }
 
   async scanFiles(
-    nuxt: Nuxt,
+    cwd: string,
     set: Set<string> = new Set(),
   ) {
     const files = await glob(
       this.globInclude,
       {
         ignore: this.globExclude,
-        cwd: nuxt.options.rootDir,
+        cwd,
         absolute: true,
         expandDirectories: false,
       },

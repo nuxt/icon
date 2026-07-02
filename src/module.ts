@@ -10,7 +10,8 @@ import { unocssIntegration } from './integrations/unocss'
 import { registerServerBundle } from './bundle-server'
 import { registerClientBundle } from './bundle-client'
 import { NuxtIconModuleContext } from './context'
-import { getCollectionPath } from './collections'
+import { getResolvePaths } from './collections'
+import { getCollectionPath } from './core/collections'
 
 export type { ModuleOptions, NuxtIconRuntimeOptions as RuntimeOptions }
 
@@ -121,7 +122,7 @@ export default defineNuxtModule<ModuleOptions>({
 
       const collections = bundle.collections
         .filter(collection => typeof collection === 'string')
-        .map(collection => getCollectionPath(collection, nuxt))
+        .map(collection => getCollectionPath(collection, getResolvePaths(nuxt)))
       const resolvedPaths = await Promise.all(
         collections.map(collection => resolvePath(collection, {
           url: nuxt.options.rootDir,

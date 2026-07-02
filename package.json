@@ -8,27 +8,41 @@
   "exports": {
     ".": "./dist/module.mjs",
     "./module": "./dist/module.mjs",
+    "./vite": {
+      "types": "./dist/vite.d.mts",
+      "import": "./dist/vite.mjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.mts",
+      "import": "./dist/utils.mjs"
+    },
+    "./client": {
+      "types": "./client.d.ts"
+    },
     "./*": "./dist/*"
   },
   "main": "./dist/module.mjs",
   "module": "./dist/module.mjs",
   "types": "./dist/types.d.mts",
   "files": [
+    "client.d.ts",
     "dist"
   ],
   "scripts": {
     "prepack": "pnpm build",
     "build": "nuxt-module-build prepare && nuxt-module-build build",
-    "play": "nuxi dev playground",
-    "play:build": "nuxi build playground",
-    "play:deploy": "nr -C playground deploy",
-    "dev": "nuxi dev playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "play": "nuxi dev playgrounds/nuxt",
+    "play:build": "nuxi build playgrounds/nuxt",
+    "play:deploy": "nr -C playgrounds/nuxt deploy",
+    "play:vite": "pnpm -C playgrounds/vite dev",
+    "play:vite:build": "pnpm -C playgrounds/vite build",
+    "dev": "nuxi dev playgrounds/nuxt",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playgrounds/nuxt",
     "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm lint",
     "release": "bumpp",
-    "test:playground": "pnpm -C playground run test",
+    "test:playground": "pnpm -C playgrounds/nuxt run test",
     "test:unit": "vitest",
     "test": "pnpm run test:unit --run && pnpm run test:playground --run"
   },

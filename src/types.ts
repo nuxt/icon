@@ -1,5 +1,16 @@
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from './schema-types'
+import type { ClientBundleOptions, CustomCollection, ServerBundleOptions } from './core/types'
+
+export type {
+  ClientBundleOptions,
+  ClientBundleScanOptions,
+  CustomCollection,
+  RemoteCollection,
+  RemoteCollectionSource,
+  ResolvedServerBundleOptions,
+  ServerBundleOptions,
+} from './core/types'
 
 export type { NuxtIconRuntimeOptions }
 
@@ -43,132 +54,6 @@ export interface ModuleOptions extends Partial<Omit<NuxtIconRuntimeOptions, 'cus
    * List of pre-compiled CSS classnames to be used for server-side CSS icon rendering
    */
   serverKnownCssClasses?: string[]
-}
-
-export interface CustomCollection extends Pick<IconifyJSON, 'prefix' | 'width' | 'height'> {
-  dir: string
-  /**
-   * Normalize icon names to kebab-case
-   *
-   * Since v1.10.0, Iconify supports arbitrary icon names.
-   * You can disable this option to keep the original icon names.
-   *
-   * This options is true by default to ensure compatibility with older versions.
-   * In the next major version, this option will be disabled by default.
-   *
-   * @see https://github.com/nuxt/icon/issues/265#issuecomment-2524979176
-   * @default true
-   */
-  normalizeIconName?: boolean
-  /**
-   * Enables recursive scanning of the specified directory.
-   * The folder structure determines icon names.
-   *
-   * Disabled by default to ensure compatibility with older versions.
-   *
-   * @example `path/to/icon.svg` → `path-to-icon`
-   * @see https://github.com/nuxt/icon/issues/374
-   * @default false
-   */
-  recursive?: boolean
-}
-
-export interface RemoteCollection {
-  prefix: string
-  fetchEndpoint: string
-}
-
-export type RemoteCollectionSource = 'github-raw' | 'jsdelivr' | 'unpkg' | ((name: string) => string)
-
-export interface ServerBundleOptions {
-  /**
-   * Iconify collection names to be bundled
-   */
-  collections?: (string | CustomCollection | IconifyJSON | RemoteCollection)[]
-  /**
-   * Whether to bundle remote collections
-   *
-   * When set to `true`, `jsdelivr` will be used as the default remote source
-   *
-   * @default false
-   */
-  remote?: boolean | RemoteCollectionSource
-  /**
-   * Whether to disable server bundle
-   */
-  disabled?: boolean
-
-  /**
-   * External icon JSON files as in the final `node_modules`, instead of bundling them
-   * This would likely improve the performance of bundling.
-   * Enabling this option would requires your production Node.js server to be able to import JSON modules.
-   *
-   * @default false
-   */
-  externalizeIconsJson?: boolean
-}
-
-export interface ClientBundleOptions {
-  /**
-   * List of icons to be bundled, each icon should be in the formatted as `prefix:icon`
-   */
-  icons?: string[]
-  /**
-   * Scan source files for icon usage to bundle them in client bundle.
-   *
-   * Currently experimental. Once stabled, this option will be enabled by default.
-   *
-   * @default false
-   */
-  scan?: boolean | ClientBundleScanOptions
-  /**
-   * Bundle all custom collections into client-side
-   *
-   * Default to true when `provider` is not set to `server`
-   */
-  includeCustomCollections?: boolean
-  /**
-   * Size limit of the client bundle in KB, uncompressed.
-   * When exceeded, this will prevent the build process from continuing
-   * Set to `0` to disable the size limit check
-   *
-   * @default 256
-   */
-  sizeLimitKb?: number
-}
-
-export interface ClientBundleScanOptions {
-  /**
-   * Glob patterns or paths to include files for scanning, relative to the project root.
-   * Plain JavaScript and TypeScript files are not included by default to improve performance.
-   *
-   * When specified, the default will be overridden
-   *
-   * @default ['**\/*.{vue,jsx,tsx,md,mdc,mdx}']
-   */
-  globInclude?: string[]
-  /**
-   * Glob patterns or paths to exclude files for scanning
-   * When specified, the default will be overridden
-   *
-   * @default ['node_modules', 'dist', 'build', 'coverage', 'test', 'tests', '.*']
-   */
-  globExclude?: string[]
-  /**
-   * Collection names to be ignored when scanning
-   */
-  ignoreCollections?: string[]
-  /**
-   * Additional collections that are not or not yet inclduded in the `@iconify` collection
-   */
-  additionalCollections?: string[]
-}
-
-export interface ResolvedServerBundleOptions {
-  disabled: boolean
-  remote: RemoteCollectionSource | false
-  collections: (string | IconifyJSON | RemoteCollection)[]
-  externalizeIconsJson: boolean
 }
 
 declare module '@nuxt/schema' {

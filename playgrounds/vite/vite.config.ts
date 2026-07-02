@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import { NuxtIconBundle } from '../src/vite'
+import { NuxtIconBundle } from '../../src/vite'
 
 export default defineConfig({
   plugins: [

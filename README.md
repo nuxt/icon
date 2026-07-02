@@ -129,7 +129,7 @@ When the `name` matches a global registered component, it will be rendered as th
 <Icon name="MyComponent" />
 ```
 
-Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playground/components/global/NuxtLogo.vue)).
+Note that `MyComponent` needs to be inside `components/global/` folder (see [example](https://github.com/nuxt-modules/icon/blob/main/playgrounds/nuxt/components/global/NuxtLogo.vue)).
 
 > [!TIP]
 > You can also change the component name with:
@@ -606,7 +606,7 @@ The plugin accepts the same options as `icon.clientBundle` (`icons`, `scan`, `si
 
 For library and framework authors integrating icons themselves: `virtual:nuxt-icon-bundle` exports `init(addIcon)` so you can register the bundled data on your own copy of `@iconify/vue` (or any compatible store), and the underlying primitives (`IconUsageScanner`, `resolveBundleIcons`, `generateClientBundleCode`, ...) are exported from `@nuxt/icon/utils`.
 
-See [`playground-vite/`](./playground-vite/) for a working example (`pnpm play:vite` to run it locally).
+See [`playgrounds/vite/`](./playgrounds/vite/) for a working example (`pnpm play:vite` to run it locally).
 
 ### Render Function
 
@@ -690,7 +690,7 @@ export default defineNuxtConfig({
 1. Clone this repository
 2. Install dependencies using `pnpm install` (install `pnpm` with `corepack enable`, [learn more](https://pnpm.io/installation#using-corepack))
 3. Run `npm run dev:prepare` to generate type stubs.
-4. Use `npm run dev` to start [playground](https://github.com/nuxt-modules/icon/tree/main/playground) in development mode.
+4. Use `npm run dev` to start [playground](https://github.com/nuxt-modules/icon/tree/main/playgrounds/nuxt) in development mode.
 
 ## Credits 💌
 

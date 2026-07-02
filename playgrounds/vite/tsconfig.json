@@ -12,6 +12,6 @@
   "include": [
     "src/**/*",
     "vite.config.ts",
-    "../client.d.ts"
+    "../../client.d.ts"
   ]
 }

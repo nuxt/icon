@@ -1,6 +1,5 @@
 packages:
-  - playground
-  - playground-vite
+  - playgrounds/*
 shamefullyHoist: true
 strictPeerDependencies: false
 ignoreWorkspaceRootCheck: true

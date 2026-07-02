@@ -1,11 +1,13 @@
 import type { Nuxt } from 'nuxt/schema'
-import type { IconifyIcon, IconifyJSON } from '@iconify/types'
+import type { IconifyJSON } from '@iconify/types'
 import { provider } from 'std-env'
 import { logger } from '@nuxt/kit'
 import { collectionNames } from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
-import { discoverInstalledCollections, getResolvePaths, loadCustomCollection, resolveCollection } from './collections'
-import { IconUsageScanner } from './scan'
+import { getResolvePaths } from './collections'
+import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './core/collections'
+import { IconUsageScanner } from './core/scan'
+import { resolveBundleIcons, type ResolvedBundleIcons } from './core/bundle'
 
 const KEYWORDS_EDGE_TARGETS: string[] = [
   'edge',
@@ -100,11 +102,11 @@ export class NuxtIconModuleContext {
     if (!resolved.collections)
       resolved.collections = resolved.remote
         ? collectionNames
-        : await discoverInstalledCollections(this.nuxt)
+        : await discoverInstalledCollections(getResolvePaths(this.nuxt))
 
     const collections = await Promise.all(
       (resolved.collections || [])
-        .map(c => resolveCollection(this.nuxt, c)),
+        .map(c => resolveCollection(c, this.nuxt.options.rootDir)),
     )
 
     return {
@@ -139,11 +141,11 @@ export class NuxtIconModuleContext {
   private async _loadCustomCollection(): Promise<IconifyJSON[]> {
     return Promise.all(
       (this.options.customCollections || [])
-        .map(collection => loadCustomCollection(collection, this.nuxt)),
+        .map(collection => loadCustomCollection(collection, this.nuxt.options.rootDir)),
     )
   }
 
-  async loadClientBundleCollections(): Promise<{ collections: IconifyJSON[], count: number, failed: string[], dropped: string[] }> {
+  async loadClientBundleCollections(): Promise<ResolvedBundleIcons> {
     const {
       includeCustomCollections = this.options.provider !== 'server',
       scan = false,
@@ -161,136 +163,25 @@ export class NuxtIconModuleContext {
       const additionalCollections = customCollections.map(c => c.prefix)
       const scanOptions = scan === true ? { additionalCollections } : { additionalCollections, ...scan }
       this.scanner = new IconUsageScanner(scanOptions)
-      await this.scanner.scanFiles(this.nuxt, this.scannedIcons)
+      await this.scanner.scanFiles(this.nuxt.options.rootDir, this.scannedIcons)
     }
 
     const icons = new Set<string>([...userIcons, ...this.scannedIcons])
 
+    // Let other modules contribute icons to the client bundle (they may also
+    // remove icons, e.g. scanned false positives)
     await this.nuxt.callHook('icon:clientBundleIcons', icons)
 
-    if (!icons.size && !customCollections.length) {
-      return {
-        count: 0,
-        collections: [],
-        failed: [],
-        dropped: [],
-      }
-    }
-
-    const iconifyCollectionMap = new Map<string, Promise<IconifyJSON | undefined>>()
-
-    const { getIconData } = await import('@iconify/utils')
-    const { loadCollectionFromFS } = await import('@iconify/utils/lib/loader/fs')
-
-    const failed: string[] = []
-    const dropped: string[] = []
-    let count = 0
-
-    const customCollectionNames = new Set(customCollections.map(c => c.prefix))
-    const collections = new Map<string, IconifyJSON>()
-
-    // Resolve collections from the Nuxt root (and workspace root as a fallback)
-    // instead of `process.cwd()`, so collections installed in a subproject are
-    // found when the command is launched from a workspace root.
-    const resolvePaths = getResolvePaths(this.nuxt)
-
-    async function loadCollection(prefix: string): Promise<IconifyJSON | undefined> {
-      if (customCollectionNames.has(prefix)) {
-        const collection = customCollections.find(c => c.prefix === prefix)
-        if (collection) {
-          return collection
-        }
-      }
-
-      for (const cwd of resolvePaths) {
-        const collection = await loadCollectionFromFS(prefix, false, '@iconify-json', cwd)
-        if (collection) {
-          return collection
-        }
-      }
-      return undefined
-    }
-
-    function addIcon(prefix: string, name: string, data: IconifyIcon) {
-      let collection = collections.get(prefix)
-      if (!collection) {
-        collection = {
-          prefix,
-          icons: {},
-        }
-        collections.set(prefix, collection)
-      }
-      if (!collection.icons[name]) {
-        count += 1
-      }
-      collection.icons[name] = data
-    }
-
-    await Promise.all([...icons].map(async (icon) => {
-      try {
-        const [prefix, name] = icon.split(':')
-        if (prefix === undefined || name === undefined) {
-          throw new Error(`Invalid icon ${icon}. Expected "prefix:name" format.`)
-        }
-        if (!iconifyCollectionMap.has(prefix))
-          iconifyCollectionMap.set(prefix, loadCollection(prefix))
-
-        let data: IconifyIcon | null = null
-        const collection = await iconifyCollectionMap.get(prefix)
-        if (collection)
-          data = getIconData(collection, name)
-
-        if (!data) {
-          // Only icons the user explicitly listed in `clientBundle.icons` hard-fail
-          // the build. Scanned and hook-contributed icons are best-effort: drop them
-          // from the bundle and fall back to runtime loading.
-          if (userIcons.has(icon)) {
-            failed.push(icon)
-          }
-          // We don't warn for scanned icons, because the extraction can have false
-          // positives; hook-contributed icons are surfaced so module authors get a
-          // heads-up that something couldn't be bundled.
-          else if (!this.scannedIcons.has(icon)) {
-            dropped.push(icon)
-          }
-        }
-        else {
-          addIcon(prefix, name, data)
-        }
-      }
-      catch (e) {
-        console.error(e)
-        // Mirror the best-effort handling above: only explicit user icons hard-fail,
-        // scanned/hook-contributed icons fall back to runtime loading.
-        if (userIcons.has(icon)) {
-          failed.push(icon)
-        }
-        else if (!this.scannedIcons.has(icon)) {
-          dropped.push(icon)
-        }
-      }
-    }))
-
-    if (includeCustomCollections && customCollections.length) {
-      customCollections.flatMap(collection => Object.keys(collection.icons)
-        .map((name) => {
-          const data = getIconData(collection, name)
-          if (data) {
-            addIcon(collection.prefix, name, data)
-          }
-        }))
-    }
-
-    for (const collection of collections.values()) {
-      const sortedEntries = Object.entries(collection.icons).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
-      collection.icons = Object.fromEntries(sortedEntries)
-    }
-
-    return {
-      collections: [...collections.values()],
-      count,
-      failed,
-      dropped,
-    }
+    return resolveBundleIcons({
+      icons: [...userIcons].filter(i => icons.has(i)),
+      scannedIcons: [...this.scannedIcons].filter(i => icons.has(i)),
+      extraIcons: [...icons].filter(i => !userIcons.has(i) && !this.scannedIcons.has(i)),
+      customCollections,
+      includeCustomCollections,
+      // Resolve collections from the Nuxt root (and workspace root as a fallback)
+      // instead of `process.cwd()`, so collections installed in a subproject are
+      // found when the command is launched from a workspace root.
+      resolvePaths: getResolvePaths(this.nuxt),
+    })
   }
 }

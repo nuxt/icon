@@ -1,4 +1,5 @@
 import { addTemplate, logger } from '@nuxt/kit'
+import { generateClientBundleCode } from './core/bundle'
 import type { NuxtIconModuleContext } from './context'
 
 export function registerClientBundle(
@@ -36,40 +37,12 @@ export function registerClientBundle(
         logger.warn(`Nuxt Icon could not resolve these icons for the client bundle, falling back to runtime loading:\n${dropped.map(f => ' - ' + f).join('\n')}`)
       }
 
-      if (!collections.length)
-        return 'export function init() {}'
+      const { code, bundleSizeKb } = generateClientBundleCode(collections, { sizeLimitKb })
 
-      const values = [...collections.values()]
-      const valuesCompat = JSON.stringify(values)
-      const bundleSizeKb = Buffer.byteLength(valuesCompat, 'utf-8') / 1024
+      if (collections.length)
+        logger.info(`Nuxt Icon client bundle consist of \`${count}\` icons with \`${bundleSizeKb.toFixed(2)}KB\`(uncompressed) in size`)
 
-      if (sizeLimitKb > 0) {
-        if (bundleSizeKb > sizeLimitKb) {
-          throw new Error(`Nuxt Icon client bundle size limit exceeded: \`${bundleSizeKb.toFixed(2)}KB\` > \`${sizeLimitKb}KB\``)
-        }
-        if (bundleSizeKb > sizeLimitKb * 0.75) {
-          logger.warn(`Nuxt Icon client bundle size is close to the limit: \`${bundleSizeKb.toFixed(2)}KB\` -> \`${sizeLimitKb}KB\``)
-        }
-      }
-
-      logger.info(`Nuxt Icon client bundle consist of \`${count}\` icons with \`${bundleSizeKb.toFixed(2)}KB\`(uncompressed) in size`)
-
-      const collectionsRaw = `JSON.parse(${JSON.stringify(valuesCompat)})`
-
-      cacheData = [
-        'let _initialized = false',
-        'export function init(addIcon) {',
-        '  if (_initialized)',
-        '    return',
-        `  const collections = ${collectionsRaw}`,
-        `  for (const collection of collections) {`,
-        `    for (const [name, data] of Object.entries(collection.icons)) {`,
-        `      addIcon(collection.prefix ? (collection.prefix + ':' + name) : name, data)`,
-        `    }`,
-        '  }',
-        '  _initialized = true',
-        '}',
-      ].join('\n')
+      cacheData = code
       cacheSize = count
       cacheVersion = ctx.clientBundleVersion
       return cacheData

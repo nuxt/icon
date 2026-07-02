@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { it, expect } from 'vitest'
-import { IconUsageScanner } from '../src/scan'
+import { IconUsageScanner } from '../src/core/scan'
 
 it('extract icon usages', async () => {
   const code = await import('../playground/components/ShowcaseFixture.vue?raw').then(m => m.default)

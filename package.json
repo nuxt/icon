@@ -8,12 +8,24 @@
   "exports": {
     ".": "./dist/module.mjs",
     "./module": "./dist/module.mjs",
+    "./vite": {
+      "types": "./dist/vite.d.mts",
+      "import": "./dist/vite.mjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.mts",
+      "import": "./dist/utils.mjs"
+    },
+    "./client": {
+      "types": "./client.d.ts"
+    },
     "./*": "./dist/*"
   },
   "main": "./dist/module.mjs",
   "module": "./dist/module.mjs",
   "types": "./dist/types.d.mts",
   "files": [
+    "client.d.ts",
     "dist"
   ],
   "scripts": {

@@ -564,6 +564,48 @@ export default defineNuxtConfig({
 > </template>
 > ```
 
+### Standalone Vite Plugin (without Nuxt)
+
+If you are building a plain Vue app with Vite (for example when using [Nuxt UI's Vue integration](https://ui.nuxt.com/docs/getting-started/integrations/vue)), there is no Nuxt server to serve icons from, and `@iconify/vue` would fetch icons from the Iconify API at runtime. To render icons offline (and during SSR) without network requests, `@nuxt/icon` ships a standalone Vite plugin that pre-bundles the icons you use into the client build:
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import { NuxtIconBundle } from '@nuxt/icon/vite'
+
+export default defineConfig({
+  plugins: [
+    NuxtIconBundle({
+      // Explicitly pre-bundle known icons (hard-fails the build when missing locally)
+      icons: ['uil:github', 'heroicons:home'],
+      // Scanning your source files for icon usages is enabled by default
+      scan: true,
+    }),
+  ],
+})
+```
+
+Then register the bundled icons once in your entry file:
+
+```ts
+// main.ts
+import 'virtual:nuxt-icon-bundle/register'
+```
+
+Make sure the icon collections you use are installed locally (e.g. `npm i -D @iconify-json/uil`), and add the type shims for the virtual modules to your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["@nuxt/icon/client"]
+  }
+}
+```
+
+The plugin accepts the same options as `icon.clientBundle` (`icons`, `scan`, `sizeLimitKb`), plus `customCollections` — with one difference: `scan` is enabled by default, since bundling is the whole point of the plugin.
+
+For library and framework authors integrating icons themselves: `virtual:nuxt-icon-bundle` exports `init(addIcon)` so you can register the bundled data on your own copy of `@iconify/vue` (or any compatible store), and the underlying primitives (`IconUsageScanner`, `resolveBundleIcons`, `generateClientBundleCode`, ...) are exported from `@nuxt/icon/utils`.
+
 ### Render Function
 
 You can use the `Icon` component in a render function (useful if you create a functional component), for this you can import it from `#components`:

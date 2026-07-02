@@ -173,7 +173,10 @@ export class NuxtIconModuleContext {
             ],
           }
       this.scanner = new IconUsageScanner(scanOptions)
-      await this.scanner.scanFiles(this.nuxt.options.rootDir, this.scannedIcons)
+      await this.scanner.scanFiles(
+        this.nuxt.options._layers.map(layer => layer.cwd),
+        this.scannedIcons,
+      )
     }
 
     const icons = new Set<string>([...userIcons, ...this.scannedIcons])

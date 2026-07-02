@@ -46,21 +46,26 @@ export class IconUsageScanner {
   }
 
   async scanFiles(
-    cwd: string,
+    cwd: string | string[],
     set: Set<string> = new Set(),
   ) {
-    const files = await glob(
-      this.globInclude,
-      {
-        ignore: this.globExclude,
-        cwd,
-        absolute: true,
-        expandDirectories: false,
-      },
+    const dirs = Array.isArray(cwd) ? cwd : [cwd]
+    const files = new Set(
+      (await Promise.all(
+        dirs.map(dir => glob(
+          this.globInclude,
+          {
+            ignore: this.globExclude,
+            cwd: dir,
+            absolute: true,
+            expandDirectories: false,
+          },
+        )),
+      )).flat(),
     )
 
     await Promise.all(
-      files.map(async (file) => {
+      [...files].map(async (file) => {
         const code = await fs.readFile(file, 'utf-8').catch(() => '')
         this.extractFromCode(code, set)
       }),

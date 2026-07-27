@@ -33,8 +33,11 @@ export function registerClientBundle(
           logger.warn(msg)
       }
 
+      // `dropped` icons come from integrations via the `icon:clientBundleIcons` hook, not
+      // from the user, so a warning is noise they can't act on. They already fall back to
+      // runtime loading, so keep it at debug level for anyone inspecting the bundle.
       if (dropped.length) {
-        logger.warn(`Nuxt Icon could not resolve these icons for the client bundle, falling back to runtime loading:\n${dropped.map(f => ' - ' + f).join('\n')}`)
+        logger.debug(`Nuxt Icon could not resolve these icons for the client bundle, falling back to runtime loading:\n${dropped.map(f => ' - ' + f).join('\n')}`)
       }
 
       const { code, bundleSizeKb } = generateClientBundleCode(collections, { sizeLimitKb })

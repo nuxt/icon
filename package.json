@@ -44,7 +44,7 @@
     "release": "bumpp",
     "test:playground": "pnpm -C playgrounds/nuxt run test",
     "test:unit": "vitest",
-    "test": "pnpm run test:unit --run && pnpm run test:playground --run"
+    "test": "pnpm run test:unit --run && pnpm run test:playground --run && pnpm run play:build && pnpm -C playgrounds/nuxt5 run build"
   },
   "dependencies": {
     "@iconify/collections": "^1.0.702",

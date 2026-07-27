@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "nuxt-icon-nuxt5-playground",
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build"
+  },
+  "dependencies": {
+    "@iconify-json/ph": "1.2.2",
+    "nitro": "3.0.260610-beta",
+    "nuxt": "npm:nuxt-nightly@5.0.0-29745766.482f3357"
+  }
+}

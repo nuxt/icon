@@ -4,8 +4,8 @@ import { createError, type H3Event } from 'h3'
 import { parseQuery, parsePath } from 'ufo'
 import { consola } from 'consola'
 import type { NuxtIconRuntimeOptions } from '../../schema-types'
-// @ts-expect-error tsconfig.server has the types
-import { useAppConfig, defineCachedEventHandler } from '#imports'
+import appConfig from '#internal/nuxt/app-config'
+import { defineCachedHandler } from '#nuxt-icon-server-runtime'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()
@@ -20,8 +20,8 @@ function getInstallCommand(pkg: string): string {
   return `npm i -D ${pkg}`
 }
 
-export default defineCachedEventHandler(async (event: H3Event) => {
-  const options = useAppConfig().icon as NuxtIconRuntimeOptions
+export default defineCachedHandler(async (event: H3Event) => {
+  const options = appConfig.icon as NuxtIconRuntimeOptions
   const collectionName = event.context.params?.collection?.replace(/\.json$/, '')
   const collection = collectionName && Object.hasOwn(collections, collectionName)
     ? await collections[collectionName]?.()
@@ -56,16 +56,17 @@ export default defineCachedEventHandler(async (event: H3Event) => {
       return createError({ status: 400, message: 'Invalid icon request' })
     }
     try {
-      const data = await $fetch(apiUrl.href)
-      return data
+      const response = await fetch(apiUrl)
+      if (!response.ok) {
+        return response.status === 404
+          ? createError({ status: 404 })
+          : createError({ status: 500, message: 'Failed to fetch fallback icon' })
+      }
+      return response.json()
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    catch (e: any) {
+    catch (e) {
       consola.error(e)
-      if (e.status === 404)
-        return createError({ status: 404 })
-      else
-        return createError({ status: 500, message: 'Failed to fetch fallback icon' })
+      return createError({ status: 500, message: 'Failed to fetch fallback icon' })
     }
   }
   return createError({ status: 404 })

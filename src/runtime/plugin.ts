@@ -1,13 +1,14 @@
 import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
-import { defineNuxtPlugin, useAppConfig, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
   name: '@nuxt/icon',
   setup() {
     const configs = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
+    const $fetch = useRequestFetch()
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore type incompatible

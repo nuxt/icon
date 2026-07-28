@@ -3,7 +3,8 @@
   "name": "nuxt-icon-nuxt5-playground",
   "type": "module",
   "scripts": {
-    "build": "nuxt build"
+    "build": "nuxt build",
+    "test": "nuxt build && node test.mjs"
   },
   "dependencies": {
     "@iconify-json/ph": "1.2.2",

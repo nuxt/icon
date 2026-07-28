@@ -1,4 +1,4 @@
-import Module from '../../src/module'
+import Module from '../../../src/module'
 
 export default defineNuxtConfig({
   modules: [Module],
@@ -10,8 +10,6 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2026-06-10',
   icon: {
-    iconifyApiEndpoint: 'http://127.0.0.1:34615/iconify/',
-    fallbackToApi: 'server-only',
     serverBundle: {
       collections: ['ph'],
     },

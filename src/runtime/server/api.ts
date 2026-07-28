@@ -3,8 +3,7 @@ import { hash } from 'ohash'
 import { createError, type H3Event } from 'h3'
 import { parseQuery, parsePath } from 'ufo'
 import { consola } from 'consola'
-import type { NuxtIconRuntimeOptions } from '../../schema-types'
-import appConfig from '#internal/nuxt/app-config'
+import options from '#nuxt-icon-server-options'
 import { defineCachedHandler } from '#nuxt-icon-server-runtime'
 import { collections } from '#nuxt-icon-server-bundle'
 
@@ -21,7 +20,6 @@ function getInstallCommand(pkg: string): string {
 }
 
 export default defineCachedHandler(async (event: H3Event) => {
-  const options = appConfig.icon as NuxtIconRuntimeOptions
   const collectionName = event.context.params?.collection?.replace(/\.json$/, '')
   const collection = collectionName && Object.hasOwn(collections, collectionName)
     ? await collections[collectionName]?.()

@@ -56,6 +56,11 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.nitro.virtual['#nuxt-icon-server-runtime'] = usesNitroV3
       ? `export { defineCachedHandler } from 'nitro/cache'`
       : `export { defineCachedEventHandler as defineCachedHandler } from 'nitropack/runtime'`
+    nuxt.options.nitro.virtual['#nuxt-icon-server-options'] = () =>
+      `export default ${JSON.stringify({
+        iconifyApiEndpoint: options.iconifyApiEndpoint,
+        fallbackToApi: options.fallbackToApi,
+      })}`
 
     // @ts-expect-error `customize` is not allowed in module options
     if (typeof options.customize === 'function') {

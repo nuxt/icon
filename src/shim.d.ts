@@ -10,11 +10,12 @@ declare module '#build/nuxt-icon-client-bundle' {
   export function init(addIcon: ((name: string, data: IconifyIcon) => void)): void
 }
 
-declare module '#internal/nuxt/app-config' {
-  import type { AppConfig } from '@nuxt/schema'
-
-  const appConfig: AppConfig
-  export default appConfig
+declare module '#nuxt-icon-server-options' {
+  const options: {
+    iconifyApiEndpoint: string
+    fallbackToApi: boolean | 'server-only' | 'client-only'
+  }
+  export default options
 }
 
 declare module '#nuxt-icon-server-runtime' {

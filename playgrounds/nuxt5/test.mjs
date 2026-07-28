@@ -3,6 +3,9 @@ import { spawn } from 'node:child_process'
 
 const port = 34615
 const origin = `http://127.0.0.1:${port}`
+const fetchWithTimeout = (url, timeout = 5_000) => fetch(url, {
+  signal: AbortSignal.timeout(timeout),
+})
 const server = spawn(process.execPath, ['.output/server/index.mjs'], {
   cwd: import.meta.dirname,
   env: {
@@ -18,7 +21,7 @@ async function waitForServer() {
     if (server.exitCode !== null) {
       throw new Error(`Nuxt 5 server exited with code ${server.exitCode}`)
     }
-    const response = await fetch(origin).catch(() => null)
+    const response = await fetchWithTimeout(origin, 1_000).catch(() => null)
     if (response?.ok) return
     await new Promise(resolve => setTimeout(resolve, 100))
   }
@@ -28,13 +31,17 @@ async function waitForServer() {
 try {
   await waitForServer()
 
-  const bundled = await fetch(`${origin}/api/_nuxt_icon/ph.json?icons=acorn-bold`)
+  const bundled = await fetchWithTimeout(`${origin}/api/_nuxt_icon/ph.json?icons=acorn-bold`)
   assert.equal(bundled.status, 200)
-  assert.ok((await bundled.json()).icons['acorn-bold'])
+  const bundledData = await bundled.json()
+  assert.equal(bundledData.prefix, 'ph')
+  assert.ok(bundledData.icons['acorn-bold'])
 
-  const remote = await fetch(`${origin}/api/_nuxt_icon/remote.json?icons=remote`)
+  const remote = await fetchWithTimeout(`${origin}/api/_nuxt_icon/remote.json?icons=remote`)
   assert.equal(remote.status, 200)
-  assert.ok((await remote.json()).icons.remote)
+  const remoteData = await remote.json()
+  assert.equal(remoteData.prefix, 'remote')
+  assert.ok(remoteData.icons.remote)
 }
 finally {
   server.kill()

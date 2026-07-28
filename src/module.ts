@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin, getNuxtVersion } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
 import type { ViteDevServer } from 'vite'
@@ -50,6 +50,17 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+    const usesNitroV3 = Number.parseInt(getNuxtVersion(nuxt)) >= 5
+
+    nuxt.options.nitro.virtual ||= {}
+    nuxt.options.nitro.virtual['#nuxt-icon-server-runtime'] = usesNitroV3
+      ? `export { defineCachedHandler } from 'nitro/cache'`
+      : `export { defineCachedEventHandler as defineCachedHandler } from 'nitropack/runtime'`
+    nuxt.options.nitro.virtual['#nuxt-icon-server-options'] = () =>
+      `export default ${JSON.stringify({
+        iconifyApiEndpoint: options.iconifyApiEndpoint,
+        fallbackToApi: options.fallbackToApi,
+      })}`
 
     // @ts-expect-error `customize` is not allowed in module options
     if (typeof options.customize === 'function') {

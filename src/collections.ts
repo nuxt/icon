@@ -1,8 +1,9 @@
+import { getLayerDirectories } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 
 export function getResolvePaths(nuxt: Nuxt): string[] {
-  const layerDirs = (nuxt.options._layers || []).map(
-    layer => layer.cwd || layer.config?.rootDir,
+  const layerDirs = getLayerDirectories(nuxt).map(
+    dir => dir.root,
   )
 
   return Array.from(

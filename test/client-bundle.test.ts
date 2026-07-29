@@ -27,9 +27,13 @@ function installCollection(dir: string, prefix: string, icon: string) {
   }))
 }
 
-function createContext(rootDir: string, workspaceDir: string, icons: string[], hookIcons: string[] = []) {
+function createContext(rootDir: string, workspaceDir: string, icons: string[], hookIcons: string[] = [], layerDirs: string[] = []) {
   const nuxt = {
-    options: { rootDir, workspaceDir },
+    options: {
+      rootDir,
+      workspaceDir,
+      _layers: [{ cwd: rootDir, config: { rootDir } }, ...layerDirs.map(dir => ({ cwd: dir, config: { rootDir: dir } }))],
+    },
     // Mimic a module contributing icons through the `icon:clientBundleIcons` hook
     callHook: async (_name: string, set: Set<string>) => {
       for (const icon of hookIcons)
@@ -48,11 +52,13 @@ let root: string
 const appDir = () => join(root, 'app')
 const wsDir = () => join(root, 'ws')
 const emptyDir = () => join(root, 'empty')
+const layerDir = () => join(root, 'layer')
 
 beforeAll(() => {
   root = mkdtempSync(join(tmpdir(), 'nuxt-icon-client-bundle-'))
   installCollection(appDir(), 'nuxt-icon-test', 'foo')
   installCollection(wsDir(), 'nuxt-icon-test-ws', 'bar')
+  installCollection(layerDir(), 'nuxt-icon-test-layer', 'baz')
   mkdirSync(emptyDir(), { recursive: true })
 })
 
@@ -78,6 +84,16 @@ it('falls back to workspaceDir when the collection is not under rootDir', async 
   expect(result.failed).toEqual([])
   expect(result.count).toBe(1)
   expect(result.collections.find(c => c.prefix === 'nuxt-icon-test-ws')?.icons.bar).toBeTruthy()
+})
+
+it('resolves a collection installed by a layer rather than the app', async () => {
+  // The layer owns the dependency, so it resolves from neither `rootDir` nor `workspaceDir`.
+  const context = createContext(emptyDir(), emptyDir(), ['nuxt-icon-test-layer:baz'], [], [layerDir()])
+  const result = await context.loadClientBundleCollections()
+
+  expect(result.failed).toEqual([])
+  expect(result.count).toBe(1)
+  expect(result.collections.find(c => c.prefix === 'nuxt-icon-test-layer')?.icons.baz).toBeTruthy()
 })
 
 it('does not hard-fail when a hook-contributed icon cannot be resolved', async () => {

@@ -1,7 +1,9 @@
+import { relative } from 'node:path'
 import { addTemplate } from '@nuxt/kit'
+import { resolveModule } from 'local-pkg'
 import type { NuxtIconRuntimeOptions } from './types'
 import { getResolvePaths } from './collections'
-import { getCollectionPath } from './core/collections'
+import { getCollectionPath, resolveCollectionFile } from './core/collections'
 import type { NuxtIconModuleContext } from './context'
 
 export function registerServerBundle(
@@ -49,13 +51,26 @@ export function registerServerBundle(
             return `  '${collection}': createRemoteCollection(${JSON.stringify(getRemoteEndpoint(collection))}),`
           }
 
-          const path = getCollectionPath(collection, getResolvePaths(nuxt))
+          const resolvePaths = getResolvePaths(nuxt)
+          const path = getCollectionPath(collection, resolvePaths)
 
-          // When in dev mode, we avoid bundling the icons to improve performance
-          // Get rid of the require() when ESM JSON modules are widely supported
-          return isBundling
-            ? `  '${collection}': () => import('${path}', { with: { type: 'json' } }).then(m => m.default),`
-            : `  '${collection}': () => require('${path}'),`
+          if (!isBundling) {
+            // When in dev mode, we avoid bundling the icons to improve performance
+            // Get rid of the require() when ESM JSON modules are widely supported
+            return `  '${collection}': () => require('${path}'),`
+          }
+
+          // A collection owned by a layer does not resolve from the app, so the bare specifier above
+          // reaches the build unresolved and throws at runtime. Import the resolved file instead
+          const file = resolveModule(path, { paths: [nuxt.options.rootDir] })
+            ? undefined
+            : resolveCollectionFile(collection, resolvePaths)
+          if (file) {
+            const relPath = relative(nuxt.options.buildDir, file).replaceAll('\\', '/')
+            return `  '${collection}': () => import('${relPath.startsWith('.') ? relPath : `./${relPath}`}').then(m => m.default),`
+          }
+
+          return `  '${collection}': () => import('${path}', { with: { type: 'json' } }).then(m => m.default),`
         }
         else {
           const { prefix } = collection

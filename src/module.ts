@@ -92,10 +92,12 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
       filePath: await resolver.resolvePath('./runtime/components/index'),
     })
-    addServerHandler({
-      route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,
-      handler: resolver.resolve('./runtime/server/api'),
-    })
+    if (options.provider === 'server') {
+      addServerHandler({
+        route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,
+        handler: resolver.resolve('./runtime/server/api'),
+      })
+    }
 
     await setupCustomCollectionsWatcher(options, nuxt, ctx)
 

@@ -156,6 +156,14 @@ export default defineNuxtModule<ModuleOptions>({
             return { id, external: true }
           }
         },
+        // Rollup 4 re-prints the import attributes of external modules with the `assert`
+        // key (`output.importAttributesKey`, switching to `with` only in Rollup 5), and
+        // Node.js removed `assert` in v22 — the icon API then fails at runtime with
+        // `ERR_IMPORT_ATTRIBUTE_MISSING`. Keep the key the generated code already uses.
+        outputOptions(options: { importAttributesKey?: 'assert' | 'with' }) {
+          options.importAttributesKey ||= 'with'
+          return options
+        },
       })
     })
 

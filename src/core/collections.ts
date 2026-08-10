@@ -4,7 +4,7 @@ import { consola } from 'consola'
 import { glob } from 'tinyglobby'
 import type { IconifyIcon, IconifyJSON } from '@iconify/types'
 import { parseSVGContent, convertParsedSVG } from '@iconify/utils/lib/svg/parse'
-import { isPackageExists } from 'local-pkg'
+import { isPackageExists, resolveModule } from 'local-pkg'
 import { collectionNames } from '../collection-names'
 import type { CustomCollection, ServerBundleOptions, RemoteCollection } from './types'
 
@@ -31,6 +31,14 @@ export function getCollectionPath(collection: string, resolvePaths: string[]) {
   return hasFullCollection(resolvePaths)
     ? `@iconify/json/json/${collection}.json`
     : `@iconify-json/${collection}/icons.json`
+}
+
+/**
+ * The file a collection's specifier points at, searched across every resolve path.
+ * Returns `undefined` when the collection is not installed.
+ */
+export function resolveCollectionFile(collection: string, resolvePaths: string[]): string | undefined {
+  return resolveModule(getCollectionPath(collection, resolvePaths), { paths: resolvePaths })
 }
 
 // https://github.com/iconify/iconify/blob/2274c033b49c01a50dc89b490b89d803d19d95dc/packages/utils/src/icon/name.ts#L15-L18

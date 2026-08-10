@@ -8,3 +8,6 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+update:
+  ignoreDeps:
+    - typescript@7

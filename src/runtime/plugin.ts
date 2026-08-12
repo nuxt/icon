@@ -1,18 +1,26 @@
 import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
-import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin, tryUseNuxtApp, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
   name: '@nuxt/icon',
   setup() {
     const configs = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
-    const $fetch = useRequestFetch()
+    const requestFetch = useRequestFetch()
+    const nativeFetch = (requestFetch as { native?: typeof globalThis.fetch }).native
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore type incompatible
-    _api.setFetch($fetch.native)
+    _api.setFetch((input, init) => {
+      const event = tryUseNuxtApp()?.ssrContext?.event as { fetch?: typeof globalThis.fetch } | undefined
+      const nitroFetch = (globalThis as typeof globalThis & {
+        $fetch?: { native?: typeof globalThis.fetch }
+      }).$fetch?.native
+
+      // Prefer request-aware fetch, but Nitro 2's useRequestFetch() has no `.native`.
+      // Its global native fetch keeps deferred relative requests local without retaining an event.
+      return (event?.fetch || nativeFetch || nitroFetch || globalThis.fetch)(input, init)
+    })
 
     const resources: string[] = []
     if (options.provider === 'server') {
@@ -33,7 +41,7 @@ export default defineNuxtPlugin({
 
     async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
       try {
-        const data = await $fetch(resources[0] + '/' + prefix + '.json', {
+        const data = await requestFetch(resources[0] + '/' + prefix + '.json', {
           query: {
             icons: icons.join(','),
           },

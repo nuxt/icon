@@ -31,6 +31,12 @@ async function waitForServer() {
 try {
   await waitForServer()
 
+  const page = await fetchWithTimeout(origin)
+  assert.equal(page.status, 200)
+  const pageHtml = await page.text()
+  assert.match(pageHtml, /class="iconify i-ph:acorn-bold"/)
+  assert.match(pageHtml, /data:image\/svg\+xml/)
+
   const bundled = await fetchWithTimeout(`${origin}/api/_nuxt_icon/ph.json?icons=acorn-bold`)
   assert.equal(bundled.status, 200)
   const bundledData = await bundled.json()

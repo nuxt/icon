@@ -1,7 +1,7 @@
 import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
-import { defineNuxtPlugin, tryUseNuxtApp, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
   name: '@nuxt/icon',
@@ -12,14 +12,10 @@ export default defineNuxtPlugin({
     const nativeFetch = (requestFetch as { native?: typeof globalThis.fetch }).native
 
     _api.setFetch((input, init) => {
-      const event = tryUseNuxtApp()?.ssrContext?.event as { fetch?: typeof globalThis.fetch } | undefined
       const nitroFetch = (globalThis as typeof globalThis & {
         $fetch?: { native?: typeof globalThis.fetch }
       }).$fetch?.native
-
-      // Prefer request-aware fetch, but Nitro 2's useRequestFetch() has no `.native`.
-      // Its global native fetch keeps deferred relative requests local without retaining an event.
-      return (event?.fetch || nativeFetch || nitroFetch || globalThis.fetch)(input, init)
+      return (nativeFetch || nitroFetch || globalThis.fetch)(input, init)
     })
 
     const resources: string[] = []

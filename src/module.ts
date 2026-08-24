@@ -10,7 +10,7 @@ import { unocssIntegration } from './integrations/unocss'
 import { registerServerBundle } from './bundle-server'
 import { registerClientBundle } from './bundle-client'
 import { NuxtIconModuleContext } from './context'
-import { getResolvePaths } from './collections'
+import { createCollectionDirResolver, getResolvePaths } from './collections'
 import { getCollectionPath } from './core/collections'
 
 export type { ModuleOptions, NuxtIconRuntimeOptions as RuntimeOptions }
@@ -205,7 +205,12 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
     return
 
   let viteDevServer: ViteDevServer
-  const collectionDirs = await Promise.all(options.customCollections.filter(x => 'dir' in x).map(x => nuxtResolvePath(x.dir)))
+  const resolveCollectionDir = createCollectionDirResolver(nuxt)
+  const collectionDirs = await Promise.all(
+    options.customCollections
+      .filter(x => 'dir' in x)
+      .map(x => nuxtResolvePath(x.dir, { cwd: resolveCollectionDir(x) })),
+  )
 
   if (options.clientBundle?.includeCustomCollections) {
     addVitePlugin({

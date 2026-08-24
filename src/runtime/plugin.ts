@@ -8,11 +8,15 @@ export default defineNuxtPlugin({
   setup() {
     const configs = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
-    const $fetch = useRequestFetch()
+    const requestFetch = useRequestFetch()
+    const nativeFetch = (requestFetch as { native?: typeof globalThis.fetch }).native
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore type incompatible
-    _api.setFetch($fetch.native)
+    _api.setFetch((input, init) => {
+      const nitroFetch = (globalThis as typeof globalThis & {
+        $fetch?: { native?: typeof globalThis.fetch }
+      }).$fetch?.native
+      return (nativeFetch || nitroFetch || globalThis.fetch)(input, init)
+    })
 
     const resources: string[] = []
     if (options.provider === 'server') {
@@ -33,7 +37,7 @@ export default defineNuxtPlugin({
 
     async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
       try {
-        const data = await $fetch(resources[0] + '/' + prefix + '.json', {
+        const data = await requestFetch(resources[0] + '/' + prefix + '.json', {
           query: {
             icons: icons.join(','),
           },

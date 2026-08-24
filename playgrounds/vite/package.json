@@ -15,6 +15,6 @@
     "@iconify-json/ph": "^1.2.2",
     "@iconify-json/uil": "^1.2.3",
     "@vitejs/plugin-vue": "^6.0.8",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

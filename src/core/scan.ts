@@ -79,5 +79,12 @@ export function createMatchRegex(
   collections: string[] | Set<string>,
 ) {
   const collectionsRegex = [...collections].sort((a, b) => b.length - a.length).join('|')
-  return new RegExp('\\b(?:i-)?(' + collectionsRegex + ')[:-]([a-z0-9-]+)\\b', 'g')
+  // `(?<![\w-])` / `(?![\w-])`: a reference never starts or ends in the middle of a
+  // longer identifier, so `source-map-js` is not `map:js` and `--gg-size` is not
+  // `gg:size`. `\b` alone let both through, because a `-` is a word boundary.
+  //
+  // The name follows Iconify's own icon name grammar, which has no leading,
+  // doubled or trailing `-`, so a name that cannot exist is never extracted:
+  // https://github.com/iconify/iconify/blob/2274c033b49c01a50dc89b490b89d803d19d95dc/packages/utils/src/icon/name.ts#L15-L18
+  return new RegExp('(?<![\\w-])(?:i-)?(' + collectionsRegex + ')[:-]([a-z0-9]+(?:-[a-z0-9]+)*)(?![\\w-])', 'g')
 }

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@iconify/vue": "^5.0.1",
-    "vue": "^3.5.41"
+    "vue": "^3.5.42"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.2.2",

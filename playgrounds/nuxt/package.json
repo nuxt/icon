@@ -12,9 +12,9 @@
     "nuxt": "^4.5.2"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^4.1.0",
-    "@vue/test-utils": "^2.4.11",
-    "playwright-core": "^1.62.1",
+    "@nuxt/test-utils": "^4.2.0",
+    "@vue/test-utils": "^2.5.0",
+    "playwright-core": "^1.63.0",
     "vitest": "^4.1.11"
   }
 }

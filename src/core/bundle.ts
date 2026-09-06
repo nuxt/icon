@@ -171,7 +171,9 @@ export async function resolveBundleIcons(options: ResolveBundleIconsOptions): Pr
 
   if (includeCustomCollections && customCollections.length) {
     for (const collection of customCollections) {
-      for (const name of Object.keys(collection.icons)) {
+      // An alias is a name users can render, so it belongs in the bundle too
+      const names = [...Object.keys(collection.icons), ...Object.keys(collection.aliases || {})]
+      for (const name of names) {
         const data = getIconData(collection, name)
         if (data) {
           addIcon(collection.prefix, name, data)

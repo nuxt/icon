@@ -1,7 +1,3 @@
-import { createResolver } from '@nuxt/kit'
-
-const { resolve } = createResolver(import.meta.url)
-
 export default defineNuxtConfig({
   app: {
     head: {
@@ -14,8 +10,9 @@ export default defineNuxtConfig({
   icon: {
     customCollections: [
       {
+        // Relative to this layer, not to the app extending it
         prefix: 'layer',
-        dir: resolve('./icons'),
+        dir: './icons',
       },
     ],
   },

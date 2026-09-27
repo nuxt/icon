@@ -472,7 +472,7 @@ export default defineNuxtConfig({
 ```
 
 - A string `provider: X` is the same as `{ server: X, client: X }`.
-- The server bundle and the local endpoint are enabled when at least one side uses `server`. This is decided at build time, so overriding `provider` in `app.config.ts` does not enable or disable them.
+- The local endpoint is enabled when at least one side uses `server`, and so is the server bundle unless `serverBundle` is `false`. This is decided at build time, so overriding `provider` in `app.config.ts` does not enable or disable them.
 - `provider` in `app.config.ts` is not validated: set both `server` and `client` there too. A side left out is taken from the module options when they also use the object form; otherwise it is treated as unset and falls back to the `iconify` provider.
 - Unless both sides use `server`, `clientBundle.includeCustomCollections` defaults to `true`, since the client bundle is also used during SSR.
 
@@ -551,7 +551,7 @@ export default defineNuxtConfig({
 })
 ```
 
-`includeCustomCollections` will include all the custom collections you have defined in `icon.customCollections` in the client bundle. It's disabled by default but will automatically enable when `ssr: false` is set.
+`includeCustomCollections` will include all the custom collections you have defined in `icon.customCollections` in the client bundle. It's disabled by default when both sides of `provider` use `server`, and enabled otherwise (e.g. when `ssr: false` is set).
 
 #### Scan Components
 

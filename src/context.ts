@@ -65,6 +65,9 @@ export class NuxtIconModuleContext {
     return this._serverBundle
   }
 
+  /**
+   * Resolve the server bundle options; the bundle is disabled unless at least one side of `provider` uses `server`.
+   */
   private async _resolveServerBundle(): Promise<ResolvedServerBundleOptions> {
     let serverBundle = this.options.serverBundle
     if (serverBundle === 'auto') {
@@ -146,6 +149,9 @@ export class NuxtIconModuleContext {
     )
   }
 
+  /**
+   * Resolve the icons for the client bundle, which is used both in the browser and during SSR.
+   */
   async loadClientBundleCollections(): Promise<ResolvedBundleIcons> {
     const iconProvider = this.options.provider
     // The client bundle is used during SSR too, so bundle custom collections unless both sides use the local server handler

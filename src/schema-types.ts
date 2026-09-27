@@ -102,10 +102,14 @@ export interface NuxtIconRuntimeOptions {
    *
    * `server` by default; `iconify` when `ssr: false`
    *
+   * Use `{ server, client }` to set a different provider for SSR and for the browser,
+   * e.g. `{ server: 'server', client: 'iconify' }`. A string is the same as setting both sides.
+   * Both `server` and `client` are required in the object form.
+   *
    *
    * @enum server,iconify,none
    */
-  provider: 'server' | 'iconify' | 'none' | undefined
+  provider: 'server' | 'iconify' | 'none' | { server: 'server' | 'iconify' | 'none', client: 'server' | 'iconify' | 'none' } | undefined
 
   /**
    * Iconify API Endpoint URL

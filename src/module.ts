@@ -12,6 +12,7 @@ import { registerClientBundle } from './bundle-client'
 import { NuxtIconModuleContext } from './context'
 import { getResolvePaths } from './collections'
 import { getCollectionPath } from './core/collections'
+import { normalizeProvider, usesLocalApi } from './runtime/provider'
 
 export type { ModuleOptions, NuxtIconRuntimeOptions as RuntimeOptions }
 
@@ -68,12 +69,11 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // Use `server` provider when SSR is disabled or generate mode
-    if (!options.provider) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      options.provider = (!nuxt.options.ssr || nuxt.options.nitro.static || (nuxt.options as any)._generate)
-        ? 'iconify'
-        : 'server'
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const defaultProvider = (!nuxt.options.ssr || nuxt.options.nitro.static || (nuxt.options as any)._generate)
+      ? 'iconify'
+      : 'server'
+    options.provider = normalizeProvider(options.provider, defaultProvider)
 
     // In some monorepo, `@iconify/vue` might be bundled twice which does not share the loaded data
     nuxt.options.vite ||= {}
@@ -92,7 +92,7 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
       filePath: await resolver.resolvePath('./runtime/components/index'),
     })
-    if (options.provider === 'server') {
+    if (usesLocalApi(options.provider)) {
       addServerHandler({
         route: `${options.localApiEndpoint || '/api/_nuxt_icon'}/:collection`,
         handler: resolver.resolve('./runtime/server/api'),

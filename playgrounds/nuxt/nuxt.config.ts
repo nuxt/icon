@@ -68,6 +68,7 @@ export default defineNuxtConfig({
     ],
     serverBundle: 'remote',
     // provider: 'none',
+    // provider: { server: 'server', client: 'iconify' },
     fallbackToApi: 'server-only',
     // serverBundle: {
     //   externalizeIconsJson: true,

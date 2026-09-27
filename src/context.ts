@@ -8,6 +8,7 @@ import { getResolvePaths } from './collections'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './core/collections'
 import { IconUsageScanner } from './core/scan'
 import { resolveBundleIcons, type ResolvedBundleIcons } from './core/bundle'
+import { getSideProvider, usesLocalApi } from './runtime/provider'
 
 const KEYWORDS_EDGE_TARGETS: string[] = [
   'edge',
@@ -84,7 +85,7 @@ export class NuxtIconModuleContext {
       logger.info(`Nuxt Icon server bundle mode is set to \`${serverBundle}\``)
     }
 
-    const resolved = (!serverBundle || this.options.provider !== 'server')
+    const resolved = (!serverBundle || !usesLocalApi(this.options.provider))
       ? { disabled: true }
       : typeof serverBundle === 'string'
         ? { remote: serverBundle === 'remote' }
@@ -146,8 +147,12 @@ export class NuxtIconModuleContext {
   }
 
   async loadClientBundleCollections(): Promise<ResolvedBundleIcons> {
+    const iconProvider = this.options.provider
+    // The client bundle is used during SSR too, so bundle custom collections unless both sides use the local server handler
+    const localApiOnly = getSideProvider(iconProvider, 'server') === 'server'
+      && getSideProvider(iconProvider, 'client') === 'server'
     const {
-      includeCustomCollections = this.options.provider !== 'server',
+      includeCustomCollections = !localApiOnly,
       scan = false,
     } = this.options.clientBundle || {}
 

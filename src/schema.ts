@@ -120,7 +120,6 @@ export const schema = {
         'e.g. `{ server: \'server\', client: \'iconify\' }`. A string is the same as setting both sides.',
         'Both `server` and `client` are required in the object form.',
       ].join('\n'),
-      enum: ['server', 'iconify', 'none'],
       tags: ['@studioIcon material-symbols:cloud'],
       type: '"server" | "iconify" | "none" | { server: "server" | "iconify" | "none", client: "server" | "iconify" | "none" } | undefined',
     },

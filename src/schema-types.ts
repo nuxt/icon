@@ -106,8 +106,6 @@ export interface NuxtIconRuntimeOptions {
    * e.g. `{ server: 'server', client: 'iconify' }`. A string is the same as setting both sides.
    * Both `server` and `client` are required in the object form.
    *
-   *
-   * @enum server,iconify,none
    */
   provider: 'server' | 'iconify' | 'none' | { server: 'server' | 'iconify' | 'none', client: 'server' | 'iconify' | 'none' } | undefined
 

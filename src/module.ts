@@ -207,7 +207,7 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
   let viteDevServer: ViteDevServer
   const collectionDirs = await Promise.all(options.customCollections.filter(x => 'dir' in x).map(x => nuxtResolvePath(x.dir)))
 
-  if (options.clientBundle?.includeCustomCollections) {
+  if (ctx.shouldIncludeCustomCollections()) {
     addVitePlugin({
       name: 'nuxt-icon/client-bundle-updater',
       apply: 'serve',

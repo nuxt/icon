@@ -150,15 +150,25 @@ export class NuxtIconModuleContext {
   }
 
   /**
+   * Whether custom collections are bundled into the client bundle: `clientBundle.includeCustomCollections`,
+   * or by default unless both sides of `provider` use the local server handler.
+   */
+  shouldIncludeCustomCollections(): boolean {
+    const explicit = this.options.clientBundle?.includeCustomCollections
+    if (explicit !== undefined)
+      return explicit
+    // The client bundle is used during SSR too, so bundle custom collections unless both sides use the local server handler
+    const iconProvider = this.options.provider
+    return !(getSideProvider(iconProvider, 'server') === 'server'
+      && getSideProvider(iconProvider, 'client') === 'server')
+  }
+
+  /**
    * Resolve the icons for the client bundle, which is used both in the browser and during SSR.
    */
   async loadClientBundleCollections(): Promise<ResolvedBundleIcons> {
-    const iconProvider = this.options.provider
-    // The client bundle is used during SSR too, so bundle custom collections unless both sides use the local server handler
-    const localApiOnly = getSideProvider(iconProvider, 'server') === 'server'
-      && getSideProvider(iconProvider, 'client') === 'server'
+    const includeCustomCollections = this.shouldIncludeCustomCollections()
     const {
-      includeCustomCollections = !localApiOnly,
       scan = false,
     } = this.options.clientBundle || {}
 

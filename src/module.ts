@@ -15,6 +15,7 @@ import { getCollectionPath } from './core/collections'
 import { normalizeProvider, usesLocalApi } from './runtime/provider'
 
 export type { ModuleOptions, NuxtIconRuntimeOptions as RuntimeOptions }
+export type { IconProvider } from './runtime/provider'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

@@ -1,5 +1,6 @@
 // This file is generated from scripts/schema.ts
 import type { IconifyIconCustomizeCallback } from './runtime/components/shared'
+import type { IconProvider } from './runtime/provider'
 
 export interface NuxtIconRuntimeOptions {
   /**
@@ -107,7 +108,7 @@ export interface NuxtIconRuntimeOptions {
    * Both `server` and `client` are required in the object form.
    *
    */
-  provider: 'server' | 'iconify' | 'none' | { server: 'server' | 'iconify' | 'none', client: 'server' | 'iconify' | 'none' } | undefined
+  provider: IconProvider | { server: IconProvider, client: IconProvider } | undefined
 
   /**
    * Iconify API Endpoint URL

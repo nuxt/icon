@@ -121,7 +121,7 @@ export const schema = {
         'Both `server` and `client` are required in the object form.',
       ].join('\n'),
       tags: ['@studioIcon material-symbols:cloud'],
-      type: '"server" | "iconify" | "none" | { server: "server" | "iconify" | "none", client: "server" | "iconify" | "none" } | undefined',
+      type: 'IconProvider | { server: IconProvider, client: IconProvider } | undefined',
     },
   },
   iconifyApiEndpoint: {

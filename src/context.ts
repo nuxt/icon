@@ -8,6 +8,7 @@ import { getResolvePaths } from './collections'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './core/collections'
 import { IconUsageScanner } from './core/scan'
 import { resolveBundleIcons, type ResolvedBundleIcons } from './core/bundle'
+import { getSideProvider, usesLocalApi } from './runtime/provider'
 
 const KEYWORDS_EDGE_TARGETS: string[] = [
   'edge',
@@ -64,6 +65,9 @@ export class NuxtIconModuleContext {
     return this._serverBundle
   }
 
+  /**
+   * Resolve the server bundle options; the bundle is disabled unless at least one side of `provider` uses `server`.
+   */
   private async _resolveServerBundle(): Promise<ResolvedServerBundleOptions> {
     let serverBundle = this.options.serverBundle
     if (serverBundle === 'auto') {
@@ -84,7 +88,7 @@ export class NuxtIconModuleContext {
       logger.info(`Nuxt Icon server bundle mode is set to \`${serverBundle}\``)
     }
 
-    const resolved = (!serverBundle || this.options.provider !== 'server')
+    const resolved = (!serverBundle || !usesLocalApi(this.options.provider))
       ? { disabled: true }
       : typeof serverBundle === 'string'
         ? { remote: serverBundle === 'remote' }
@@ -145,9 +149,26 @@ export class NuxtIconModuleContext {
     )
   }
 
+  /**
+   * Whether custom collections are bundled into the client bundle: `clientBundle.includeCustomCollections`,
+   * or by default unless both sides of `provider` use the local server handler.
+   */
+  shouldIncludeCustomCollections(): boolean {
+    const explicit = this.options.clientBundle?.includeCustomCollections
+    if (explicit !== undefined)
+      return explicit
+    // The client bundle is used during SSR too, so bundle custom collections unless both sides use the local server handler
+    const iconProvider = this.options.provider
+    return !(getSideProvider(iconProvider, 'server') === 'server'
+      && getSideProvider(iconProvider, 'client') === 'server')
+  }
+
+  /**
+   * Resolve the icons for the client bundle, which is used both in the browser and during SSR.
+   */
   async loadClientBundleCollections(): Promise<ResolvedBundleIcons> {
+    const includeCustomCollections = this.shouldIncludeCustomCollections()
     const {
-      includeCustomCollections = this.options.provider !== 'server',
       scan = false,
     } = this.options.clientBundle || {}
 

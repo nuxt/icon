@@ -451,6 +451,31 @@ export default defineNuxtConfig({
 
 This will make requests to Iconify API every time the client requests an icon. We do not recommend doing so unless the other options are not feasible.
 
+#### Separate Server and Client Providers
+
+`provider` can also be set separately for SSR and for the browser.
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon'
+  ],
+  icon: {
+    // SSR uses the server bundle through the local endpoint, the browser fetches from the Iconify API directly
+    provider: { server: 'server', client: 'iconify' },
+    iconifyApiEndpoint: 'https://icons.example.com',
+    serverBundle: {
+      collections: ['ph', 'lucide'],
+    },
+  },
+})
+```
+
+- A string `provider: X` is the same as `{ server: X, client: X }`.
+- The local endpoint is enabled when at least one side uses `server`, and so is the server bundle unless `serverBundle` is `false`. This is decided at build time, so overriding `provider` in `app.config.ts` does not enable or disable them.
+- `provider` in `app.config.ts` is not validated: set both `server` and `client` there too. A side left out is taken from the module options when they also use the object form; otherwise it is treated as unset and falls back to the `iconify` provider.
+- Unless both sides use `server`, `clientBundle.includeCustomCollections` defaults to `true`, since the client bundle is also used during SSR.
+
 ### Client Bundle
 
 For icons that you know you are going to use frequently, you can bundle them with your client bundle to avoid network requests.
@@ -526,7 +551,7 @@ export default defineNuxtConfig({
 })
 ```
 
-`includeCustomCollections` will include all the custom collections you have defined in `icon.customCollections` in the client bundle. It's disabled by default but will automatically enable when `ssr: false` is set.
+`includeCustomCollections` will include all the custom collections you have defined in `icon.customCollections` in the client bundle. It's disabled by default when both sides of `provider` use `server`, and enabled otherwise (e.g. when `ssr: false` is set).
 
 #### Scan Components
 

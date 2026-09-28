@@ -1,6 +1,7 @@
 import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
+import { getSideProvider } from './provider'
 import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
@@ -18,8 +19,10 @@ export default defineNuxtPlugin({
       return (nativeFetch || nitroFetch || globalThis.fetch)(input, init)
     })
 
+    const provider = getSideProvider(options.provider, import.meta.server ? 'server' : 'client')
+
     const resources: string[] = []
-    if (options.provider === 'server') {
+    if (provider === 'server') {
       const baseURL = configs.app?.baseURL?.replace(/\/$/, '') ?? ''
 
       resources.push(baseURL + (options.localApiEndpoint || '/api/_nuxt_icon'))
@@ -27,7 +30,7 @@ export default defineNuxtPlugin({
         resources.push(options.iconifyApiEndpoint!)
       }
     }
-    else if (options.provider === 'none') {
+    else if (provider === 'none') {
       // Provide a no-op fetch function to prevent Iconify from fetching icons
       _api.setFetch(() => Promise.resolve(new Response()))
     }

@@ -71,6 +71,8 @@ export default defineCachedHandler(async (event: H3Event) => {
 }, {
   group: 'nuxt',
   name: 'icon',
+  // @ts-expect-error Nitro 3 API
+  allowQuery: ['icons'],
   getKey(event: H3Event) {
     const collection = event.context.params?.collection?.replace(/\.json$/, '') || 'unknown'
     const icons = String(parseQuery(parsePath(event.path).search).icons || '').split(',')

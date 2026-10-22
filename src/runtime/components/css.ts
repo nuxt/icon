@@ -108,8 +108,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
 
     const selector = computed(() => '.' + escapeCssSelector(cssClass.value))
 
-    function getCSS(icon: IconifyIcon, withLayer = true) {
-      let iconSelector = selector.value
+    function getCSS(icon: IconifyIcon, withLayer = true, iconSelector = selector.value) {
       if (options.cssWherePseudo) {
         iconSelector = `:where(${iconSelector})`
       }
@@ -128,39 +127,42 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
     if (import.meta.client) {
       const selectors = getAllSelectors()
 
-      async function mountCSS(icon: IconifyIcon) {
-        if (selectors.has(selector.value))
+      // Takes the name and selector the icon was requested for: the name can
+      // change while the icon loads, and the rule must not go to the new name.
+      async function mountCSS(icon: IconifyIcon, name: string, iconSelector: string) {
+        if (selectors.has(iconSelector))
           return
         if (typeof document === 'undefined')
           return
         const style = document.createElement('style')
-        style.textContent = getCSS(icon)
+        style.textContent = getCSS(icon, true, iconSelector)
         if (import.meta.dev) {
-          style.dataset.nuxtIconDev = props.name
+          style.dataset.nuxtIconDev = name
         }
         const firstStyle = document.head.querySelector('style, link[rel="stylesheet"]')
         if (firstStyle)
           document.head.insertBefore(style, firstStyle)
         else
           document.head.appendChild(style)
-        selectors.add(selector.value)
+        selectors.add(iconSelector)
       }
 
       watch(
         () => props.name,
-        () => {
-          if (selectors.has(selector.value)) {
+        (name) => {
+          const iconSelector = selector.value
+          if (selectors.has(iconSelector)) {
             return
           }
-          const data = getIcon(props.name)
+          const data = getIcon(name)
           if (data) {
-            mountCSS(data)
+            mountCSS(data, name, iconSelector)
           }
           else {
-            loadIcon(props.name, import.meta.server ? options.fetchTimeout : -1)
+            loadIcon(name, import.meta.server ? options.fetchTimeout : -1)
               .then((data) => {
                 if (data)
-                  mountCSS(data)
+                  mountCSS(data, name, iconSelector)
               })
               .catch(() => null)
           }

@@ -241,7 +241,7 @@ importers:
         version: 4.5.2
       '@nuxt/test-utils':
         specifier: ^4.1.0
-        version: 4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@20.11.6)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))
+        version: 4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@21.0.4)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -261,8 +261,8 @@ importers:
         specifier: ^10.9.0
         version: 10.9.0(jiti@2.7.0)(supports-color@10.2.2)
       happy-dom:
-        specifier: ^20.11.6
-        version: 20.11.6
+        specifier: ^21.0.4
+        version: 21.0.4
       nuxt:
         specifier: ^4.5.2
         version: 4.5.2(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7(supports-color@10.2.2)))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7(supports-color@10.2.2)))(@oxc-project/types@0.155.0)(@parcel/watcher@2.5.6)(@types/node@26.2.0)(@vue/compiler-sfc@3.5.44)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.1)(eslint@10.9.0(jiti@2.7.0)(supports-color@10.2.2))(ioredis@5.11.1(supports-color@10.2.2))(lightningcss@1.33.0)(magicast@0.5.4)(optionator@0.9.4)(oxc-parser@0.131.0)(rolldown@1.2.15)(rollup-plugin-visualizer@7.0.1(rolldown@1.2.15)(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.22)(supports-color@10.2.2)(terser@5.48.0)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vue-tsc@3.3.11(typescript@6.0.3))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))(yaml@2.9.0)
@@ -290,7 +290,7 @@ importers:
     devDependencies:
       '@nuxt/test-utils':
         specifier: ^4.1.0
-        version: 4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@20.11.6)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))
+        version: 4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@21.0.4)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))
       '@vue/test-utils':
         specifier: ^2.4.11
         version: 2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3))
@@ -299,7 +299,7 @@ importers:
         version: 1.62.1
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
 
   playgrounds/nuxt5:
     dependencies:
@@ -3627,8 +3627,8 @@ packages:
       ocache:
         optional: true
 
-  happy-dom@20.11.6:
-    resolution: {integrity: sha512-Hldbg8AdAa5a5oDcZpjqnGitp7JB0hqWmfv/8qr+kft4vzSD8BHsbdRfzYvL/0QcbKcURC/yyoygbeDQarPvYg==}
+  happy-dom@21.0.4:
+    resolution: {integrity: sha512-tFm+GaLBgo6o0awHnvHaNoraVo27qJ+2tZEtZ+cIa08hXbeitrxAJajLI05hsUy/2/YTKcUjQYzHe5mCcraLBw==}
     engines: {node: '>=20.0.0'}
 
   has-flag@4.0.0:
@@ -7335,7 +7335,7 @@ snapshots:
       rc9: 3.1.0
       std-env: 4.3.0
 
-  '@nuxt/test-utils@4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@20.11.6)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))':
+  '@nuxt/test-utils@4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@21.0.4)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))':
     dependencies:
       '@clack/prompts': 1.7.0
       '@nuxt/devtools-kit': 2.7.0(magicast@0.5.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
@@ -7367,9 +7367,9 @@ snapshots:
       vue: 3.5.44(typescript@6.0.3)
     optionalDependencies:
       '@vue/test-utils': 2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3))
-      happy-dom: 20.11.6
+      happy-dom: 21.0.4
       playwright-core: 1.62.1
-      vitest: 4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@farmfe/core'
       - '@rsbuild/core'
@@ -9967,7 +9967,7 @@ snapshots:
       crossws: 0.4.15(srvx@1.0.6)
       ocache: 0.3.1
 
-  happy-dom@20.11.6:
+  happy-dom@21.0.4:
     dependencies:
       '@types/node': 26.2.0
       '@types/whatwg-mimetype': 3.0.2
@@ -12641,9 +12641,9 @@ snapshots:
 
   vitest-environment-nuxt@2.0.0:
     dependencies:
-      '@nuxt/test-utils': 4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@20.11.6)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))
+      '@nuxt/test-utils': 4.1.0(@vue/test-utils@2.4.11(@vue/compiler-dom@3.5.44)(@vue/server-renderer@3.5.44)(vue@3.5.44(typescript@6.0.3)))(esbuild@0.28.1)(happy-dom@21.0.4)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.15)(rollup@4.62.2)(typescript@6.0.3)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vitest@4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)))(webpack@5.108.1(cssnano@8.0.2(postcss@8.5.31))(csso@5.0.5)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.31))
 
-  vitest@4.1.11(@types/node@26.2.0)(happy-dom@20.11.6)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitest@4.1.11(@types/node@26.2.0)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.11
       '@vitest/mocker': 4.1.11(vite@8.3.5(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
@@ -12667,7 +12667,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 26.2.0
-      happy-dom: 20.11.6
+      happy-dom: 21.0.4
     transitivePeerDependencies:
       - msw
 

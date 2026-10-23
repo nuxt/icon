@@ -80,7 +80,7 @@
     "bumpp": "^12.2.1",
     "changelogen": "^0.6.2",
     "eslint": "^10.9.0",
-    "happy-dom": "^20.11.6",
+    "happy-dom": "^21.0.4",
     "nuxt": "^4.5.2",
     "prettier": "^3.9.6",
     "typescript": "~6.0.3",

@@ -116,6 +116,34 @@ it('bundles whole custom collections when includeCustomCollections is set', asyn
   expect(result.collections.find(c => c.prefix === 'custom')?.icons.baz).toBeTruthy()
 })
 
+it('bundles the aliases of a custom collection', async () => {
+  // The server bundle serves aliases (it ships the whole collection JSON), and
+  // an explicitly requested alias resolves here too, so the whole-collection
+  // path must not be the only one that drops them.
+  const result = await resolveBundleIcons({
+    customCollections: [{
+      prefix: 'custom-aliases',
+      icons: {
+        home: { body: '<path d="M0 0h24v24H0z"/>' },
+      },
+      aliases: {
+        'house': { parent: 'home' },
+        'home-flip': { parent: 'home', hFlip: true },
+      },
+      width: 24,
+      height: 24,
+    }],
+    includeCustomCollections: true,
+    resolvePaths: [root],
+  })
+
+  const collection = result.collections.find(c => c.prefix === 'custom-aliases')
+  expect(Object.keys(collection?.icons || {})).toEqual(['home', 'home-flip', 'house'])
+  expect(collection?.icons.house?.body).toBe('<path d="M0 0h24v24H0z"/>')
+  expect(collection?.icons['home-flip']?.hFlip).toBe(true)
+  expect(result.count).toBe(3)
+})
+
 it('resolves icons from custom collections before installed packages', async () => {
   // `@iconify-json/test-conflict` is installed with a different `baz` body
   // (see `beforeAll`), so this proves the custom collection takes precedence

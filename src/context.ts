@@ -104,7 +104,7 @@ export class NuxtIconModuleContext {
         ? collectionNames
         : await discoverInstalledCollections(getResolvePaths(this.nuxt))
 
-    const resolveCollectionDir = createCollectionDirResolver(this.nuxt)
+    const resolveCollectionDir = createCollectionDirResolver(this.nuxt, 'serverBundle')
     const collections = await Promise.all(
       (resolved.collections || [])
         .map(c => resolveCollection(c, resolveCollectionDir(c))),
@@ -140,7 +140,7 @@ export class NuxtIconModuleContext {
   }
 
   private async _loadCustomCollection(): Promise<IconifyJSON[]> {
-    const resolveCollectionDir = createCollectionDirResolver(this.nuxt)
+    const resolveCollectionDir = createCollectionDirResolver(this.nuxt, 'customCollections')
     return Promise.all(
       (this.options.customCollections || [])
         .map(collection => loadCustomCollection(collection, resolveCollectionDir(collection))),

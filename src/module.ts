@@ -205,7 +205,7 @@ async function setupCustomCollectionsWatcher(options: ModuleOptions, nuxt: Nuxt,
     return
 
   let viteDevServer: ViteDevServer
-  const resolveCollectionDir = createCollectionDirResolver(nuxt)
+  const resolveCollectionDir = createCollectionDirResolver(nuxt, 'customCollections')
   const collectionDirs = await Promise.all(
     options.customCollections
       .filter(x => 'dir' in x)

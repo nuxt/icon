@@ -15,6 +15,7 @@ function writeIcon(dir: string, name: string) {
 interface Layer {
   cwd: string
   customCollections?: CustomCollection[]
+  serverBundleCollections?: CustomCollection[]
 }
 
 // Nuxt clones layer configs when merging them into `nuxt.options`, so the
@@ -29,9 +30,12 @@ function createContext(rootDir: string, layers: Layer[], collections: CustomColl
       nitro: {},
       _layers: layers.map(layer => ({
         cwd: layer.cwd,
-        config: layer.customCollections
-          ? { icon: { customCollections: structuredClone(layer.customCollections) } }
-          : {},
+        config: {
+          icon: structuredClone({
+            customCollections: layer.customCollections,
+            serverBundle: { collections: layer.serverBundleCollections },
+          }),
+        },
       })),
     },
   }
@@ -116,6 +120,22 @@ it('gives each layer its own directory when two layers declare the same collecti
   const loaded = await context.loadCustomCollection()
 
   expect(loaded.map(c => Object.keys(c.icons))).toEqual([['app-only'], ['logo']])
+})
+
+it('does not match a layer collection against a server bundle declaration from another layer', async () => {
+  const collection: CustomCollection = { prefix: 'icons', dir: './app/assets/icons' }
+  const context = createContext(
+    appDir(),
+    [
+      { cwd: appDir(), serverBundleCollections: [collection] },
+      { cwd: layerDir(), customCollections: [collection] },
+    ],
+    [collection],
+  )
+
+  const [loaded] = await context.loadCustomCollection()
+
+  expect(Object.keys(loaded!.icons)).toEqual(['logo'])
 })
 
 it('leaves an absolute `dir` alone', async () => {

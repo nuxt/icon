@@ -34,18 +34,24 @@ type ConfiguredCollection = string | IconifyJSON | CustomCollection | RemoteColl
  * no match (a collection pushed by another module, for instance) keeps
  * resolving from `rootDir`, as before.
  *
+ * Only declarations from `source` are matched, so a `customCollections` entry
+ * cannot consume a `serverBundle.collections` entry with the same `prefix` and
+ * `dir` declared by another layer.
+ *
  * The returned function consumes its matches, so build a new one per pass.
  */
-export function createCollectionDirResolver(nuxt: Nuxt): (collection: ConfiguredCollection) => string {
+export function createCollectionDirResolver(
+  nuxt: Nuxt,
+  source: 'customCollections' | 'serverBundle',
+): (collection: ConfiguredCollection) => string {
   const declared: { prefix: string, dir: string, cwd: string }[] = []
 
   for (const layer of nuxt.options._layers) {
     const icon = (layer.config as { icon?: ModuleOptions }).icon
     const serverBundle = icon?.serverBundle
-    const collections: ConfiguredCollection[] = [
-      ...icon?.customCollections || [],
-      ...(typeof serverBundle === 'object' && serverBundle?.collections) || [],
-    ]
+    const collections: ConfiguredCollection[] = (source === 'customCollections'
+      ? icon?.customCollections
+      : typeof serverBundle === 'object' && serverBundle?.collections) || []
     for (const collection of collections) {
       if (typeof collection !== 'string' && 'dir' in collection)
         declared.push({ prefix: collection.prefix, dir: collection.dir, cwd: layer.cwd })

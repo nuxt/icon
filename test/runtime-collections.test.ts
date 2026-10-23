@@ -9,6 +9,7 @@ function createContext(options: Partial<ModuleOptions>) {
   const nuxt = {
     options: {
       rootDir: '/root',
+      _layers: [],
       nitro: {},
       dev: false,
     },
@@ -42,8 +43,9 @@ it('does not add a remote endpoint for a custom collection', async () => {
     serverBundle: 'remote',
     customCollections: [customCollection],
   })
-  // `module.ts` fills `appConfig.icon.collections` from this before the server bundle resolves
-  ctx.getRuntimeCollections(runtimeOptions)
+  // `module.ts` fills `appConfig.icon.collections` from this before the server bundle resolves.
+  // `fallbackToApi: false` exercises the `serverBundle: 'remote'` branch, which the first test does not cover
+  ctx.getRuntimeCollections({ fallbackToApi: false } as NuxtIconRuntimeOptions)
 
   const { collections } = await ctx.resolveServerBundle()
   const entries = collections.filter(c => (typeof c === 'string' ? c : c.prefix) === 'my-icons')

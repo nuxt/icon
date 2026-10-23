@@ -79,7 +79,7 @@ export interface ClientBundleOptions {
   /**
    * Bundle all custom collections into client-side
    *
-   * Default to true when `provider` is not set to `server`
+   * Default to true when at least one side of `provider` is not set to `server`
    */
   includeCustomCollections?: boolean
   /**

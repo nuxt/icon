@@ -26,10 +26,12 @@ export class NuxtIconModuleContext {
   public scanner: IconUsageScanner | undefined
 
   getRuntimeCollections(runtimeOptions: NuxtIconRuntimeOptions): string[] {
+    // Copy: the custom prefixes below are appended in place, and `collectionNames`
+    // is a module-level constant shared with every other consumer in the process
     const resolved = runtimeOptions.fallbackToApi
-      ? collectionNames
+      ? [...collectionNames]
       : typeof this.options.serverBundle === 'string'
-        ? collectionNames
+        ? [...collectionNames]
         : this.options.serverBundle
           ? this.options.serverBundle.collections
             ?.map(c => typeof c === 'string' ? c : c.prefix) || []

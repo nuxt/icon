@@ -40,8 +40,6 @@
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playgrounds/nuxt",
     "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
-    "prepublishOnly": "pnpm lint",
-    "release": "bumpp",
     "test:playground": "pnpm -C playgrounds/nuxt run test",
     "test:unit": "vitest",
     "test": "pnpm run test:unit --run && pnpm run test:playground --run && pnpm run play:build && nuxi build test/fixtures/nuxt4-compat5 && pnpm -C playgrounds/nuxt5 run test"
@@ -77,7 +75,6 @@
     "@types/node": "^26.6.5",
     "@types/picomatch": "^4.0.3",
     "@unocss/nuxt": "^66.11.0",
-    "bumpp": "^12.3.0",
     "changelogen": "^0.6.2",
     "eslint": "^10.13.0",
     "happy-dom": "^21.0.4",

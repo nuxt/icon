@@ -7,6 +7,7 @@ import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../..
 import type { IconifyIconCustomizeCallback } from './shared'
 import { hash } from 'ohash'
 import { loadIcon, resolveCustomizeFn } from './shared'
+import { insertIconStyle } from './style-order'
 import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, onServerPrefetch } from '#imports'
 
 // This should only be used in the client side
@@ -139,11 +140,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
         if (import.meta.dev) {
           style.dataset.nuxtIconDev = name
         }
-        const firstStyle = document.head.querySelector('style, link[rel="stylesheet"]')
-        if (firstStyle)
-          document.head.insertBefore(style, firstStyle)
-        else
-          document.head.appendChild(style)
+        insertIconStyle(style, document.head, options.cssLayer)
         selectors.add(iconSelector)
       }
 

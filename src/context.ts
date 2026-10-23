@@ -4,7 +4,7 @@ import { provider } from 'std-env'
 import { logger } from '@nuxt/kit'
 import { collectionNames } from './collection-names'
 import type { ModuleOptions, NuxtIconRuntimeOptions, ResolvedServerBundleOptions } from './types'
-import { getResolvePaths } from './collections'
+import { createCollectionDirResolver, getResolvePaths } from './collections'
 import { discoverInstalledCollections, loadCustomCollection, resolveCollection } from './core/collections'
 import { IconUsageScanner } from './core/scan'
 import { resolveBundleIcons, type ResolvedBundleIcons } from './core/bundle'
@@ -26,10 +26,12 @@ export class NuxtIconModuleContext {
   public scanner: IconUsageScanner | undefined
 
   getRuntimeCollections(runtimeOptions: NuxtIconRuntimeOptions): string[] {
+    // Copy: the custom prefixes below are appended in place, and `collectionNames`
+    // is a module-level constant shared with every other consumer in the process
     const resolved = runtimeOptions.fallbackToApi
-      ? collectionNames
+      ? [...collectionNames]
       : typeof this.options.serverBundle === 'string'
-        ? collectionNames
+        ? [...collectionNames]
         : this.options.serverBundle
           ? this.options.serverBundle.collections
             ?.map(c => typeof c === 'string' ? c : c.prefix) || []
@@ -104,9 +106,10 @@ export class NuxtIconModuleContext {
         ? collectionNames
         : await discoverInstalledCollections(getResolvePaths(this.nuxt))
 
+    const resolveCollectionDir = createCollectionDirResolver(this.nuxt, 'serverBundle')
     const collections = await Promise.all(
       (resolved.collections || [])
-        .map(c => resolveCollection(c, this.nuxt.options.rootDir)),
+        .map(c => resolveCollection(c, resolveCollectionDir(c))),
     )
 
     return {
@@ -139,9 +142,10 @@ export class NuxtIconModuleContext {
   }
 
   private async _loadCustomCollection(): Promise<IconifyJSON[]> {
+    const resolveCollectionDir = createCollectionDirResolver(this.nuxt, 'customCollections')
     return Promise.all(
       (this.options.customCollections || [])
-        .map(collection => loadCustomCollection(collection, this.nuxt.options.rootDir)),
+        .map(collection => loadCustomCollection(collection, resolveCollectionDir(collection))),
     )
   }
 

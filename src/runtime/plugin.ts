@@ -1,7 +1,6 @@
 import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
-import { loadCustomIconsChunked } from './custom-icon-loader'
 import { getSideProvider } from './provider'
 import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
@@ -39,22 +38,47 @@ export default defineNuxtPlugin({
       resources.push(options.iconifyApiEndpoint!)
     }
 
-    async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
+    async function loadCustomIconsChunk(icons: string[], prefix: string): Promise<IconifyJSON | null> {
       try {
-        return await loadCustomIconsChunked(
-          icons,
-          prefix,
-          names => requestFetch(resources[0] + '/' + prefix + '.json', {
-            query: {
-              icons: names.join(','),
-            },
-          }) as Promise<IconifyJSON>,
-        )
+        const data = await requestFetch(resources[0] + '/' + prefix + '.json', {
+          query: {
+            icons: icons.join(','),
+          },
+        }) as IconifyJSON
+        // Simple data validation
+        if (!data || data.prefix !== prefix || !data.icons)
+          throw new Error('Invalid data' + JSON.stringify(data))
+        return data as IconifyJSON
       }
       catch (e) {
         console.error('Failed to load custom icons', e)
         return null
       }
+    }
+
+    async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
+      // Split large lists into several requests to stay under URL length limits (431 / 414)
+      const chunks: string[][] = [[]]
+      let length = 0
+      for (const name of icons) {
+        if (length + name.length > 2000 && chunks.at(-1)!.length) {
+          chunks.push([])
+          length = 0
+        }
+        chunks.at(-1)!.push(name)
+        length += name.length + 1
+      }
+      const results = (await Promise.all(chunks.map(chunk => loadCustomIconsChunk(chunk, prefix))))
+        .filter((data): data is IconifyJSON => !!data)
+      if (!results.length)
+        return null
+      // Keep collection-level properties (width, height, ...) from the responses
+      return results.reduce((acc, data) => ({
+        ...acc,
+        ...data,
+        icons: { ...acc.icons, ...data.icons },
+        aliases: { ...acc.aliases, ...data.aliases },
+      }))
     }
 
     addAPIProvider('', { resources })

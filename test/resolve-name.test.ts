@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { getSortedCollections, resolveName } from '../src/runtime/components/resolve-name'
 
@@ -40,19 +40,25 @@ describe('resolveName', () => {
     expect(collections).toEqual(['simple', 'simple-icons', 'si'])
   })
 
-  it('picks up collections added after the first resolution', () => {
-    const collections = ['simple']
-    const options = createOptions(collections)
-    expect(resolveName('i-simple-icons-github', options)).toBe('simple:icons-github')
-    collections.push('simple-icons')
-    expect(resolveName('i-simple-icons-github', options)).toBe('simple-icons:github')
+  it('updates computed names when reactive collections change in place', () => {
+    const options = reactive(createOptions(['simple', 'foo']))
+    const first = computed(() => resolveName('i-simple-icons-github', options))
+    const second = computed(() => resolveName('i-simple-icons-github', options))
+    expect(first.value).toBe('simple:icons-github')
+    expect(second.value).toBe('simple:icons-github')
+
+    options.collections![1] = 'simple-icons'
+    expect(first.value).toBe('simple-icons:github')
+    expect(second.value).toBe('simple-icons:github')
   })
 
-  it('picks up reactive collections replaced in place', () => {
-    const options = reactive(createOptions(['simple', 'foo']))
-    expect(resolveName('i-simple-icons-github', options)).toBe('simple:icons-github')
-    options.collections![1] = 'simple-icons'
-    expect(resolveName('i-simple-icons-github', options)).toBe('simple-icons:github')
+  it('updates computed names when reactive collections grow', () => {
+    const options = reactive(createOptions(['simple']))
+    const name = computed(() => resolveName('i-simple-icons-github', options))
+    expect(name.value).toBe('simple:icons-github')
+
+    options.collections!.push('simple-icons')
+    expect(name.value).toBe('simple-icons:github')
   })
 })
 

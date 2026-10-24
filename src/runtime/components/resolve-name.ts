@@ -1,31 +1,22 @@
-import { toRaw } from 'vue'
+import { computed, toRaw } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 
 const HYPHEN = 45
 
-const sortedCollectionsCache = new WeakMap<string[], { source: string[], sorted: string[] }>()
-
-function isSameList(a: string[], b: string[]) {
-  if (a.length !== b.length)
-    return false
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i])
-      return false
-  }
-  return true
-}
+const sortedCollectionsCache = new WeakMap<string[], { readonly value: string[] }>()
 
 export function getSortedCollections(collections: string[] | null | undefined): string[] {
   if (!collections)
     return []
-  const source = toRaw(collections)
-  const cached = sortedCollectionsCache.get(source)
-  // App config is cloned per request on the server, but updated in place on the client (HMR, `updateAppConfig`)
-  if (cached && (import.meta.client ? isSameList(cached.source, source) : cached.source.length === source.length))
-    return cached.sorted
-  const sorted = [...source].sort((a, b) => b.length - a.length)
-  sortedCollectionsCache.set(source, { source: [...source], sorted })
-  return sorted
+  const key = toRaw(collections)
+  let sorted = sortedCollectionsCache.get(key)
+  if (!sorted) {
+    const sort = () => [...collections].sort((a, b) => b.length - a.length)
+    // App config is cloned per request on the server, but reactive and updated in place on the client (HMR, `updateAppConfig`)
+    sorted = import.meta.client ? computed(sort) : { value: sort() }
+    sortedCollectionsCache.set(key, sorted)
+  }
+  return sorted.value
 }
 
 export function resolveName(name: string, options: Pick<NuxtIconRuntimeOptions, 'cssSelectorPrefix' | 'aliases' | 'collections'>): string {

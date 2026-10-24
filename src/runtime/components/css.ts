@@ -1,12 +1,13 @@
 import { addIcon, getIcon as _getIcon } from '@iconify/vue'
 import { computed, watch, h, defineComponent } from 'vue'
-import { getIconCSS } from '@iconify/utils/lib/css/icon'
 import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
 import { hash } from 'ohash'
+import { getCachedIconCSS } from './css-cache'
 import { loadIcon, resolveCustomizeFn } from './shared'
+import { insertIconStyle } from './style-order'
 import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, onServerPrefetch } from '#imports'
 
 // This should only be used in the client side
@@ -113,11 +114,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
         iconSelector = `:where(${iconSelector})`
       }
 
-      const css = getIconCSS(icon, {
-        iconSelector,
-        format: 'compressed',
-        customise: resolveCustomizeFn(props.customize, options.customize),
-      })
+      const css = getCachedIconCSS(icon, iconSelector, resolveCustomizeFn(props.customize, options.customize))
       if (options.cssLayer && withLayer) {
         return `@layer ${options.cssLayer} { ${css} }`
       }
@@ -139,11 +136,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
         if (import.meta.dev) {
           style.dataset.nuxtIconDev = name
         }
-        const firstStyle = document.head.querySelector('style, link[rel="stylesheet"]')
-        if (firstStyle)
-          document.head.insertBefore(style, firstStyle)
-        else
-          document.head.appendChild(style)
+        insertIconStyle(style, document.head, options.cssLayer)
         selectors.add(iconSelector)
       }
 

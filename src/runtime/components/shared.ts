@@ -4,6 +4,7 @@ import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import { useAppConfig } from '#imports'
 import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
+import { resolveName } from './resolve-name'
 
 export { initClientBundle }
 
@@ -47,25 +48,8 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
 
 export function useResolvedName(getName: () => string) {
   const options = useAppConfig().icon as NuxtIconRuntimeOptions
-  const collections = (options.collections || []).sort((a, b) => b.length - a.length)
 
-  return computed(() => {
-    const name = getName()
-    const bare = name.startsWith(options.cssSelectorPrefix)
-      ? name.slice(options.cssSelectorPrefix.length)
-      : name
-    const resolved = options.aliases?.[bare] || bare
-
-    // Disambiguate collection
-    // e.g. `simple-icons-github` -> `simple-icons:github`
-    if (!resolved.includes(':')) {
-      const collection = collections.find(c => resolved.startsWith(c + '-'))
-      return collection
-        ? collection + ':' + resolved.slice(collection.length + 1)
-        : resolved
-    }
-    return resolved
-  })
+  return computed(() => resolveName(getName(), options))
 }
 
 export function resolveCustomizeFn(

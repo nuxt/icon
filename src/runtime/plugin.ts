@@ -1,6 +1,7 @@
 import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
+import { loadCustomIconsChunked } from './custom-icon-loader'
 import { getSideProvider } from './provider'
 import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
@@ -40,15 +41,15 @@ export default defineNuxtPlugin({
 
     async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
       try {
-        const data = await requestFetch(resources[0] + '/' + prefix + '.json', {
-          query: {
-            icons: icons.join(','),
-          },
-        }) as IconifyJSON
-        // Simple data validation
-        if (!data || data.prefix !== prefix || !data.icons)
-          throw new Error('Invalid data' + JSON.stringify(data))
-        return data as IconifyJSON
+        return await loadCustomIconsChunked(
+          icons,
+          prefix,
+          names => requestFetch(resources[0] + '/' + prefix + '.json', {
+            query: {
+              icons: names.join(','),
+            },
+          }) as Promise<IconifyJSON>,
+        )
       }
       catch (e) {
         console.error('Failed to load custom icons', e)

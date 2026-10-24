@@ -41,6 +41,11 @@ it('regenerates CSS when the icon data changes', () => {
   expect(getIconCSS).toHaveBeenCalledTimes(4)
 })
 
+it('distinguishes a missing field from one set to `undefined`', () => {
+  const css = getCachedIconCSS({ body: icon.body, width: undefined }, '.i-a')
+  expect(getCachedIconCSS({ body: icon.body, height: 24 }, '.i-a')).not.toBe(css)
+})
+
 it('is not affected by mutating the icon after caching', () => {
   const data = { ...icon }
   const css = getCachedIconCSS(data, '.i-a')
@@ -67,4 +72,12 @@ it('clears the cache once it holds 1000 selectors', () => {
   getCachedIconCSS(icon, '.i-overflow')
   getCachedIconCSS(icon, '.i-0')
   expect(getIconCSS).toHaveBeenCalledTimes(1002)
+})
+
+it('does not clear the cache when replacing an existing selector at capacity', () => {
+  for (let i = 0; i < 1000; i++)
+    getCachedIconCSS(icon, `.i-${i}`)
+  getCachedIconCSS({ ...icon, width: 16 }, '.i-0')
+  getCachedIconCSS(icon, '.i-1')
+  expect(getIconCSS).toHaveBeenCalledTimes(1001)
 })

@@ -1,4 +1,4 @@
-import { computed, toRaw } from 'vue'
+import { computed, reactive, toRaw } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 
 const HYPHEN = 45
@@ -11,9 +11,9 @@ export function getSortedCollections(collections: string[] | null | undefined): 
   const key = toRaw(collections)
   let sorted = sortedCollectionsCache.get(key)
   if (!sorted) {
-    const sort = () => [...collections].sort((a, b) => b.length - a.length)
+    const sort = (source: string[]) => [...source].sort((a, b) => b.length - a.length)
     // App config is cloned per request on the server, but reactive and updated in place on the client (HMR, `updateAppConfig`)
-    sorted = import.meta.client ? computed(sort) : { value: sort() }
+    sorted = import.meta.client ? computed(() => sort(reactive(key))) : { value: sort(key) }
     sortedCollectionsCache.set(key, sorted)
   }
   return sorted.value

@@ -52,6 +52,18 @@ describe('resolveName', () => {
     expect(second.value).toBe('simple-icons:github')
   })
 
+  it('updates computed names when collections first resolved as a plain array change', () => {
+    const collections = ['simple', 'foo']
+    expect(resolveName('i-simple-icons-github', createOptions(collections))).toBe('simple:icons-github')
+
+    const options = reactive(createOptions(collections))
+    const name = computed(() => resolveName('i-simple-icons-github', options))
+    expect(name.value).toBe('simple:icons-github')
+
+    options.collections![1] = 'simple-icons'
+    expect(name.value).toBe('simple-icons:github')
+  })
+
   it('updates computed names when reactive collections grow', () => {
     const options = reactive(createOptions(['simple']))
     const name = computed(() => resolveName('i-simple-icons-github', options))

@@ -52,17 +52,17 @@ describe('mergeIconifyJSONChunks', () => {
     const a: IconifyJSON = {
       prefix: 'fa',
       icons: { home: { body: '<path/>' } },
-      aliases: { house: 'home' },
+      aliases: { house: { parent: 'home' } },
     }
     const b: IconifyJSON = {
       prefix: 'fa',
       icons: { user: { body: '<circle/>' } },
-      aliases: { person: 'user' },
+      aliases: { person: { parent: 'user' } },
     }
     expect(mergeIconifyJSONChunks([a, b], 'fa')).toEqual({
       prefix: 'fa',
       icons: { home: { body: '<path/>' }, user: { body: '<circle/>' } },
-      aliases: { house: 'home', person: 'user' },
+      aliases: { house: { parent: 'home' }, person: { parent: 'user' } },
     })
   })
 })
@@ -73,7 +73,7 @@ describe('loadCustomIconsChunked', () => {
     const fetchChunk = vi.fn(async (chunk: string[]) => ({
       prefix: 'c',
       icons: Object.fromEntries(chunk.map(n => [n, { body: `<${n}/>` }])),
-      aliases: Object.fromEntries(chunk.map(n => [`a-${n}`, n])),
+      aliases: Object.fromEntries(chunk.map(n => [`a-${n}`, { parent: n }])),
     } satisfies IconifyJSON))
 
     const result = await loadCustomIconsChunked(names, 'c', fetchChunk, 30)

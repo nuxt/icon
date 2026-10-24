@@ -38,7 +38,7 @@ export default defineNuxtPlugin({
       resources.push(options.iconifyApiEndpoint!)
     }
 
-    async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
+    async function loadCustomIconsChunk(icons: string[], prefix: string): Promise<IconifyJSON | null> {
       try {
         const data = await requestFetch(resources[0] + '/' + prefix + '.json', {
           query: {
@@ -54,6 +54,32 @@ export default defineNuxtPlugin({
         console.error('Failed to load custom icons', e)
         return null
       }
+    }
+
+    async function customIconLoader(icons: string[], prefix: string): Promise<IconifyJSON | null> {
+      // Split large lists into several requests to stay under URL length limits (431 / 414)
+      const chunks: string[][] = [[]]
+      let length = 0
+      for (const name of icons) {
+        const nameLength = encodeURIComponent(name).length
+        if (length + nameLength > 2000 && chunks.at(-1)!.length) {
+          chunks.push([])
+          length = 0
+        }
+        chunks.at(-1)!.push(name)
+        length += nameLength + 1
+      }
+      const results = (await Promise.all(chunks.map(chunk => loadCustomIconsChunk(chunk, prefix))))
+        .filter((data): data is IconifyJSON => !!data)
+      if (!results.length)
+        return null
+      // Keep collection-level properties (width, height, ...) from the responses
+      return results.reduce((acc, data) => ({
+        ...acc,
+        ...data,
+        icons: { ...acc.icons, ...data.icons },
+        aliases: { ...acc.aliases, ...data.aliases },
+      }))
     }
 
     addAPIProvider('', { resources })

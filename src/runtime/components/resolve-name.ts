@@ -1,17 +1,30 @@
+import { toRaw } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 
 const HYPHEN = 45
 
-const sortedCollectionsCache = new WeakMap<string[], string[]>()
+const sortedCollectionsCache = new WeakMap<string[], { source: string[], sorted: string[] }>()
+
+function isSameList(a: string[], b: string[]) {
+  if (a.length !== b.length)
+    return false
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i])
+      return false
+  }
+  return true
+}
 
 export function getSortedCollections(collections: string[] | null | undefined): string[] {
   if (!collections)
     return []
-  let sorted = sortedCollectionsCache.get(collections)
-  if (!sorted || sorted.length !== collections.length) {
-    sorted = [...collections].sort((a, b) => b.length - a.length)
-    sortedCollectionsCache.set(collections, sorted)
-  }
+  const source = toRaw(collections)
+  const cached = sortedCollectionsCache.get(source)
+  // App config is cloned per request on the server, but updated in place on the client (HMR, `updateAppConfig`)
+  if (cached && (import.meta.client ? isSameList(cached.source, source) : cached.source.length === source.length))
+    return cached.sorted
+  const sorted = [...source].sort((a, b) => b.length - a.length)
+  sortedCollectionsCache.set(source, { source: [...source], sorted })
   return sorted
 }
 

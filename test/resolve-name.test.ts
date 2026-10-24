@@ -1,3 +1,4 @@
+import { reactive } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { getSortedCollections, resolveName } from '../src/runtime/components/resolve-name'
 
@@ -44,6 +45,13 @@ describe('resolveName', () => {
     const options = createOptions(collections)
     expect(resolveName('i-simple-icons-github', options)).toBe('simple:icons-github')
     collections.push('simple-icons')
+    expect(resolveName('i-simple-icons-github', options)).toBe('simple-icons:github')
+  })
+
+  it('picks up reactive collections replaced in place', () => {
+    const options = reactive(createOptions(['simple', 'foo']))
+    expect(resolveName('i-simple-icons-github', options)).toBe('simple:icons-github')
+    options.collections![1] = 'simple-icons'
     expect(resolveName('i-simple-icons-github', options)).toBe('simple-icons:github')
   })
 })

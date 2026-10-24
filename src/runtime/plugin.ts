@@ -61,12 +61,13 @@ export default defineNuxtPlugin({
       const chunks: string[][] = [[]]
       let length = 0
       for (const name of icons) {
-        if (length + name.length > 2000 && chunks.at(-1)!.length) {
+        const nameLength = encodeURIComponent(name).length
+        if (length + nameLength > 2000 && chunks.at(-1)!.length) {
           chunks.push([])
           length = 0
         }
         chunks.at(-1)!.push(name)
-        length += name.length + 1
+        length += nameLength + 1
       }
       const results = (await Promise.all(chunks.map(chunk => loadCustomIconsChunk(chunk, prefix))))
         .filter((data): data is IconifyJSON => !!data)

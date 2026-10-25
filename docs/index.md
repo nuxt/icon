@@ -1,6 +1,8 @@
 ---
-title: Overview
+title: Nuxt Icon
 description: 'Add 200,000+ ready to use icons to your Nuxt application.'
+navigation:
+  title: Overview
 ---
 
 ![Nuxt Icon](https://github.com/nuxt-modules/icon/assets/904724/ae673805-06ad-4c05-820e-a8445c7224ce)

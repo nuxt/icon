@@ -45,7 +45,7 @@
     "test": "pnpm run test:unit --run && pnpm run test:playground --run && pnpm run play:build && nuxi build test/fixtures/nuxt4-compat5 && pnpm -C playgrounds/nuxt5 run test"
   },
   "dependencies": {
-    "@iconify/collections": "^1.0.754",
+    "@iconify/collections": "^1.0.755",
     "@iconify/types": "^2.0.0",
     "@iconify/utils": "^3.1.7",
     "@iconify/vue": "^5.0.4",

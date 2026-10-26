@@ -12,7 +12,7 @@ Add [200,000+ ready to use icons](https://icones.js.org) to your [Nuxt](https://
 - [✨ &nbsp;Release Notes](https://github.com/nuxt/icon/releases)
 - [🏀 &nbsp;Online playground](https://stackblitz.com/edit/nuxt-icon-playground?file=app.vue)
 
-## Features ✨
+## Features
 
 - Nuxt 3 ready
 - SSR friendly

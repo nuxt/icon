@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin, getNuxtVersion } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, addTemplate, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin, getNuxtVersion } from '@nuxt/kit'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
 import type { ViteDevServer } from 'vite'
@@ -92,6 +92,16 @@ export default defineNuxtModule<ModuleOptions>({
       name: options.componentName || 'Icon',
       global: true,
       filePath: await resolver.resolvePath('./runtime/components/index'),
+    })
+    const svgComponent = JSON.stringify(await resolver.resolvePath('./runtime/components/svg'))
+    addTemplate({
+      filename: 'nuxt-icon-svg.mjs',
+      getContents: () => options.mode === 'svg'
+        ? `export { NuxtIconSvg } from ${svgComponent}`
+        : [
+            `import { defineAsyncComponent } from 'vue'`,
+            `export const NuxtIconSvg = /* @__PURE__ */ defineAsyncComponent(() => import(${svgComponent}).then(r => r.NuxtIconSvg))`,
+          ].join('\n'),
     })
     if (usesLocalApi(options.provider)) {
       addServerHandler({

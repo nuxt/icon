@@ -10,6 +10,10 @@ declare module '#build/nuxt-icon-client-bundle' {
   export function init(addIcon: ((name: string, data: IconifyIcon) => void)): void
 }
 
+declare module '#build/nuxt-icon-svg' {
+  export const NuxtIconSvg: typeof import('./runtime/components/svg').NuxtIconSvg
+}
+
 declare module '#nuxt-icon-server-options' {
   const options: {
     iconifyApiEndpoint: string

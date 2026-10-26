@@ -1,23 +1,16 @@
-import { addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyJSON } from '@iconify/types'
 import type { NuxtIconRuntimeOptions } from '../types'
+import { applyIconifyConfig, setIconifyConfig } from './iconify-config'
 import { getSideProvider } from './provider'
-import { defineNuxtPlugin, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin, onNuxtReady, useAppConfig, useRequestFetch, useRuntimeConfig } from '#imports'
 
 export default defineNuxtPlugin({
   name: '@nuxt/icon',
-  setup() {
+  async setup(nuxtApp) {
     const configs = useRuntimeConfig()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
     const requestFetch = useRequestFetch()
     const nativeFetch = (requestFetch as { native?: typeof globalThis.fetch }).native
-
-    _api.setFetch((input, init) => {
-      const nitroFetch = (globalThis as typeof globalThis & {
-        $fetch?: { native?: typeof globalThis.fetch }
-      }).$fetch?.native
-      return (nativeFetch || nitroFetch || globalThis.fetch)(input, init)
-    })
 
     const provider = getSideProvider(options.provider, import.meta.server ? 'server' : 'client')
 
@@ -30,11 +23,7 @@ export default defineNuxtPlugin({
         resources.push(options.iconifyApiEndpoint!)
       }
     }
-    else if (provider === 'none') {
-      // Provide a no-op fetch function to prevent Iconify from fetching icons
-      _api.setFetch(() => Promise.resolve(new Response()))
-    }
-    else {
+    else if (provider !== 'none') {
       resources.push(options.iconifyApiEndpoint!)
     }
 
@@ -82,12 +71,32 @@ export default defineNuxtPlugin({
       }))
     }
 
-    addAPIProvider('', { resources })
+    setIconifyConfig({
+      resources,
+      fetch: provider === 'none'
+        // Provide a no-op fetch function to prevent Iconify from fetching icons
+        ? () => Promise.resolve(new Response())
+        : (input, init) => {
+            const nitroFetch = (globalThis as typeof globalThis & {
+              $fetch?: { native?: typeof globalThis.fetch }
+            }).$fetch?.native
+            return (nativeFetch || nitroFetch || globalThis.fetch)(input, init)
+          },
+      customIconsLoader: customIconLoader,
+      customCollections: options.customCollections || [],
+    })
 
-    // Register custom collections handlers
-    for (const prefix of options.customCollections || []) {
-      if (prefix)
-        setCustomIconsLoader(customIconLoader, prefix)
+    if (import.meta.server) {
+      applyIconifyConfig(await import('@iconify/vue'))
+      return
+    }
+
+    if (options.mode !== 'svg') {
+      const preload = () => import('./components/css-runtime').then(r => r.setupIconify()).catch(() => {})
+      if (nuxtApp.isHydrating)
+        onNuxtReady(preload)
+      else
+        preload()
     }
   },
 

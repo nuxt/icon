@@ -3,7 +3,7 @@ import { h } from 'vue'
 import type { PropType } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
-import { initClientBundle, loadIcon, useResolvedName, resolveCustomizeFn } from './shared'
+import { initClientBundle, loadIcon, setupIconify, useResolvedName, resolveCustomizeFn } from './shared'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
@@ -20,6 +20,7 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
     },
   },
   setup(props, { slots }) {
+    setupIconify()
     const nuxt = useNuxtApp()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
     const name = useResolvedName(() => props.name)

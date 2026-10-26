@@ -1,15 +1,23 @@
-import { addIcon, getIcon as _getIcon } from '@iconify/vue'
 import { computed, watch, h, defineComponent } from 'vue'
 import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../../types'
-import type { IconifyIconCustomizeCallback } from './shared'
+import type { IconifyIconCustomizeCallback } from './name'
 import { useCustomizeHash } from './customize-hash'
-import { getCachedIconCSS } from './css-cache'
 import { createIconSelectors, escapeCssSelector } from './css-selectors'
-import { loadIcon, resolveCustomizeFn } from './shared'
+import { resolveCustomizeFn } from './name'
 import { insertIconStyle } from './style-order'
 import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, onServerPrefetch } from '#imports'
+
+type CssRuntime = typeof import('./css-runtime')
+
+let runtime: CssRuntime | undefined
+
+function loadRuntime(): Promise<CssRuntime> {
+  return runtime
+    ? Promise.resolve(runtime)
+    : import('./css-runtime').then(r => runtime = r)
+}
 
 // This should only be used in the client side
 let selectors: ReturnType<typeof createIconSelectors> | undefined
@@ -43,27 +51,27 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       return base
     })
 
-    function getIcon(name: string) {
+    function getIcon(rt: CssRuntime, name: string) {
       if (!name)
         return
-      const icon = _getIcon(name)
+      const icon = rt.getIcon(name)
       if (icon)
         return icon
       const payload = nuxt.payload?.data?.[name]
       if (payload) {
-        addIcon(name, payload)
+        rt.addIcon(name, payload)
         return payload
       }
     }
 
     const selector = computed(() => '.' + escapeCssSelector(cssClass.value))
 
-    function getCSS(icon: IconifyIcon, withLayer = true, iconSelector = selector.value) {
+    function getCSS(rt: CssRuntime, icon: IconifyIcon, withLayer = true, iconSelector = selector.value) {
       if (options.cssWherePseudo) {
         iconSelector = `:where(${iconSelector})`
       }
 
-      const css = getCachedIconCSS(icon, iconSelector, resolveCustomizeFn(props.customize, options.customize))
+      const css = rt.getCachedIconCSS(icon, iconSelector, resolveCustomizeFn(props.customize, options.customize))
       if (options.cssLayer && withLayer) {
         return `@layer ${options.cssLayer} { ${css} }`
       }
@@ -75,13 +83,13 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
 
       // Takes the name and selector the icon was requested for: the name can
       // change while the icon loads, and the rule must not go to the new name.
-      async function mountCSS(icon: IconifyIcon, name: string, iconSelector: string) {
+      async function mountCSS(rt: CssRuntime, icon: IconifyIcon, name: string, iconSelector: string) {
         if (knownSelectors.has(iconSelector))
           return
         if (typeof document === 'undefined')
           return
         const style = document.createElement('style')
-        style.textContent = getCSS(icon, true, iconSelector)
+        style.textContent = getCSS(rt, icon, true, iconSelector)
         if (import.meta.dev) {
           style.dataset.nuxtIconDev = name
         }
@@ -96,18 +104,24 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
           if (knownSelectors.has(iconSelector)) {
             return
           }
-          const data = getIcon(name)
-          if (data) {
-            mountCSS(data, name, iconSelector)
+          const mount = (rt: CssRuntime) => {
+            const data = getIcon(rt, name)
+            if (data) {
+              mountCSS(rt, data, name, iconSelector)
+            }
+            else {
+              rt.loadIcon(name, import.meta.server ? options.fetchTimeout : -1)
+                .then((data) => {
+                  if (data)
+                    mountCSS(rt, data, name, iconSelector)
+                })
+                .catch(() => null)
+            }
           }
-          else {
-            loadIcon(name, import.meta.server ? options.fetchTimeout : -1)
-              .then((data) => {
-                if (data)
-                  mountCSS(data, name, iconSelector)
-              })
-              .catch(() => null)
-          }
+          if (runtime)
+            mount(runtime)
+          else
+            loadRuntime().then(mount).catch(() => null)
         },
         { immediate: true },
       )
@@ -121,7 +135,8 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
       if (import.meta.server) {
         const configs = (useRuntimeConfig().icon || {}) as NuxtIconRuntimeServerOptions
         if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
-          const icon = await loadIcon(props.name, options.fetchTimeout).catch(() => null)
+          const rt = await loadRuntime()
+          const icon = await rt.loadIcon(props.name, options.fetchTimeout).catch(() => null)
           if (!icon)
             return null
           let ssrCSS: Map<string, string> = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS]
@@ -147,7 +162,7 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
           }
           // Dedupe CSS (use cssClass as key to support per-instance customization)
           if (cssClass.value && !ssrCSS.has(cssClass.value)) {
-            const css = getCSS(icon, false)
+            const css = getCSS(rt, icon, false)
             ssrCSS.set(cssClass.value, css)
           }
           return null

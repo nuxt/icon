@@ -1,22 +1,29 @@
 import { computed, reactive, toRaw } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 
-const HYPHEN = 45
+const collectionSetCache = new WeakMap<string[], { readonly value: Set<string> }>()
 
-const sortedCollectionsCache = new WeakMap<string[], { readonly value: string[] }>()
-
-export function getSortedCollections(collections: string[] | null | undefined): string[] {
+export function getCollectionSet(collections: string[] | null | undefined): Set<string> | undefined {
   if (!collections)
-    return []
+    return
   const key = toRaw(collections)
-  let sorted = sortedCollectionsCache.get(key)
-  if (!sorted) {
-    const sort = (source: string[]) => [...source].sort((a, b) => b.length - a.length)
+  let set = collectionSetCache.get(key)
+  if (!set) {
     // App config is cloned per request on the server, but reactive and updated in place on the client (HMR, `updateAppConfig`)
-    sorted = import.meta.client ? computed(() => sort(reactive(key))) : { value: sort(key) }
-    sortedCollectionsCache.set(key, sorted)
+    set = import.meta.client ? computed(() => new Set(reactive(key))) : { value: new Set(key) }
+    collectionSetCache.set(key, set)
   }
-  return sorted.value
+  return set.value
+}
+
+function findCollection(name: string, collections: Set<string>): string | undefined {
+  let index = name.lastIndexOf('-')
+  while (index > 0) {
+    const collection = name.slice(0, index)
+    if (collections.has(collection))
+      return collection
+    index = name.lastIndexOf('-', index - 1)
+  }
 }
 
 export function resolveName(name: string, options: Pick<NuxtIconRuntimeOptions, 'cssSelectorPrefix' | 'aliases' | 'collections'>): string {
@@ -28,8 +35,8 @@ export function resolveName(name: string, options: Pick<NuxtIconRuntimeOptions, 
   // Disambiguate collection
   // e.g. `simple-icons-github` -> `simple-icons:github`
   if (!resolved.includes(':')) {
-    const collection = getSortedCollections(options.collections)
-      .find(c => resolved.charCodeAt(c.length) === HYPHEN && resolved.startsWith(c))
+    const collections = getCollectionSet(options.collections)
+    const collection = collections && findCollection(resolved, collections)
     return collection
       ? collection + ':' + resolved.slice(collection.length + 1)
       : resolved

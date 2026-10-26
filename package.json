@@ -52,6 +52,7 @@
     "@nuxt/devtools-kit": "^3.4.4",
     "@nuxt/kit": "^4.6.2",
     "consola": "^3.4.2",
+    "fnv1a-64": "^0.1.2",
     "local-pkg": "^1.2.1",
     "mlly": "^1.8.2",
     "ohash": "^2.0.12",

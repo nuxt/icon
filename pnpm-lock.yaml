@@ -187,6 +187,9 @@ importers:
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+      fnv1a-64:
+        specifier: ^0.1.2
+        version: 0.1.2
       local-pkg:
         specifier: ^1.2.1
         version: 1.2.1

@@ -1,5 +1,5 @@
 import { computed, getCurrentInstance, useId } from 'vue'
-import { hash } from 'ohash'
+import { fnv1a64Base36 } from 'fnv1a-64'
 import type { IconifyIconCustomizeCallback } from './shared'
 import { useState } from '#imports'
 
@@ -16,7 +16,7 @@ export function useCustomizeHash(getCustomize: () => IconifyIconCustomizeCallbac
   if (typeof customize === 'function') {
     const id = useId()
     const ssrHashes = useState<Record<string, string>>('nuxt-icon-customize', () => ({}))
-    const sourceHash = hash(customize.toString())
+    const sourceHash = fnv1a64Base36(customize.toString())
     if (import.meta.server)
       ssrHashes.value[id] = sourceHash
     // `vnode.el` is already set during setup only when this instance is hydrating, including lazy hydration
@@ -28,7 +28,7 @@ export function useCustomizeHash(getCustomize: () => IconifyIconCustomizeCallbac
     const customize = getCustomize()
     if (typeof customize !== 'function')
       return
-    const sourceHash = hash(customize.toString())
+    const sourceHash = fnv1a64Base36(customize.toString())
     return (import.meta.client && hydratedHashes.get(sourceHash)) || sourceHash
   })
 }

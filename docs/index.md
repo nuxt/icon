@@ -50,7 +50,16 @@ If you have the legacy module `nuxt-icon` installed, you might want to remove it
 
 ## Vite (without Nuxt)
 
-If you are building a plain Vue app with Vite (for example when using [Nuxt UI's Vue integration](https://ui.nuxt.com/docs/getting-started/integrations/vue)), there is no Nuxt server to serve icons from, and `@iconify/vue` would fetch icons from the Iconify API at runtime. To render icons offline (and during SSR) without network requests, `@nuxt/icon` ships a standalone Vite plugin that pre-bundles the icons you use into the client build:
+If you are building a plain Vue app with Vite (for example when using [Nuxt UI's Vue integration](https://ui.nuxt.com/docs/getting-started/integrations/vue)), there is no Nuxt server to serve icons from, and `@iconify/vue` would fetch icons from the Iconify API at runtime. To render icons offline without network requests, `@nuxt/icon` ships a standalone Vite plugin that pre-bundles the icons you use into the client build.
+
+Install it with `@iconify/vue`, which the registration module imports, and the icon collections you use:
+
+```bash
+npm i @nuxt/icon @iconify/vue
+npm i -D @iconify-json/uil @iconify-json/heroicons
+```
+
+Then add the plugin to your Vite config:
 
 ```ts
 // vite.config.ts
@@ -62,7 +71,8 @@ export default defineConfig({
     NuxtIconBundle({
       // Explicitly pre-bundle known icons (hard-fails the build when missing locally)
       icons: ['uil:github', 'heroicons:home'],
-      // Scanning your source files for icon usages is enabled by default
+      // Scanning your source files for icon usages is enabled by default.
+      // It reads .vue, .jsx, .tsx, Markdown and YAML files: list icons only named in .js/.ts files in `icons`.
       scan: true,
     }),
   ],
@@ -76,7 +86,7 @@ Then register the bundled icons once in your entry file:
 import 'virtual:nuxt-icon-bundle/register'
 ```
 
-Make sure the icon collections you use are installed locally (e.g. `npm i -D @iconify-json/uil`), and add the type shims for the virtual modules to your `tsconfig.json`:
+Add the type shims for the virtual modules to your `tsconfig.json`:
 
 ```json
 {
@@ -89,5 +99,7 @@ Make sure the icon collections you use are installed locally (e.g. `npm i -D @ic
 The plugin accepts the same options as `icon.clientBundle` (`icons`, `scan`, `sizeLimitKb`), plus `customCollections` — with two differences in defaults: `scan` is enabled by default (bundling is the whole point of the plugin), and `includeCustomCollections` is always enabled by default (there is no server provider to fall back to).
 
 For library and framework authors integrating icons themselves: `virtual:nuxt-icon-bundle` exports `init(addIcon)` so you can register the bundled data on your own copy of `@iconify/vue` (or any compatible store), and the underlying primitives (`IconUsageScanner`, `resolveBundleIcons`, `generateClientBundleCode`, ...) are exported from `@nuxt/icon/utils`.
+
+For server-side rendering, `@iconify/vue` has its own requirements: see its [documentation](https://iconify.design/docs/icon-components/vue/).
 
 See [`playgrounds/vite/`](https://github.com/nuxt/icon/tree/main/playgrounds/vite) for a working example (`pnpm play:vite` to run it locally).

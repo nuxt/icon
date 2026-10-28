@@ -86,12 +86,12 @@ Then register the bundled icons once in your entry file:
 import 'virtual:nuxt-icon-bundle/register'
 ```
 
-Add the type shims for the virtual modules to your `tsconfig.json`:
+Add the type shims for the virtual modules to the `types` of your `tsconfig.json`, next to the ones you already list:
 
 ```json
 {
   "compilerOptions": {
-    "types": ["@nuxt/icon/client"]
+    "types": ["vite/client", "@nuxt/icon/client"]
   }
 }
 ```

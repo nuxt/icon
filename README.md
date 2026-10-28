@@ -57,10 +57,10 @@ Read the [documentation](https://nuxt.com/modules/icon) for [usage](https://nuxt
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/@nuxt/icon/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-version-href]: https://npmjs.com/package/@nuxt/icon
+[npm-version-href]: https://npmx.dev/package/@nuxt/icon
 
 [npm-downloads-src]: https://img.shields.io/npm/dm/@nuxt/icon.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-downloads-href]: https://npmjs.com/package/@nuxt/icon
+[npm-downloads-href]: https://npmx.dev/package-stats/@nuxt/icon/v/latest?granularity=monthly
 
 [license-src]: https://img.shields.io/github/license/nuxt/icon.svg?style=flat&colorA=18181B&colorB=28CF8D
 [license-href]: https://github.com/nuxt/icon/blob/main/LICENSE

@@ -34,6 +34,9 @@ jobs:
       - name: Dependencies
         run: pnpm install
 
+      - name: Install Chromium
+        run: pnpm exec playwright-core install --with-deps chromium-headless-shell
+
       - name: Prepare
         run: npm run dev:prepare
 

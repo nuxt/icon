@@ -4,7 +4,7 @@ import type { PropType } from 'vue'
 import type { IconifyIcon } from '@iconify/types'
 import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
-import { hash } from 'ohash'
+import { useCustomizeHash } from './customize-hash'
 import { getCachedIconCSS } from './css-cache'
 import { loadIcon, resolveCustomizeFn } from './shared'
 import { insertIconStyle } from './style-order'
@@ -83,13 +83,14 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
   setup(props) {
     const nuxt = useNuxtApp()
     const options = useAppConfig().icon as NuxtIconRuntimeOptions
+    const customizeHash = useCustomizeHash(() => props.customize)
     const cssClass = computed(() => {
       if (!props.name) return ''
       const base = options.cssSelectorPrefix + props.name
       // When a per-instance customize function is provided, append a hash of its source
       // so that distinct customizations get their own selector and CSS rule.
-      if (typeof props.customize === 'function') {
-        return base + '--customized-' + hash(props.customize.toString())
+      if (customizeHash.value) {
+        return base + '--customized-' + customizeHash.value
       }
       return base
     })

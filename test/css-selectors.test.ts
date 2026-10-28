@@ -52,6 +52,19 @@ describe('createIconSelectors', () => {
     expect(selectors.has('.i-ph\\:acorn')).toBe(true)
   })
 
+  it('ignores rules inside comments', () => {
+    const { document, styleSheets } = createDocument(
+      `/* } ${rule('.i-ph\\:acorn-bold')} */`,
+      `.a{color:red}/*;.i-ph\\:alarm{*/${rule('.i-ph\\:acorn')}`,
+    )
+    styleSheets.mockReturnValue([] as unknown as StyleSheetList)
+    const selectors = createIconSelectors('i-', document)
+
+    expect(selectors.has('.i-ph\\:acorn-bold')).toBe(false)
+    expect(selectors.has('.i-ph\\:alarm')).toBe(false)
+    expect(selectors.has('.i-ph\\:acorn')).toBe(true)
+  })
+
   it('falls back to the CSSOM for rules outside inline styles', () => {
     const { document, styleSheets } = createDocument()
     const sheet = new window.CSSStyleSheet()

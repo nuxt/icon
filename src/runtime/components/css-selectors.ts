@@ -8,9 +8,10 @@ function escapeRegExp(source: string) {
 
 function scanStyleElements(doc: Document, prefix: string, selectors: Set<string>) {
   const selector = `\\.${escapeRegExp(escapeCssSelector(prefix))}(?:[\\w-]|\\\\.)*`
-  const rule = new RegExp(`(?:^|[{};/])\\s*(?::where\\((${selector})\\)|(${selector}))\\s*\\{`, 'g')
+  const rule = new RegExp(`(?:^|[{};])\\s*(?::where\\((${selector})\\)|(${selector}))\\s*\\{`, 'g')
   for (const style of doc.querySelectorAll('style')) {
-    for (const match of (style.textContent || '').matchAll(rule))
+    const css = (style.textContent || '').replace(/\/\*[\s\S]*?\*\//g, '')
+    for (const match of css.matchAll(rule))
       selectors.add(match[1] || match[2]!)
   }
 }

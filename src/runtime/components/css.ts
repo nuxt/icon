@@ -6,66 +6,14 @@ import type { NuxtIconRuntimeOptions, NuxtIconRuntimeServerOptions } from '../..
 import type { IconifyIconCustomizeCallback } from './shared'
 import { useCustomizeHash } from './customize-hash'
 import { getCachedIconCSS } from './css-cache'
+import { createIconSelectors, escapeCssSelector } from './css-selectors'
 import { loadIcon, resolveCustomizeFn } from './shared'
 import { insertIconStyle } from './style-order'
 import { useAppConfig, useNuxtApp, useHead, useRuntimeConfig, onServerPrefetch } from '#imports'
 
 // This should only be used in the client side
-let cssSelectors: Set<string> | undefined
+let selectors: ReturnType<typeof createIconSelectors> | undefined
 const SYMBOL_SERVER_CSS = 'NUXT_ICONS_SERVER_CSS'
-
-function escapeCssSelector(selector: string) {
-  return selector.replace(/([^\w-])/g, '\\$1')
-}
-
-function getAllSelectors() {
-  if (cssSelectors)
-    return cssSelectors
-
-  cssSelectors = new Set<string>()
-
-  const filter = (selector: string): string | undefined => {
-    selector = selector
-      .replace(/^:where\((.*)\)$/, '$1')
-      .trim()
-    if (selector.startsWith('.')) {
-      return selector
-    }
-  }
-
-  const scanCssRules = (rules: CSSRuleList) => {
-    if (!rules?.length)
-      return
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for (const rule of (rules as any)) {
-      // scan for nested rules
-      if (rule?.cssRules) {
-        scanCssRules(rule.cssRules)
-      }
-      // scan for selector
-      const selectorRaw = rule?.selectorText
-      if (typeof selectorRaw === 'string') {
-        const selector = filter(selectorRaw)
-        if (selector)
-          cssSelectors!.add(selector)
-      }
-    }
-  }
-
-  if (typeof document !== 'undefined') {
-    for (const styleSheet of document.styleSheets) {
-      try {
-        const rules = styleSheet.cssRules || styleSheet.rules
-        scanCssRules(rules)
-      }
-      catch {
-        // this typically means the stylesheet is from an inaccessible origin
-      }
-    }
-  }
-
-  return cssSelectors
-}
 
 export const NuxtIconCss = /* @__PURE__ */ defineComponent({
   name: 'NuxtIconCss',
@@ -123,12 +71,12 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
     }
 
     if (import.meta.client) {
-      const selectors = getAllSelectors()
+      const knownSelectors = selectors ||= createIconSelectors(options.cssSelectorPrefix)
 
       // Takes the name and selector the icon was requested for: the name can
       // change while the icon loads, and the rule must not go to the new name.
       async function mountCSS(icon: IconifyIcon, name: string, iconSelector: string) {
-        if (selectors.has(iconSelector))
+        if (knownSelectors.has(iconSelector))
           return
         if (typeof document === 'undefined')
           return
@@ -138,14 +86,14 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
           style.dataset.nuxtIconDev = name
         }
         insertIconStyle(style, document.head, options.cssLayer)
-        selectors.add(iconSelector)
+        knownSelectors.add(iconSelector)
       }
 
       watch(
         () => props.name,
         (name) => {
           const iconSelector = selector.value
-          if (selectors.has(iconSelector)) {
+          if (knownSelectors.has(iconSelector)) {
             return
           }
           const data = getIcon(name)

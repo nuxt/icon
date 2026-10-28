@@ -1,6 +1,6 @@
 import { computed, getCurrentInstance, useId } from 'vue'
 import { fnv1a64Base36 } from 'fnv1a-64'
-import type { IconifyIconCustomizeCallback } from './shared'
+import type { IconifyIconCustomizeCallback } from './name'
 import { useState } from '#imports'
 
 const hydratedHashes = new Map<string, string>()

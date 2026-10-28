@@ -1,24 +1,21 @@
-import { computed } from 'vue'
-import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon } from '@iconify/vue'
+import { getIcon as _getIcon, addIcon as _addIcon, loadIcon as _loadIcon, addAPIProvider, _api, setCustomIconsLoader } from '@iconify/vue'
 import type { IconifyIcon } from '@iconify/types'
-import type { NuxtIconRuntimeOptions } from '../../types'
-import { useAppConfig } from '#imports'
 import { init as initClientBundle } from '#build/nuxt-icon-client-bundle'
-import { resolveName } from './resolve-name'
+import { applyIconifyConfig } from '../iconify-config'
 
 export { initClientBundle }
+export { useResolvedName, resolveCustomizeFn } from './name'
+export type { IconifyIconCustomizeCallback } from './name'
 
-export type IconifyIconCustomizeCallback = (
-  content: string,
-  name?: string,
-  prefix?: string,
-  provider?: string,
-) => string
+export function setupIconify() {
+  applyIconifyConfig({ addAPIProvider, _api, setCustomIconsLoader })
+}
 
 export async function loadIcon(name: string, timeout: number): Promise<Required<IconifyIcon> | null | undefined> {
   if (!name)
     return null
   initClientBundle(_addIcon)
+  setupIconify()
   const _icon = _getIcon(name)
   if (_icon)
     return _icon
@@ -44,20 +41,4 @@ export async function loadIcon(name: string, timeout: number): Promise<Required<
     await load
 
   return _getIcon(name)
-}
-
-export function useResolvedName(getName: () => string) {
-  const options = useAppConfig().icon as NuxtIconRuntimeOptions
-
-  return computed(() => resolveName(getName(), options))
-}
-
-export function resolveCustomizeFn(
-  customize: IconifyIconCustomizeCallback | boolean | null | undefined,
-  globalCustomize: IconifyIconCustomizeCallback | undefined,
-):
-    IconifyIconCustomizeCallback | undefined {
-  if (customize === false) return undefined
-  if (customize === true || customize === null) return globalCustomize
-  return customize
 }

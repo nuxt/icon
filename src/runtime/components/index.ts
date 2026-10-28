@@ -1,12 +1,11 @@
-import { getIcon as _getIcon } from '@iconify/vue'
 import type { PropType } from 'vue'
 import { computed, defineComponent, h } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import { NuxtIconCss } from './css'
-import { NuxtIconSvg } from './svg'
-import type { IconifyIconCustomizeCallback } from './shared'
-import { useResolvedName } from './shared'
+import type { IconifyIconCustomizeCallback } from './name'
+import { useResolvedName } from './name'
 import { useAppConfig, useNuxtApp } from '#imports'
+import { NuxtIconSvg } from '#build/nuxt-icon-svg'
 
 export default defineComponent({
   name: 'NuxtIcon',

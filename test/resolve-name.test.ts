@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue'
 import { describe, expect, it } from 'vitest'
-import { getSortedCollections, resolveName } from '../src/runtime/components/resolve-name'
+import { getCollectionSet, resolveName } from '../src/runtime/components/resolve-name'
 
 function createOptions(collections: string[] | null, aliases: Record<string, string> = {}) {
   return { cssSelectorPrefix: 'i-', aliases, collections }
@@ -17,6 +17,14 @@ describe('resolveName', () => {
     expect(resolveName('simple-icons-github', options)).toBe('simple-icons:github')
     expect(resolveName('i-simple-foo', options)).toBe('simple:foo')
     expect(resolveName('i-si-foo', options)).toBe('si:foo')
+  })
+
+  it('prefers the longest collection regardless of configured order', () => {
+    const options = createOptions(['a', 'a-b-c', 'a-b'])
+    expect(resolveName('i-a-b-c-d', options)).toBe('a-b-c:d')
+    expect(resolveName('i-a-b-x-d', options)).toBe('a-b:x-d')
+    expect(resolveName('i-a-x-c-d', options)).toBe('a:x-c-d')
+    expect(resolveName('i-a-b-c', options)).toBe('a-b:c')
   })
 
   it('requires a hyphen after the collection name', () => {
@@ -74,9 +82,9 @@ describe('resolveName', () => {
   })
 })
 
-describe('getSortedCollections', () => {
-  it('sorts each collections array once', () => {
+describe('getCollectionSet', () => {
+  it('creates one set per collections array', () => {
     const collections = ['simple', 'simple-icons']
-    expect(getSortedCollections(collections)).toBe(getSortedCollections(collections))
+    expect(getCollectionSet(collections)).toBe(getCollectionSet(collections))
   })
 })

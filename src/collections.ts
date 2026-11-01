@@ -2,19 +2,31 @@ import { getLayerDirectories } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 import type { IconifyJSON } from '@iconify/types'
 import type { CustomCollection, ModuleOptions, RemoteCollection } from './types'
+import { fullCollectionCache } from './core/collections'
+
+const fullCollectionCacheByNuxt = new WeakMap<Nuxt, { paths: string, value?: boolean }>()
 
 export function getResolvePaths(nuxt: Nuxt): string[] {
   const layerDirs = getLayerDirectories(nuxt).map(
     dir => dir.root,
   )
 
-  return Array.from(
+  const paths = Array.from(
     new Set(
       [nuxt.options.rootDir, nuxt.options.workspaceDir, ...layerDirs].filter(
         Boolean,
       ),
     ),
   )
+
+  const key = paths.join('\0')
+  let cache = fullCollectionCacheByNuxt.get(nuxt)
+  if (cache?.paths !== key) {
+    cache = { paths: key }
+    fullCollectionCacheByNuxt.set(nuxt, cache)
+  }
+  fullCollectionCache.set(paths, cache)
+  return paths
 }
 
 type ConfiguredCollection = string | IconifyJSON | CustomCollection | RemoteCollection

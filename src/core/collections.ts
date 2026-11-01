@@ -10,7 +10,16 @@ import type { CustomCollection, ServerBundleOptions, RemoteCollection } from './
 
 const logger = consola.withTag('nuxt:icon')
 
+/**
+ * Answers for path lists from `getResolvePaths()`, shared by one Nuxt instance. Each check
+ * resolves `@iconify/json` from every layer root, and the module asks once per collection.
+ */
+export const fullCollectionCache = new WeakMap<string[], { value?: boolean }>()
+
 export function hasFullCollection(resolvePaths: string[]): boolean {
+  const cache = fullCollectionCache.get(resolvePaths)
+  if (cache)
+    return cache.value ??= isPackageExists('@iconify/json', { paths: resolvePaths })
   return isPackageExists('@iconify/json', { paths: resolvePaths })
 }
 

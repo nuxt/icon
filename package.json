@@ -49,7 +49,7 @@
     "@iconify/types": "^2.0.0",
     "@iconify/utils": "^3.1.7",
     "@iconify/vue": "^5.0.4",
-    "@nuxt/devtools-kit": "^3.4.4",
+    "@nuxt/devtools-kit": "^4.1.0",
     "@nuxt/kit": "^4.6.3",
     "consola": "^3.4.2",
     "fnv1a-64": "^0.1.2",

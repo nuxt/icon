@@ -1,11 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { _api } from '@iconify/vue'
 import type { IconifyConfig } from '../src/runtime/iconify-config'
+
+// Capture the provider that ships with the installed @iconify/vue version, so
+// each test starts from a clean default without hard-coding the host list.
+const defaultResources = [..._api.getAPIConfig('')!.resources]
 
 async function load() {
   vi.resetModules()
   const iconify = await import('@iconify/vue')
   iconify._api.setFetch(globalThis.fetch)
-  iconify.addAPIProvider('', { resources: ['https://api.iconify.design'] })
+  iconify.addAPIProvider('', { resources: defaultResources })
   const config = await import('../src/runtime/iconify-config')
   return { iconify, ...config }
 }
@@ -34,6 +39,56 @@ describe('applyIconifyConfig', () => {
 
     expect(ctx.iconify._api.getFetch()).toBe(config.fetch)
     expect(ctx.iconify._api.getAPIConfig('')!.resources).toEqual(['/api/_nuxt_icon'])
+  })
+
+  it('replaces the default public provider shipped by Iconify', () => {
+    // @iconify/vue 5.0.5 added `api2.iconify.design` to the default resources
+    ctx.iconify.addAPIProvider('', { resources: ['https://api.iconify.design', 'https://api2.iconify.design'] })
+
+    ctx.setIconifyConfig(createConfig())
+    ctx.applyIconifyConfig(ctx.iconify)
+
+    expect(ctx.iconify._api.getAPIConfig('')!.resources).toEqual(['/api/_nuxt_icon'])
+  })
+
+  // Iconify's own API is the only provider we may replace. These are the hosts
+  // it has shipped so far, plus a made-up one to keep the pattern honest.
+  it.each([
+    'https://api.iconify.design',
+    'https://api2.iconify.design',
+    'https://api42.iconify.design',
+  ])('replaces the public Iconify host %s', (resource) => {
+    ctx.iconify.addAPIProvider('', { resources: [resource] })
+    ctx.setIconifyConfig(createConfig())
+    ctx.applyIconifyConfig(ctx.iconify)
+
+    expect(ctx.iconify._api.getAPIConfig('')!.resources).toEqual(['/api/_nuxt_icon'])
+  })
+
+  // Anything else was set by the app on purpose, so it stays untouched. The
+  // lookalikes here are the reason the check is anchored to the whole host.
+  it.each([
+    'https://api.iconify.design.evil.com',
+    'https://api.iconify.design@evil.com',
+    'https://evil.com/https://api.iconify.design',
+    'http://api.iconify.design',
+    'https://api-2.iconify.design',
+    'https://apiiconify.design',
+  ])('keeps a provider set by the app for %s', (resource) => {
+    ctx.iconify.addAPIProvider('', { resources: [resource] })
+    ctx.setIconifyConfig(createConfig())
+    ctx.applyIconifyConfig(ctx.iconify)
+
+    expect(ctx.iconify._api.getAPIConfig('')!.resources).toEqual([resource])
+  })
+
+  it('keeps a provider with a custom resource mixed in', () => {
+    const resources = ['https://api.iconify.design', 'https://icons.example.com']
+    ctx.iconify.addAPIProvider('', { resources })
+    ctx.setIconifyConfig(createConfig())
+    ctx.applyIconifyConfig(ctx.iconify)
+
+    expect(ctx.iconify._api.getAPIConfig('')!.resources).toEqual(resources)
   })
 
   it('keeps a fetch function and provider set by the app', () => {

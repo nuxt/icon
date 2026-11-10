@@ -60,17 +60,17 @@ export default defineComponent({
       ? useSvgIconRenderer(directName)
       : undefined
 
-    return () => {
-      const attrs = { ...runtimeOptions.attrs, class: runtimeOptions.class, style: style.value }
-      return (renderSvg && name.value === directName && renderSvg(attrs)) || h(
+    return () => (renderSvg && name.value === directName && renderSvg({ ...runtimeOptions.attrs, class: runtimeOptions.class, style: style.value }))
+      || h(
         component.value,
         {
-          ...attrs,
+          ...runtimeOptions.attrs,
           name: name.value,
+          class: runtimeOptions.class,
+          style: style.value,
           customize: props.customize,
         },
         slots,
       )
-    }
   },
 })

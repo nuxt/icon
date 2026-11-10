@@ -12,6 +12,7 @@ declare module '#build/nuxt-icon-client-bundle' {
 
 declare module '#build/nuxt-icon-svg' {
   export const NuxtIconSvg: typeof import('./runtime/components/svg').NuxtIconSvg
+  export const useSvgIconRenderer: typeof import('./runtime/components/svg').useSvgIconRenderer | undefined
 }
 
 declare module '#nuxt-icon-server-options' {

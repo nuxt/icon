@@ -97,10 +97,11 @@ export default defineNuxtModule<ModuleOptions>({
     addTemplate({
       filename: 'nuxt-icon-svg.mjs',
       getContents: () => options.mode === 'svg'
-        ? `export { NuxtIconSvg } from ${svgComponent}`
+        ? `export { NuxtIconSvg, useSvgIconRenderer } from ${svgComponent}`
         : [
             `import { defineAsyncComponent } from 'vue'`,
             `export const NuxtIconSvg = /* @__PURE__ */ defineAsyncComponent(() => import(${svgComponent}).then(r => r.NuxtIconSvg))`,
+            `export const useSvgIconRenderer = undefined`,
           ].join('\n'),
     })
     if (usesLocalApi(options.provider)) {

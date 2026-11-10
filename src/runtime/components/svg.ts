@@ -1,4 +1,4 @@
-import { Icon as Iconify, addIcon } from '@iconify/vue'
+import { Icon as Iconify, addIcon, getIcon } from '@iconify/vue'
 import { h } from 'vue'
 import type { PropType } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
@@ -33,6 +33,16 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       // @See https://github.com/nuxt/icon/issues/356
       onServerPrefetch(async () => {
         if (import.meta.server) {
+          // an icon already in memory goes straight into the payload, under the key `useAsyncData`
+          // would use: a `useAsyncData` per instance costs more than rendering the icon itself
+          if (storeKey in nuxt.payload.data)
+            return
+          initClientBundle(addIcon)
+          const icon = getIcon(name.value)
+          if (icon) {
+            nuxt.payload.data[storeKey] = icon
+            return
+          }
           await useAsyncData(
             storeKey,
             async () => await loadIcon(name.value, options.fetchTimeout),

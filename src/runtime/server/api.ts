@@ -1,10 +1,10 @@
 import { getIcons } from '@iconify/utils'
 import { hash } from 'ohash'
-import { createError, type H3Event } from 'h3'
+import type { H3Event } from 'h3'
 import { parseQuery, parsePath } from 'ufo'
 import { consola } from 'consola'
 import options from '#nuxt-icon-server-options'
-import { defineCachedHandler } from '#nuxt-icon-server-runtime'
+import { createError, defineCachedHandler } from '#nuxt-icon-server-runtime'
 import { collections } from '#nuxt-icon-server-bundle'
 
 const warnOnceSet = /* @__PURE__ */ new Set<string>()

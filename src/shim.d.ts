@@ -24,6 +24,8 @@ declare module '#nuxt-icon-server-options' {
 
 declare module '#nuxt-icon-server-runtime' {
   import type { defineCachedEventHandler } from 'nitropack/runtime'
+  import type { createError as _createError } from 'h3'
 
   export const defineCachedHandler: typeof defineCachedEventHandler
+  export const createError: typeof _createError
 }

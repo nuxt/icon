@@ -16,7 +16,10 @@ export interface IconifyConfig {
   customCollections: string[]
 }
 
-const DEFAULT_RESOURCES = ['https://api.iconify.design']
+// Iconify uses its public API as the default provider. The host list can grow
+// between releases (`api.iconify.design`, `api2.iconify.design`, ...), so match
+// the known public hosts instead of a fixed list.
+const DEFAULT_RESOURCE = /^https:\/\/api\d*\.iconify\.design$/
 
 let pending: IconifyConfig | undefined
 let applied: IconifyConfig | undefined
@@ -47,7 +50,7 @@ export function applyIconifyConfig({ addAPIProvider, _api, setCustomIconsLoader 
 
   const provider = _api.getAPIConfig('')
   const isDefaultProvider = !provider || provider === appliedProvider
-    || (provider.resources.length === DEFAULT_RESOURCES.length && provider.resources.every((r, i) => r === DEFAULT_RESOURCES[i]))
+    || (provider.resources.length > 0 && provider.resources.every(resource => DEFAULT_RESOURCE.test(resource)))
   if (config.resources.length && (import.meta.server || isDefaultProvider)) {
     addAPIProvider('', { resources: config.resources })
     appliedProvider = _api.getAPIConfig('')

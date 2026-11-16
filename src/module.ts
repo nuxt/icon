@@ -56,8 +56,8 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.nitro.virtual ||= {}
     nuxt.options.nitro.virtual['#nuxt-icon-server-runtime'] = usesNitroV3
-      ? `export { defineCachedHandler } from 'nitro/cache'`
-      : `export { defineCachedEventHandler as defineCachedHandler } from 'nitropack/runtime'`
+      ? `export { defineCachedHandler } from 'nitro/cache'\nexport { createError } from 'nitro/h3'`
+      : `export { defineCachedEventHandler as defineCachedHandler } from 'nitropack/runtime'\nexport { createError } from 'h3'`
     nuxt.options.nitro.virtual['#nuxt-icon-server-options'] = () =>
       `export default ${JSON.stringify({
         iconifyApiEndpoint: options.iconifyApiEndpoint,

@@ -42,6 +42,21 @@ afterAll(() => {
   rmSync(root, { recursive: true, force: true })
 })
 
+it('returns collections in the same order regardless of icon order', async () => {
+  const customCollections = ['zeta', 'alpha'].map(prefix => ({
+    prefix,
+    icons: { example: { body: '<path d="M0 0h24v24H0z"/>' } },
+    width: 24,
+    height: 24,
+  }))
+  const options = { customCollections, resolvePaths: [root] }
+  const first = await resolveBundleIcons({ ...options, icons: ['zeta:example', 'alpha:example'] })
+  const second = await resolveBundleIcons({ ...options, icons: ['alpha:example', 'zeta:example'] })
+
+  expect(first.collections.map(collection => collection.prefix)).toEqual(['alpha', 'zeta'])
+  expect(first.collections).toEqual(second.collections)
+})
+
 it('resolves explicit, scanned and extra icons', async () => {
   const result = await resolveBundleIcons({
     icons: ['test-bundle:foo'],

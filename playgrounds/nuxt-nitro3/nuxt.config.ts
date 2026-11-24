@@ -11,5 +11,6 @@ export default defineNuxtConfig({
       collections: ['ph'],
       externalizeIconsJson: true,
     },
+    fallbackToApi: false,
   },
 })

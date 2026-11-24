@@ -22,11 +22,12 @@ const server = spawn(process.execPath, [join(outputDir, 'server/index.mjs')], {
   },
   stdio: 'inherit',
 })
+const exited = new Promise(resolve => server.once('exit', resolve))
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 50; attempt++) {
-    if (server.exitCode !== null) {
-      throw new Error(`Nuxt server exited with code ${server.exitCode}`)
+    if (server.exitCode !== null || server.signalCode !== null) {
+      throw new Error(`Nuxt server exited with ${server.exitCode ?? server.signalCode}`)
     }
     const response = await fetchWithTimeout(origin, 1_000).catch(() => null)
     if (response?.ok) return
@@ -50,8 +51,6 @@ try {
 }
 finally {
   server.kill()
-  if (server.exitCode === null) {
-    await new Promise(resolve => server.once('exit', resolve))
-  }
+  await exited
   await rm(outputDir, { recursive: true, force: true })
 }

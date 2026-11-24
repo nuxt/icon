@@ -52,7 +52,9 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+    // Nuxt 4.7 runs on Nitro 3 when the app installs `nitro`
     const usesNitroV3 = Number.parseInt(getNuxtVersion(nuxt)) >= 5
+      || (nuxt.options as { _nitroMajor?: number })._nitroMajor === 3
 
     nuxt.options.nitro.virtual ||= {}
     nuxt.options.nitro.virtual['#nuxt-icon-server-runtime'] = usesNitroV3
@@ -152,10 +154,17 @@ export default defineNuxtModule<ModuleOptions>({
           url: nuxt.options.rootDir,
         })))
 
-      // Trace iconify-json modules
-      nitroConfig.externals ||= {}
-      nitroConfig.externals.traceInclude ||= []
-      nitroConfig.externals.traceInclude.push(...resolvedPaths)
+      // Trace iconify-json modules; Nitro 3 takes them as absolute paths in `traceDeps`
+      if (usesNitroV3) {
+        const nitroV3Config = nitroConfig as { traceDeps?: string[] }
+        nitroV3Config.traceDeps ||= []
+        nitroV3Config.traceDeps.push(...resolvedPaths)
+      }
+      else {
+        nitroConfig.externals ||= {}
+        nitroConfig.externals.traceInclude ||= []
+        nitroConfig.externals.traceInclude.push(...resolvedPaths)
+      }
 
       // Add rollup plugin to externalize iconify-json
       nitroConfig.rollupConfig ||= {}

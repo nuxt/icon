@@ -42,7 +42,7 @@
     "typecheck": "vue-tsc --noEmit",
     "test:playground": "pnpm -C playgrounds/nuxt run test",
     "test:unit": "vitest",
-    "test": "pnpm run test:unit --run && pnpm run test:playground --run && pnpm run play:build && nuxi build test/fixtures/nuxt4-compat5 && pnpm -C playgrounds/nuxt5 run test"
+    "test": "pnpm run test:unit --run && pnpm run test:playground --run && pnpm run play:build && nuxi build test/fixtures/nuxt4-compat5 && pnpm -C playgrounds/nuxt5 run test && pnpm -C playgrounds/nuxt-nitro3 run test"
   },
   "dependencies": {
     "@iconify/collections": "^1.0.765",

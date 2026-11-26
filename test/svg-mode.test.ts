@@ -24,6 +24,17 @@ describe('svg mode', async () => {
     expect(payload!.split('"i-ph:acorn-bold"')).toHaveLength(2)
   })
 
+  it('renders the ids inside icons the same way on every request', async () => {
+    const first = await $fetch<string>('/')
+    expect(await $fetch<string>('/')).toBe(first)
+    const icons = first.match(/<svg[^>]+class="iconify iconify--custom"[\s\S]*?<\/svg>/g)!
+    expect(icons).toHaveLength(2)
+    const ids = icons.map(svg => svg.match(/<linearGradient id='([^']+)'/)![1]!)
+    // unique per icon, and each icon refers to its own gradient
+    expect(new Set(ids).size).toBe(2)
+    icons.forEach((svg, i) => expect(svg).toContain(`fill="url(#${ids[i]})"`))
+  })
+
   it('loads the svg component with the critical client JS', async () => {
     const chunks = await getCriticalJS(await $fetch<string>('/'))
     expect([...chunks.values()].some(code => code.includes('IconifyProviders'))).toBe(true)

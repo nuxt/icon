@@ -188,7 +188,7 @@ export async function resolveBundleIcons(options: ResolveBundleIconsOptions): Pr
   }
 
   return {
-    collections: [...collections.values()],
+    collections: [...collections.values()].sort((a, b) => a.prefix < b.prefix ? -1 : a.prefix > b.prefix ? 1 : 0),
     count,
     failed,
     dropped,

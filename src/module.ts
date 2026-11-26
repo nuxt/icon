@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, addTemplate, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin, getNuxtVersion, getNitroVersion } from '@nuxt/kit'
-import { addCustomTab } from '@nuxt/devtools-kit'
+import { NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
 import type { ViteDevServer } from 'vite'
 import type { Nuxt } from '@nuxt/schema'
@@ -189,14 +189,16 @@ export default defineNuxtModule<ModuleOptions>({
     registerClientBundle(ctx)
 
     // Devtools
-    addCustomTab({
-      name: 'icones',
-      title: 'Icônes',
-      icon: 'https://icones.js.org/favicon.svg',
-      view: {
+    onDevtoolsReady((devtools) => {
+      devtools.docks.register({
+        id: 'icones',
+        title: 'Icônes',
+        icon: 'https://icones.js.org/favicon.svg',
         type: 'iframe',
-        src: 'https://icones.js.org',
-      },
+        url: 'https://icones.js.org',
+        groupId: NUXT_DEVTOOLS_GROUP_ID,
+        category: 'modules',
+      })
     })
 
     // Server-only runtime config for known CSS selectors

@@ -1,11 +1,7 @@
 {
   "private": true,
-  "name": "nuxt-icon-nuxt5-playground",
+  "name": "nuxt-icon-nuxt5-fixture",
   "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "test": "nuxt build && node test.mjs"
-  },
   "dependencies": {
     "@iconify-json/ph": "1.2.2",
     "nitro": "3.0.261103-rc",

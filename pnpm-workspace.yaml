@@ -1,5 +1,6 @@
 packages:
   - playgrounds/*
+  - test/fixtures/nitro3
 shamefullyHoist: true
 strictPeerDependencies: false
 ignoreWorkspaceRootCheck: true

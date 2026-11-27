@@ -1,9 +1,10 @@
-import { Icon as Iconify, addIcon, buildIcon, getIcon, replaceIDs as iconifyReplaceIDs } from '@iconify/vue'
+import { Icon as Iconify, addIcon, getIcon } from '@iconify/vue'
 import { h, useId } from 'vue'
 import type { VNode, PropType } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
 import { initClientBundle, loadIcon, setupIconify, useResolvedName, resolveCustomizeFn } from './shared'
+import { renderIconifySvg } from './svg-render'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
@@ -104,8 +105,9 @@ export function replaceIDs(body: string, prefix: string): string {
 
 /**
  * Sets up an icon to render straight to the `<svg>` that `<NuxtIconSvg>` and Iconify would produce,
- * without creating either component. The returned function renders the icon when it is in memory,
- * and returns `null` otherwise, for the caller to fall back to `<NuxtIconSvg>`.
+ * without creating either component. The returned function takes the attributes `<NuxtIconSvg>`
+ * would receive, and renders the icon when it is in memory and the attributes are supported.
+ * It returns `null` otherwise, for the caller to fall back to `<NuxtIconSvg>`.
  */
 export function useSvgIconRenderer(name: string): (attrs: Record<string, unknown>) => VNode | null {
   setupIconify()
@@ -127,20 +129,7 @@ export function useSvgIconRenderer(name: string): (attrs: Record<string, unknown
 
   return (attrs) => {
     const icon = getIcon(name)
-    if (!icon)
-      return null
-    const { attributes, body } = buildIcon(icon, {})
-    return h('svg', {
-      'xmlns': 'http://www.w3.org/2000/svg',
-      'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-      'aria-hidden': true,
-      'role': 'img',
-      ...attrs,
-      'class': [iconClass, attrs.class],
-      'style': attrs.style || {},
-      ...attributes,
-      'innerHTML': iconifyReplaceIDs(body),
-    })
+    return icon ? renderIconifySvg(icon, iconClass, attrs) : null
   }
 }
 

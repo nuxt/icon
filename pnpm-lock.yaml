@@ -316,18 +316,6 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@26.6.6)(happy-dom@21.0.4)(vite@8.3.8)
 
-  playgrounds/nuxt5:
-    dependencies:
-      '@iconify-json/ph':
-        specifier: 1.2.2
-        version: 1.2.2
-      nitro:
-        specifier: 3.0.261103-rc
-        version: 3.0.261103-rc
-      nuxt:
-        specifier: npm:nuxt-nightly@5.0.0-2611251439-b19192b
-        version: nuxt-nightly@5.0.0-2611251439-b19192b(ec86cc1192d83abd281bac9a11007f3f)
-
   playgrounds/vite:
     dependencies:
       '@iconify/vue':
@@ -349,6 +337,24 @@ importers:
       vite:
         specifier: ^8.3.8
         version: 8.3.8(@types/node@26.6.6)(@vitejs/devtools@0.8.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
+
+  test/fixtures/nitro3:
+    dependencies:
+      nitro:
+        specifier: 3.0.261103-rc
+        version: 3.0.261103-rc
+
+  test/fixtures/nuxt5:
+    dependencies:
+      '@iconify-json/ph':
+        specifier: 1.2.2
+        version: 1.2.2
+      nitro:
+        specifier: 3.0.261103-rc
+        version: 3.0.261103-rc
+      nuxt:
+        specifier: npm:nuxt-nightly@5.0.0-2611251439-b19192b
+        version: nuxt-nightly@5.0.0-2611251439-b19192b(ec86cc1192d83abd281bac9a11007f3f)
 
 packages:
 

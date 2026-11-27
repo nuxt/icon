@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "nuxt-icon-nitro3-fixture",
+  "type": "module",
+  "dependencies": {
+    "nitro": "3.0.261103-rc"
+  }
+}

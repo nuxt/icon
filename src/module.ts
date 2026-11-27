@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, addTemplate, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin, getNuxtVersion } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addServerHandler, hasNuxtModule, createResolver, addComponent, addTemplate, logger, updateTemplates, resolvePath as nuxtResolvePath, addVitePlugin, getNuxtVersion, getNitroVersion } from '@nuxt/kit'
 import { NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
 import { resolvePath } from 'mlly'
 import type { ViteDevServer } from 'vite'
@@ -153,9 +153,16 @@ export default defineNuxtModule<ModuleOptions>({
         })))
 
       // Trace iconify-json modules
-      nitroConfig.externals ||= {}
-      nitroConfig.externals.traceInclude ||= []
-      nitroConfig.externals.traceInclude.push(...resolvedPaths)
+      if (getNitroVersion(nuxt) === 3) {
+        const nitroV3Config = nitroConfig as { traceDeps?: string[] }
+        nitroV3Config.traceDeps ||= []
+        nitroV3Config.traceDeps.push(...resolvedPaths)
+      }
+      else {
+        nitroConfig.externals ||= {}
+        nitroConfig.externals.traceInclude ||= []
+        nitroConfig.externals.traceInclude.push(...resolvedPaths)
+      }
 
       // Add rollup plugin to externalize iconify-json
       nitroConfig.rollupConfig ||= {}

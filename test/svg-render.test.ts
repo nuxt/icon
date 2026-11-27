@@ -47,7 +47,7 @@ describe('renderIconifySvg', () => {
   for (const [label, attrs] of Object.entries(cases)) {
     it(`renders the same <svg> as Iconify's <Icon>: ${label}`, async () => {
       const iconify = await renderToString(h(Iconify, { icon: 'test:wide', ssr: true, ...attrs }))
-      const direct = renderIconifySvg(getIcon('test:wide')!, 'iconify iconify--test', attrs)
+      const direct = renderIconifySvg(getIcon('test:wide')!, 'iconify iconify--test', attrs, 'v_0ID')
       expect(direct).not.toBeNull()
       expect(await renderToString(direct as VNode)).toBe(iconify)
     })
@@ -57,13 +57,13 @@ describe('renderIconifySvg', () => {
     addIcon('test:square', { body: '<path fill="currentColor" d="M0 0h24v12H0z"/>', width: 24, height: 24 })
     for (const name of ['test:wide', 'test:square', 'test:wide']) {
       const iconify = await renderToString(h(Iconify, { icon: name, ssr: true }))
-      expect(await renderToString(renderIconifySvg(getIcon(name)!, 'iconify iconify--test', {}) as VNode)).toBe(iconify)
+      expect(await renderToString(renderIconifySvg(getIcon(name)!, 'iconify iconify--test', {}, 'v_0ID') as VNode)).toBe(iconify)
     }
   })
 
   for (const key of ['icon', 'mode', 'ssr', 'customise', 'onLoad']) {
     it(`falls back for \`${key}\``, () => {
-      expect(renderIconifySvg(getIcon('test:wide')!, 'iconify iconify--test', { [key]: 'x' })).toBeNull()
+      expect(renderIconifySvg(getIcon('test:wide')!, 'iconify iconify--test', { [key]: 'x' }, 'v_0ID')).toBeNull()
     })
   }
 })

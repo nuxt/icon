@@ -1,4 +1,4 @@
-import { buildIcon, replaceIDs } from '@iconify/vue'
+import { buildIcon } from '@iconify/vue'
 import type { IconifyIcon } from '@iconify/vue'
 import { flipFromString } from '@iconify/utils/lib/customisations/flip'
 import { rotateFromString } from '@iconify/utils/lib/customisations/rotate'
@@ -71,7 +71,7 @@ interface Customisations {
  * and lets the other attributes fall through onto the `<svg>`. Returns `null` for the attributes
  * it doesn't handle, for the caller to fall back to `<NuxtIconSvg>`.
  */
-export function renderIconifySvg(icon: Required<IconifyIcon>, classes: string, attrs: Record<string, unknown>): VNode | null {
+export function renderIconifySvg(icon: Required<IconifyIcon>, classes: string, attrs: Record<string, unknown>, idPrefix: string): VNode | null {
   // Split props from fallthrough attributes, as Vue does: non-boolean props keep their order,
   // boolean props come after them in declaration order, cast from `''` or their own name to `true`.
   const props: Record<string, unknown> = {}
@@ -165,7 +165,7 @@ export function renderIconifySvg(icon: Required<IconifyIcon>, classes: string, a
   svgProps.class = classes
   svgProps.style = { ...style, ...(typeof props.style === 'object' && !Array.isArray(props.style) ? props.style : {}) }
   Object.assign(svgProps, attributes)
-  svgProps.innerHTML = replaceIDs(body)
+  svgProps.innerHTML = replaceIDs(body, idPrefix)
   // The other attributes fall through onto the `<svg>`, merged the way Vue's `mergeProps` merges
   // them: `class` is appended, and the rest replaces the value, since the `<svg>` has no listeners.
   for (const key in rest) {
@@ -177,4 +177,25 @@ export function renderIconifySvg(icon: Required<IconifyIcon>, classes: string, a
       svgProps[key] = rest[key]
   }
   return h('svg', svgProps)
+}
+
+const idRE = /\sid="(\S+)"/g
+
+/**
+ * Renames the ids of an icon body to `prefix` + index, and updates their references.
+ * The new ids are written with single quotes, so Iconify's own `replaceIDs`,
+ * which only matches `id="…"`, leaves them alone.
+ */
+export function replaceIDs(body: string, prefix: string): string {
+  const ids = new Set(Array.from(body.matchAll(idRE), m => m[1]!))
+  let index = 0
+  for (const id of ids) {
+    const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    // the same references Iconify updates: `url(#id)`, `href="#id"`, `begin="id.end"`, and the id itself.
+    // `\0` marks renamed ids, so a later id cannot match a new one.
+    body = body.replace(new RegExp(`([#;"])(${escaped})([")]|\\.[a-z])`, 'g'), `$1${prefix}${index++}\0$3`)
+  }
+  return body
+    .replace(/\sid="([^"]*)\0"/g, ` id='$1'`)
+    .replaceAll('\0', '')
 }

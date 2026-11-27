@@ -4,7 +4,7 @@ import type { VNode, PropType } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
 import { initClientBundle, loadIcon, setupIconify, useResolvedName, resolveCustomizeFn } from './shared'
-import { renderIconifySvg } from './svg-render'
+import { renderIconifySvg, replaceIDs } from './svg-render'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
@@ -82,27 +82,6 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
   },
 })
 
-const idRE = /\sid="(\S+)"/g
-
-/**
- * Renames the ids of an icon body to `prefix` + index, and updates their references.
- * The new ids are written with single quotes, so Iconify's own `replaceIDs`,
- * which only matches `id="…"`, leaves them alone.
- */
-export function replaceIDs(body: string, prefix: string): string {
-  const ids = new Set(Array.from(body.matchAll(idRE), m => m[1]!))
-  let index = 0
-  for (const id of ids) {
-    const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    // the same references Iconify updates: `url(#id)`, `href="#id"`, `begin="id.end"`, and the id itself.
-    // `\0` marks renamed ids, so a later id cannot match a new one.
-    body = body.replace(new RegExp(`([#;"])(${escaped})([")]|\\.[a-z])`, 'g'), `$1${prefix}${index++}\0$3`)
-  }
-  return body
-    .replace(/\sid="([^"]*)\0"/g, ` id='$1'`)
-    .replaceAll('\0', '')
-}
-
 /**
  * Sets up an icon to render straight to the `<svg>` that `<NuxtIconSvg>` and Iconify would produce,
  * without creating either component. The returned function takes the attributes `<NuxtIconSvg>`
@@ -114,6 +93,8 @@ export function useSvgIconRenderer(name: string): (attrs: Record<string, unknown
   const nuxt = useNuxtApp()
   const storeKey = 'i-' + name
   const iconClass = iconifyClass(name)
+  // the same id prefix as `<NuxtIconSvg>`, see #585
+  const idPrefix = useId().replace(/-/g, '_') + 'ID'
   // Registered whether or not the icon renders directly, on the server and the client,
   // so `useId` sees the same async boundaries as with `<NuxtIconSvg>` during hydration.
   onServerPrefetch(() => {
@@ -129,7 +110,7 @@ export function useSvgIconRenderer(name: string): (attrs: Record<string, unknown
 
   return (attrs) => {
     const icon = getIcon(name)
-    return icon ? renderIconifySvg(icon, iconClass, attrs) : null
+    return icon ? renderIconifySvg(icon, iconClass, attrs, idPrefix) : null
   }
 }
 

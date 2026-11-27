@@ -8,5 +8,6 @@ export default defineNuxtConfig({
     serverBundle: {
       collections: ['ph'],
     },
+    customCollections: [{ prefix: 'custom', dir: './icons' }],
   },
 })

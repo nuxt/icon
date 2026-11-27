@@ -1,5 +1,5 @@
 import { Icon as Iconify, addIcon, getIcon } from '@iconify/vue'
-import { h } from 'vue'
+import { h, useId } from 'vue'
 import type { PropType } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
@@ -63,11 +63,41 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
       }
     }
 
-    return () => h(Iconify, {
-      icon: name.value,
-      ssr: true,
-      // Iconify uses `customise`, where we expose `customize` for consistency
-      customise: resolveCustomizeFn(props.customize, options.customize),
-    }, slots)
+    // Iconify renames the ids inside an icon with a counter shared by every render on the
+    // server, so an unchanged page would render different HTML on each request (#585).
+    // `useId` is stable per position in the tree, on the server and the client.
+    const idPrefix = useId().replace(/-/g, '_') + 'ID'
+
+    return () => {
+      const customize = resolveCustomizeFn(props.customize, options.customize)
+      return h(Iconify, {
+        icon: name.value,
+        ssr: true,
+        // Iconify uses `customise`, where we expose `customize` for consistency
+        customise: (body: string, ...args: [string?, string?, string?]) =>
+          replaceIDs(customize?.(body, ...args) ?? body, idPrefix),
+      }, slots)
+    }
   },
 })
+
+const idRE = /\sid="(\S+)"/g
+
+/**
+ * Renames the ids of an icon body to `prefix` + index, and updates their references.
+ * The new ids are written with single quotes, so Iconify's own `replaceIDs`,
+ * which only matches `id="…"`, leaves them alone.
+ */
+export function replaceIDs(body: string, prefix: string): string {
+  const ids = new Set(Array.from(body.matchAll(idRE), m => m[1]!))
+  let index = 0
+  for (const id of ids) {
+    const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    // the same references Iconify updates: `url(#id)`, `href="#id"`, `begin="id.end"`, and the id itself.
+    // `\0` marks renamed ids, so a later id cannot match a new one.
+    body = body.replace(new RegExp(`([#;"])(${escaped})([")]|\\.[a-z])`, 'g'), `$1${prefix}${index++}\0$3`)
+  }
+  return body
+    .replace(/\sid="([^"]*)\0"/g, ` id='$1'`)
+    .replaceAll('\0', '')
+}

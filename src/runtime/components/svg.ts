@@ -1,9 +1,10 @@
 import { Icon as Iconify, addIcon, getIcon } from '@iconify/vue'
 import { h, useId } from 'vue'
-import type { PropType } from 'vue'
+import type { VNode, PropType } from 'vue'
 import type { NuxtIconRuntimeOptions } from '../../types'
 import type { IconifyIconCustomizeCallback } from './shared'
 import { initClientBundle, loadIcon, setupIconify, useResolvedName, resolveCustomizeFn } from './shared'
+import { renderIconifySvg, replaceIDs } from './svg-render'
 import { useAsyncData, useNuxtApp, defineComponent, useAppConfig, onServerPrefetch } from '#imports'
 
 export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
@@ -81,23 +82,42 @@ export const NuxtIconSvg = /* @__PURE__ */ defineComponent({
   },
 })
 
-const idRE = /\sid="(\S+)"/g
-
 /**
- * Renames the ids of an icon body to `prefix` + index, and updates their references.
- * The new ids are written with single quotes, so Iconify's own `replaceIDs`,
- * which only matches `id="…"`, leaves them alone.
+ * Sets up an icon to render straight to the `<svg>` that `<NuxtIconSvg>` and Iconify would produce,
+ * without creating either component. The returned function takes the attributes `<NuxtIconSvg>`
+ * would receive, and renders the icon when it is in memory and the attributes are supported.
+ * It returns `null` otherwise, for the caller to fall back to `<NuxtIconSvg>`.
  */
-export function replaceIDs(body: string, prefix: string): string {
-  const ids = new Set(Array.from(body.matchAll(idRE), m => m[1]!))
-  let index = 0
-  for (const id of ids) {
-    const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    // the same references Iconify updates: `url(#id)`, `href="#id"`, `begin="id.end"`, and the id itself.
-    // `\0` marks renamed ids, so a later id cannot match a new one.
-    body = body.replace(new RegExp(`([#;"])(${escaped})([")]|\\.[a-z])`, 'g'), `$1${prefix}${index++}\0$3`)
+export function useSvgIconRenderer(name: string): (attrs: Record<string, unknown>) => VNode | null {
+  setupIconify()
+  const nuxt = useNuxtApp()
+  const storeKey = 'i-' + name
+  const iconClass = iconifyClass(name)
+  // the same id prefix as `<NuxtIconSvg>`, see #585
+  const idPrefix = useId().replace(/-/g, '_') + 'ID'
+  // Registered whether or not the icon renders directly, on the server and the client,
+  // so `useId` sees the same async boundaries as with `<NuxtIconSvg>` during hydration.
+  onServerPrefetch(() => {
+    if (import.meta.server && !(storeKey in nuxt.payload.data)) {
+      const icon = getIcon(name)
+      if (icon)
+        nuxt.payload.data[storeKey] = icon
+    }
+  })
+  initClientBundle(addIcon)
+  if (import.meta.client && nuxt.payload.data[storeKey] && !getIcon(name))
+    addIcon(name, nuxt.payload.data[storeKey])
+
+  return (attrs) => {
+    const icon = getIcon(name)
+    return icon ? renderIconifySvg(icon, iconClass, attrs, idPrefix) : null
   }
-  return body
-    .replace(/\sid="([^"]*)\0"/g, ` id='$1'`)
-    .replaceAll('\0', '')
+}
+
+/** The classes Iconify adds to an icon: `iconify`, then its prefix and provider. */
+function iconifyClass(name: string): string {
+  const parts = name.split(':')
+  const provider = parts.length > 2 && parts[0]!.startsWith('@') ? parts[0]!.slice(1) : ''
+  const prefix = parts.length > 1 ? parts[parts.length - 2]!.replace(/^@/, '') : ''
+  return 'iconify' + (prefix ? ' iconify--' + prefix : '') + (provider ? ' iconify--' + provider : '')
 }

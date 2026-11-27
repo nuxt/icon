@@ -157,6 +157,8 @@ export const NuxtIconCss = /* @__PURE__ */ defineComponent({
                 ],
               }, {
                 tagPriority: 'low',
+                // Async setup may leave another request's component context active.
+                head: nuxt.ssrContext?.head,
               })
             })
           }

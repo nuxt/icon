@@ -29,10 +29,14 @@ describe('svg mode', async () => {
     expect(await $fetch<string>('/')).toBe(first)
     const icons = first.match(/<svg[^>]+class="iconify iconify--custom"[\s\S]*?<\/svg>/g)!
     expect(icons).toHaveLength(2)
-    const ids = icons.map(svg => svg.match(/<linearGradient id='([^']+)'/)![1]!)
-    // unique per icon, and each icon refers to its own gradient
-    expect(new Set(ids).size).toBe(2)
-    icons.forEach((svg, i) => expect(svg).toContain(`fill="url(#${ids[i]})"`))
+    // each icon has two gradients, the second inheriting from the first
+    const ids = icons.map(svg => Array.from(svg.matchAll(/<linearGradient id='([^']+)'/g), m => m[1]!))
+    expect(new Set(ids.flat()).size).toBe(4)
+    icons.forEach((svg, i) => {
+      const [base, fill] = ids[i]!
+      expect(svg).toContain(`<linearGradient id='${fill}' href="#${base}"`)
+      expect(svg).toContain(`fill="url(#${fill})"`)
+    })
   })
 
   it('loads the svg component with the critical client JS', async () => {
